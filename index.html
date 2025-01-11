@@ -78,6 +78,11 @@
       position: relative;
       z-index: 1;
     }
+    #header-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
     header h1 {
       font-size: 3rem;
       font-weight: 700;
@@ -407,15 +412,16 @@
 
 <!-- ====== Шапка ====== -->
 <header>
-  <div id="logo-container">
-    <img src="logo.webp" alt="Logo" id="rotating-logo" />
-  </div>
-  <h1 id="main-title">Y Z T A X I</h1>
-  <div class="language-switcher">
-    <button onclick="changeLanguage('en')">EN</button>
-    <button onclick="changeLanguage('pl')">PL</button>
-    <button onclick="changeLanguage('ru')">RU</button>
-  </div>
+  <a href="https://maps.app.goo.gl/LjUnXAMXYSHeihpP6" id="header-link"> 
+    <div id="logo-container">
+      <img src="logo.webp" alt="Logo" id="rotating-logo" />
+    </div>
+    <h1 id="main-title">Y Z T A X I</h1>
+    <div class="language-switcher">
+      <button onclick="changeLanguage('en')">EN</button>
+      <button onclick="changeLanguage('pl')">PL</button>
+      <button onclick="changeLanguage('ru')">RU</button>
+    </div>
 </header>
 
 <!-- ====== Параллакс 1 ====== -->
@@ -490,7 +496,7 @@
   </p>
   <a
     id="map-button"
-    href="https://maps.app.goo.gl/tpEBKJzAYRGcy7S1A"
+    href="https://maps.app.goo.gl/LjUnXAMXYSHeihpP6"
     target="_blank"
     class="button"
     data-text="Open Google Maps"
