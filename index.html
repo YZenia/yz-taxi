@@ -796,7 +796,7 @@ function showPaymentPopup(type) {
     title.textContent = t.cardTitle;
     desc.innerHTML = `
       ${t.cardDesc}
-      <span class="gradient-number" onclick="copyToClipboard('79102011690000810203025301')">COPY</span>
+      <span class="gradient-number" onclick="copyToClipboard('79102011690000810203025301')">C O P Y</span>
       ${t.cardDesc2 || ''}
       <span class="gradient-number" onclick="copyToClipboard('Yevhenii Zhukovskyi')"> 'Yevhenii Zhukovskyi'</span>
     `;
@@ -807,7 +807,7 @@ function showPaymentPopup(type) {
     title.textContent = t.blikTitle;
     desc.innerHTML = `
       ${t.blikDesc}
-      <span class="gradient-number" onclick="copyToClipboard('+48739229181')">COPY📲</span>
+      <span class="gradient-number" onclick="copyToClipboard('+48739229181')">C O P Y</span>
       ${t.blikDesc2 || ''}
     `;
   }
@@ -832,9 +832,6 @@ const buttonsObserver = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) {
       document.getElementById('call-text').classList.add('typing-animate');
       document.getElementById('telegram-text').classList.add('typing-animate');
-    } else {
-      document.getElementById('call-text').classList.remove('typing-animate');
-      document.getElementById('telegram-text').classList.remove('typing-animate');
     }
   });
 }, { threshold: 0.3 });
