@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Taxi Service</title>
+    <!-- Подключение шрифта -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ====== Общие стили ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            background: #000;
+            overflow-x: hidden;
+            text-align: center;
+        }
+        h1, h2, p {
+            margin: 0.5em 0;
+        }
+        a {
+            text-decoration: none;
+        }
+
+        /* ====== Шапка ====== */
+
+        header {
+            padding: 10px 10px;
+            background: #000;
+        }
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #0ff, #f0f, #ff0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin: 0;
+            animation: neon-pulse 3s ease-in-out infinite alternate;
+        }
+        @keyframes neon-pulse {
+            0% {
+                text-shadow: 0 0 1px #0ff, 0 0 2px #ff0;
+            }
+
+        }
+
+        /* ====== Переключатель языков ====== */
+        .language-switcher {
+            margin-top: 20px;
+        }
+        .language-switcher button {
+            background: transparent;
+            border: 1px solid #0ff;
+            color: #0ff;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .language-switcher button:hover {
+            background: #0ff;
+            color: #000;
+        }
+
+        /* ====== Параллакс-секции ====== */
+        .parallax {
+            position: relative;
+            height: 50vh;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Для десктопов */
+        }
+        .parallax-1 {
+            background-image: url('1.jpg');
+        }
+        .parallax-2 {
+            background-image: url('2.jpg');
+        }
+
+
+        /* ====== Контентные секции ====== */
+        .section {
+            padding: 60px 20px;
+            opacity: 0; /* Изначально скрыто (для анимации появления) */
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            background: #000;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #f0f, #ff0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ====== Цитаты ====== */
+        .quote-block {
+            background: rgba(0,0,0,0.6);
+            padding: 20px;
+            border: 1px solid #0ff;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            animation: fadeIn 1s ease;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to   {opacity: 1;}
+        }
+
+        /* ====== Карусель для about-text и price-info ====== */
+        .carousel {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .carousel .slide {
+            display: none;     /* скрыты по умолчанию */
+            animation: fadeIn 0.5s ease;
+        }
+        .carousel .slide.active {
+            display: block;    /* показываем активный слайд */
+        }
+        .carousel .arrows {
+            margin-top: 10px;
+        }
+        .carousel button {
+            background: transparent;
+            border: 1px solid #0ff;
+            color: #0ff;
+            padding: 5px 15px;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .carousel button:hover {
+            background: #0ff;
+            color: #000;
+        }
+
+        /* ====== Блок цен ====== */
+        .pricing {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+        }
+
+        /* ====== Способы оплаты (иконки) ====== */
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .payment-methods img {
+            width: 50px;
+            height: auto;
+            filter: drop-shadow(0 0 5px #0ff);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .payment-methods img:hover {
+            transform: scale(1.1);
+        }
+
+        /* ====== Контакты (кнопки) ====== */
+        .contact-buttons a.typing-btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            border: 1px solid #f0f;
+            color: #0ff;
+            background: transparent;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s;
+            white-space: nowrap;
+            overflow: hidden;
+            vertical-align: middle;
+        }
+        .contact-buttons a.typing-btn:hover {
+            transform: scale(1.05);
+            background: #f0f;
+            color: #000;
+        }
+
+        .typing-btn::before {
+            content: attr(data-text);
+            display: inline-block;
+            position: static;
+            width: 0;
+            white-space: nowrap;
+            border-right: 2px solid #000;
+            color: transparent;
+            background: linear-gradient(90deg, #ff0, #0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            overflow: hidden;
+            vertical-align: middle;
+        }
+        .typing-animate::before {
+            animation: typing 2.5s steps(15) forwards;
+        }
+        @keyframes typing {
+            0%   { width: 0; }
+            100% { width: 100%; }
+        }
+        .typing-btn span {
+            opacity: 0;
+        }
+
+        /* ====== Кнопка карты ====== */
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            margin-top: 20px;
+            border: 1px solid #f0f;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: transform 0.3s, background-color 0.3s;
+            position: static;
+            white-space: nowrap;
+            overflow: hidden;
+            color: #0ff;
+            background: transparent;
+            vertical-align: middle;
+        }
+        .button:hover {
+            background-color: #f0f;
+            transform: scale(1.1);
+            color: #000;
+        }
+        .button::before {
+            content: attr(data-text);
+            display: inline-block;
+            width: 0;
+            white-space: nowrap;
+            border-right: 2px solid #000;
+            color: transparent;
+            background: linear-gradient(90deg, #ff0, #0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            overflow: hidden;
+            vertical-align: middle;
+        }
+        .button.typing-animate::before {
+            animation: typing 2.5s steps(15) forwards;
+        }
+
+        /* ====== Модальное окно (поп-ап) ====== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-content {
+            background: #111;
+            border: 2px solid #0ff;
+            border-radius: 10px;
+            padding: 20px 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: left;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            background: linear-gradient(90deg, #f0f, #ff0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: transparent;
+            border: 1px solid #0ff;
+            color: #0ff;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .close-btn:hover {
+            background: #0ff;
+            color: #000;
+        }
+        /* Номер с линейным градиентом */
+        .gradient-number {
+            background: linear-gradient(90deg, #0ff, #ff0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        #logo-container {
+            display: block;
+        }
+
+        #rotating-logo {
+            width: 60px;
+            height: 60px;
+            animation: rotateY 3s linear infinite;
+        }
+
+        @keyframes rotateY {
+            0% {
+                transform: rotateY(0deg);
+            }
+            100% {
+                transform: rotateY(360deg);
+            }
+        }
+
+        /* ====== Адаптивность под мобильные устройства ====== */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            .section {
+                padding: 15px 20px;
+            }
+            .payment-methods img {
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- ====== Шапка ====== -->
+<header>
+    <header>
+        <a href="https://maps.app.goo.gl/LjUnXAMXYSHeihpP6" id="header-link">
+            <div id="logo-container">
+                <img src="logo.webp" alt="Logo" id="rotating-logo" />
+            </div>
+            <h1 id="main-title">Y Z T A X I</h1>
+        </a>
+        <div class="language-switcher">
+            <button onclick="changeLanguage('en')">EN</button>
+            <button onclick="changeLanguage('pl')">PL</button>
+            <button onclick="changeLanguage('ru')">RU</button>
+        </div>
+    </header>
+
+
+</header>
+
+<!-- ====== Параллакс 1 ====== -->
+<div class="parallax parallax-1"></div>
+
+<!-- ====== Секция: Обо мне (карусель) ====== -->
+<section class="section" id="about-section">
+    <h2 id="about-title">About Me</h2>
+
+    <!-- Карусель about-text -->
+    <div class="carousel" id="about-carousel">
+        <div class="slide" v-for="(slide,index) in aboutSlides" id="about-slide-0"></div>
+        <div class="arrows">
+            <button id="about-prev">← Prev</button>
+            <button id="about-next">Next →</button>
+        </div>
+    </div>
+</section>
+
+<!-- ====== Секция: Цитаты ====== -->
+<section class="section" id="quote-section">
+    <h2 id="quote-title">Quote of the Ride</h2>
+    <div class="quote-block">
+        <p id="quote-text"></p>
+    </div>
+</section>
+
+<!-- ====== Параллакс 2 ====== -->
+<div class="parallax parallax-2"></div>
+
+<!-- ====== Секция: Цены (карусель) и способы оплаты ====== -->
+<section class="section pricing" id="pricing-section">
+    <h2 id="pricing-title">Pricing</h2>
+
+    <!-- Карусель price-info -->
+    <div class="carousel" id="price-carousel">
+        <div class="slide"></div>
+        <div class="arrows">
+            <button id="price-prev">← Prev</button>
+            <button id="price-next">Next →</button>
+        </div>
+    </div>
+
+    <h3 id="payment-title">Payment Methods</h3>
+    <div class="payment-methods">
+        <img src="card.png" alt="Card" onclick="showPaymentPopup('card')">
+        <img src="pay.png" alt="Cash" onclick="showPaymentPopup('cash')">
+        <img src="blik.jpg" alt="Blik" onclick="showPaymentPopup('blik')">
+    </div>
+</section>
+
+<!-- ====== Секция: Контакты (кнопки «typing») ====== -->
+<section class="section contact-buttons" id="contact-section">
+    <h2 id="contact-title">Contact Me</h2>
+    <a href="tel:+48739229181"
+       id="call-text"
+       class="typing-btn"
+       data-text="Call Me">
+        <span></span>
+    </a>
+    <a href="https://t.me/your_telegram_username"
+       id="telegram-text"
+       class="typing-btn"
+       data-text="Order via Telegram">
+        <span></span>
+    </a>
+</section>
+
+<!-- ====== Секция: Карта ====== -->
+<section class="section" id="map-section">
+    <h2 id="map-title">Where I am?</h2>
+    <p id="map-description">
+        Click the button below to open my location in Google Maps:
+    </p>
+    <a id="map-button"
+       href="https://maps.app.goo.gl/tpEBKJzAYRGcy7S1A"
+       target="_blank"
+       class="button"
+       data-text="Open Google Maps">
+    </a>
+</section>
+
+<!-- ====== Модальное окно для способов оплаты ====== -->
+<div id="payment-popup" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="hidePaymentPopup()">X</button>
+        <h3 id="popup-title">Payment Info</h3>
+        <p id="popup-desc">Description goes here.</p>
+    </div>
+</div>
+
+<script>
+    /* =========================
+       1) Данные
+    ========================= */
+    const translations = {
+        en: {
+            mainTitle: "Y Z T A X I",
+            aboutTitle: "About Me",
+            // Карусель aboutSlides (4 шт)
+            aboutSlides: [
+                "I'm a creative dreamer who loves to imagine and bring ideas to life...",
+                "I'm a tireless explorer always excited about new discoveries...",
+                "I'm a social enthusiast — big fan of friendly chats and teamwork...",
+                "I'm a goal-oriented optimist who sees opportunities everywhere..."
+            ],
+
+            quoteTitle: "Quote of the Ride",
+            pricingTitle: "Pricing",
+            // Карусель priceSlides (5 шт)
+            priceSlides: [
+                "3 zł per kilometer!",
+                "1 hour or ~20km. Price: 50 zł. Time limit: 1 hour.",
+                "4 hours or ~250km. Price: 400 zł. +1 zł per extra km.",
+                "Full day (in Warsaw): 8 hours, 300km. Price: 550 zł. +1 zł per extra km.",
+                "Full day (long distances): 8 hours, 500km. Price: 800 zł. +1 zł per extra km."
+            ],
+
+            paymentTitle: "Payment Methods",
+            contactTitle: "Contact Me",
+
+            aboutText: "", // not used, replaced by carousel
+            priceInfo: "", // not used, replaced by carousel
+
+            mapTitle: "Where I am?",
+            mapDescription: "Click the button below to see the location of the taxi driver:",
+            mapButton: "Open Google Maps",
+
+            callText: "Call Me",
+            telegramText: "Order via Telegram",
+
+            cardTitle: "Card Payment",
+            cardDesc: "Copy the card number ",
+            cardDesc2: " to pay for ride, Title ",
+            cashTitle: "Cash Payment",
+            cashDesc: "Pay the driver the agreed price in cash.",
+            blikTitle: "Blik Payment",
+            blikDesc: "Copy the phone number ",
+            blikDesc2: " to make a Blik payment for Title 'Taxi'."
+        },
+        pl: {
+            mainTitle: "Y Z T A X I",
+            aboutTitle: "O mnie",
+            aboutSlides: [
+                "Jestem kreatywnym marzycielem, który uwielbia wyobrażać i realizować pomysły...",
+                "Jestem niestrudzonym odkrywcą — zawsze podekscytowany nowymi odkryciami...",
+                "Jestem społecznym entuzjastą — lubię rozmowy i pracę w zespole...",
+                "Jestem zorientowanym na cel optymistą, który dostrzega możliwości wszędzie..."
+            ],
+
+            quoteTitle: "Cytat z przejazdu",
+            pricingTitle: "Cennik",
+            priceSlides: [
+                "3 zł za kilometr!",
+                "1 godzina lub ~20km. Koszt: 50 zł. Limit czasu: 1 godz.",
+                "4 godziny lub ~250km. Koszt: 400 zł. +1 zł za km dodatkowy.",
+                "Pełen dzień (Warszawa): 8h, 300km. Koszt: 550 zł. +1 zł za km.",
+                "Pełen dzień (dalekie trasy): 8h, 500km. Koszt: 800 zł. +1 zł za km."
+            ],
+
+            paymentTitle: "Metody płatności",
+            contactTitle: "Kontakt",
+
+            aboutText: "",
+            priceInfo: "",
+
+            mapTitle: "Gdzie jestem?",
+            mapDescription: "Kliknij przycisk poniżej, aby zobaczyć lokalizację taksówkarza.:",
+            mapButton: "Otwórz Google Maps",
+
+            callText: "Zadzwoń",
+            telegramText: "Zamów przez Telegram",
+
+            cardTitle: "Płatność Kartą",
+            cardDesc: "Skopiuj numer karty ",
+            cardDesc2: " aby zapłacić za przejazd, Tytul ",
+            cashTitle: "Płatność Gotówką",
+            cashDesc: "Zapłać kierowcy ustaloną kwotę w gotówce.",
+            blikTitle: "Płatność Blik",
+            blikDesc: "Skopiuj numer telefonu ",
+            blikDesc2: " aby dokonać płatności Blik za przejazd Tytul 'Taxi'."
+        },
+        ru: {
+            mainTitle: "Y Z T A X I",
+            aboutTitle: "Обо мне",
+            aboutSlides: [
+                "Творческий мечтатель — обожаю воображать и воплощать идеи...",
+                "Неустанный исследователь — постоянно жажду новых открытий...",
+                "Социальный энтузиаст — люблю общаться и работать в команде...",
+                "Целеустремлённый оптимист — стараюсь сохранять позитив и идти к целям..."
+            ],
+
+            quoteTitle: "Цитата поездки",
+            pricingTitle: "Цены",
+            priceSlides: [
+                "3 zł за километр!",
+                "Поездка на 1 час (~20 км). Стоимость 50 zł. Лимит времени: 1 час.",
+                "Поездка 4 часа (~250 км). Стоимость: 400 zł. +1 zł за км сверх.",
+                "Целый день (по Варшаве): 8 часов, 300 км. 550 zł. +1 zł за км.",
+                "Целый день (дальние поездки): 8 часов, 500 км. 800 zł. +1 zł за км."
+            ],
+
+            paymentTitle: "Способы оплаты",
+            contactTitle: "Связаться",
+
+            aboutText: "",
+            priceInfo: "",
+
+            mapTitle: "Где я нахожусь?",
+            mapDescription: "Нажмите кнопку ниже, чтобы увидеть где таксист:",
+            mapButton: "Открыть Google Maps",
+
+            callText: "Позвонить",
+            telegramText: "Заказать через Telegram",
+
+            cardTitle: "Оплата картой",
+            cardDesc: "Скопируйте номер карты ",
+            cardDesc2: " Титул для оплаты поездки ",
+            cashTitle: "Оплата наличными",
+            cashDesc: "Оплатите водителю оговорённую сумму наличными.",
+            blikTitle: "Оплата Blik",
+            blikDesc: "Скопируйте номер телефона ",
+            blikDesc2: " Титул для оплаты поездки 'Taxi' через Blik."
+        }
+    };
+
+    /* =========================
+       2) Цитаты
+    ========================= */
+    const quotesEn = [
+        "The journey of a thousand miles begins with a single step.",
+        "Speed is useful only if you are running in the right direction.",
+        "Life is a journey that must be traveled no matter how bad the roads.",
+        "Travel brings power and love back into your life.",
+        "It's not the destination, it's the journey.",
+        "A smooth ride can still take you far.",
+        "Happiness is a manner of traveling.",
+        "Adventure is out there!",
+        "Wherever you go, go with all your heart.",
+        "Well begun is half done."
+    ];
+    const quotesPl = [
+        "Podróż tysiąca mil zaczyna się od jednego kroku.",
+        "Prędkość jest użyteczna tylko, jeśli biegniesz we właściwym kierunku.",
+        "Życie to podróż, którą trzeba odbyć, bez względu na złe drogi.",
+        "Podróż przywraca moc i miłość do życia.",
+        "Nie cel, a droga jest celem.",
+        "Gładka jazda może cię daleko zaprowadzić.",
+        "Szczęście to sposób podróżowania, a nie cel.",
+        "Przygoda czeka tuż za rogiem!",
+        "Dokądkolwiek idziesz, idź z całego serca.",
+        "Dobrze rozpoczęte to w połowie zrobione."
+    ];
+    const quotesRu = [
+        "Путь в тысячу миль начинается с одного шага.",
+        "Скорость полезна, только если ты движешься в верном направлении.",
+        "Жизнь — это путешествие, которое нужно пройти, несмотря на трудности.",
+        "Путешествия возвращают силу и любовь к жизни.",
+        "Важна не цель, а сам путь.",
+        "Плавная поездка может завести тебя далеко.",
+        "Счастье — это не пункт назначения, а способ путешествовать.",
+        "Приключение рядом!",
+        "Куда бы ни шел, иди всем сердцем.",
+        "Хорошее начало — половина дела."
+    ];
+
+
+    // Слайды для about-carousel / price-carousel
+    let aboutSlides = [];  // сюда скопируем translations[lang].aboutSlides
+    let priceSlides = [];  // сюда скопируем translations[lang].priceSlides
+
+    let currentLanguage = 'en';
+
+    function changeLanguage(lang) {
+        currentLanguage = lang;
+        setLanguage(lang);
+        showRandomQuote(lang);
+        // Перезаполняем карусели
+        aboutSlides = translations[lang].aboutSlides;
+        priceSlides = translations[lang].priceSlides;
+        currentAboutIndex = 0;
+        currentPriceIndex = 0;
+        renderAboutSlide();
+        renderPriceSlide();
+    }
+
+    function setLanguage(lang) {
+        const t = translations[lang];
+        document.getElementById('main-title').textContent      = t.mainTitle;
+        document.getElementById('about-title').textContent     = t.aboutTitle;
+        document.getElementById('quote-title').textContent     = t.quoteTitle;
+        document.getElementById('pricing-title').textContent   = t.pricingTitle;
+        document.getElementById('payment-title').textContent   = t.paymentTitle;
+        document.getElementById('contact-title').textContent   = t.contactTitle;
+        document.getElementById('map-title').textContent       = t.mapTitle;
+        document.getElementById('map-description').textContent = t.mapDescription;
+
+        document.getElementById('call-text').setAttribute('data-text', t.callText);
+        document.getElementById('telegram-text').setAttribute('data-text', t.telegramText);
+        document.getElementById('map-button').setAttribute('data-text', t.mapButton);
+    }
+
+    function showRandomQuote(lang) {
+        let selected;
+        if (lang === 'pl')        selected = quotesPl;
+        else if (lang === 'ru')   selected = quotesRu;
+        else                      selected = quotesEn;
+
+        const quoteText = selected[Math.floor(Math.random() * selected.length)];
+        document.getElementById('quote-text').textContent = quoteText;
+    }
+
+    // Анимация появления секций
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+    sections.forEach(section => observer.observe(section));
+
+    // Модальное окно (поп-ап)
+    function showPaymentPopup(type) {
+        const t = translations[currentLanguage];
+        const popup = document.getElementById('payment-popup');
+        const title = document.getElementById('popup-title');
+        const desc  = document.getElementById('popup-desc');
+
+        title.textContent = "";
+        desc.innerHTML = "";
+
+        if (type === 'card') {
+            title.textContent = t.cardTitle;
+            desc.innerHTML = `
+        ${t.cardDesc}
+        <span class="gradient-number" onclick="copyToClipboard('79102011690000810203025301')">COPY</span>
+        ${t.cardDesc2 || ''}
+        <span class="gradient-number" onclick="copyToClipboard('Yevhenii Zhukovskyi')"> 'Yevhenii Zhukovskyi'</span>
+      `;
+        } else if (type === 'cash') {
+            title.textContent = t.cashTitle;
+            desc.textContent = t.cashDesc;
+        } else if (type === 'blik') {
+            title.textContent = t.blikTitle;
+            desc.innerHTML = `
+        ${t.blikDesc}
+        <span class="gradient-number" onclick="copyToClipboard('+48739229181')">COPY📲</span>
+        ${t.blikDesc2 || ''}
+      `;
+        }
+
+        popup.classList.add('show');
+    }
+    function hidePaymentPopup() {
+        document.getElementById('payment-popup').classList.remove('show');
+    }
+    function copyToClipboard(value) {
+        navigator.clipboard.writeText(value).then(() => {
+            alert('Copied: ' + value);
+        });
+    }
+
+    // Анимация «печати» при скролле
+    const buttonsSection = document.getElementById('contact-section');
+    const mapButton      = document.getElementById('map-button');
+
+    const buttonsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                document.getElementById('call-text').classList.add('typing-animate');
+                document.getElementById('telegram-text').classList.add('typing-animate');
+            } else {
+                document.getElementById('call-text').classList.remove('typing-animate');
+                document.getElementById('telegram-text').classList.remove('typing-animate');
+            }
+        });
+    }, { threshold: 0.3 });
+    buttonsObserver.observe(buttonsSection);
+
+    const mapSection = document.getElementById('map-section');
+    const mapObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                mapButton.classList.add('typing-animate');
+            } else {
+                mapButton.classList.remove('typing-animate');
+            }
+        });
+    }, { threshold: 0.3 });
+    mapObserver.observe(mapSection);
+
+    /* =========================
+       5) Логика карусели
+          - about-carousel
+          - price-carousel
+    ========================= */
+    let currentAboutIndex = 0;
+    let currentPriceIndex = 0;
+
+    const aboutPrevBtn = document.getElementById('about-prev');
+    const aboutNextBtn = document.getElementById('about-next');
+    const pricePrevBtn = document.getElementById('price-prev');
+    const priceNextBtn = document.getElementById('price-next');
+
+    aboutPrevBtn.addEventListener('click', () => {
+        currentAboutIndex = (currentAboutIndex - 1 + aboutSlides.length) % aboutSlides.length;
+        renderAboutSlide();
+    });
+    aboutNextBtn.addEventListener('click', () => {
+        currentAboutIndex = (currentAboutIndex + 1) % aboutSlides.length;
+        renderAboutSlide();
+    });
+
+    pricePrevBtn.addEventListener('click', () => {
+        currentPriceIndex = (currentPriceIndex - 1 + priceSlides.length) % priceSlides.length;
+        renderPriceSlide();
+    });
+    priceNextBtn.addEventListener('click', () => {
+        currentPriceIndex = (currentPriceIndex + 1) % priceSlides.length;
+        renderPriceSlide();
+    });
+
+    function renderAboutSlide() {
+        const container = document.getElementById('about-carousel');
+        const slides = container.querySelectorAll('.slide');
+        // Если слайды уже рендерились, удалим их
+        slides.forEach(s => s.remove());
+
+        // Создаём новый слайд
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'slide active';
+        slideDiv.innerHTML = aboutSlides[currentAboutIndex];
+        container.insertBefore(slideDiv, container.querySelector('.arrows'));
+    }
+
+    function renderPriceSlide() {
+        const container = document.getElementById('price-carousel');
+        const slides = container.querySelectorAll('.slide');
+        slides.forEach(s => s.remove());
+
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'slide active';
+        slideDiv.innerHTML = priceSlides[currentPriceIndex];
+        container.insertBefore(slideDiv, container.querySelector('.arrows'));
+    }
+
+    // Инициализация каруселей при загрузке
+    window.addEventListener('DOMContentLoaded', () => {
+        aboutSlides = translations[currentLanguage].aboutSlides;
+        priceSlides = translations[currentLanguage].priceSlides;
+        renderAboutSlide();
+        renderPriceSlide();
+    });
+    // Инициализация после DOM
+    window.addEventListener('DOMContentLoaded', () => {
+        // При загрузке страницы берём массивы из en
+        aboutSlides = translations[currentLanguage].aboutSlides;
+        priceSlides = translations[currentLanguage].priceSlides;
+        renderAboutSlide();
+        renderPriceSlide();
+
+        // Теперь #quote-text точно существует, можно вызвать changeLanguage('en')
+        changeLanguage('en');
+    });
+</script>
+</body>
+</html>
