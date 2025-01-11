@@ -29,6 +29,33 @@
         }
 
         /* ====== Шапка ====== */
+/* particles.js контейнер для header */
+#particles-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Отправляем на задний план */
+    background-color: #000000; /* Цвет фона */
+}
+
+/* particles.js контейнер для section */
+#particles-section-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: #111111; /* Цвет фона */
+}
+
+/* Дополнительный стиль для текста поверх particles */
+.section {
+    position: relative;
+    z-index: 1; /* Обеспечиваем тексту перекрытие */
+}
 
         header {
             padding: 10px 10px;
@@ -382,12 +409,12 @@
 <!-- ====== Шапка ====== -->
 <header>
     <header>
-        <a href="https://maps.app.goo.gl/LjUnXAMXYSHeihpP6" id="header-link">
-            <div id="logo-container">
-                <img src="logo.webp" alt="Logo" id="rotating-logo" />
-            </div>
-            <h1 id="main-title">Y Z T A X I</h1>
-        </a>
+        <!-- particles.js container -->
+        <div id="particles-header"></div>
+        <div id="logo-container">
+            <img src="logo.webp" alt="Logo" id="rotating-logo" />
+        </div>
+        <h1 id="main-title">Y Z T A X I</h1>
         <div class="language-switcher">
             <button onclick="changeLanguage('en')">EN</button>
             <button onclick="changeLanguage('pl')">PL</button>
@@ -402,7 +429,9 @@
 <div class="parallax parallax-1"></div>
 
 <!-- ====== Секция: Обо мне (карусель) ====== -->
-<section class="section" id="about-section">
+<section class="section" id="particles-section">
+    <!-- particles.js container -->
+    <div id="particles-section-js"></div>
     <h2 id="about-title">About Me</h2>
 
     <!-- Карусель about-text -->
@@ -860,6 +889,57 @@
         renderAboutSlide();
         renderPriceSlide();
     });
+// Инициализация particles.js для header
+particlesJS("particles-header", {
+    particles: {
+        number: { value: 100, density: { enable: true, value_area: 800 } },
+        color: { value: "#ffffff" },
+        shape: {
+            type: "circle",
+            stroke: { width: 0, color: "#000000" },
+        },
+        opacity: { value: 0.5, random: false },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 2, direction: "none" },
+    },
+    interactivity: {
+        detect_on: "canvas",
+        events: {
+            onhover: { enable: true, mode: "repulse" },
+            onclick: { enable: true, mode: "push" },
+        },
+        modes: {
+            grab: { distance: 400, line_linked: { opacity: 1 } },
+            bubble: { distance: 400, size: 40 },
+            repulse: { distance: 200 },
+            push: { particles_nb: 4 },
+        },
+    },
+    retina_detect: true,
+});
+
+// Инициализация particles.js для section
+particlesJS("particles-section-js", {
+    particles: {
+        number: { value: 80, density: { enable: true, value_area: 700 } },
+        color: { value: "#13E8E9" },
+        shape: { type: "triangle" },
+        opacity: { value: 0.6 },
+        size: { value: 4, random: true },
+        line_linked: { enable: true, distance: 120, color: "#ffffff", opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 1, direction: "none" },
+    },
+    interactivity: {
+        detect_on: "canvas",
+        events: {
+            onhover: { enable: true, mode: "bubble" },
+            onclick: { enable: true, mode: "repulse" },
+        },
+    },
+    retina_detect: true,
+});
+
     // Инициализация после DOM
     window.addEventListener('DOMContentLoaded', () => {
         // При загрузке страницы берём массивы из en
@@ -872,5 +952,8 @@
         changeLanguage('en');
     });
 </script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r17/Stats.min.js"></script>
+
 </body>
 </html>
