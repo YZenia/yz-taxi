@@ -147,15 +147,18 @@
             position: relative;
             padding: 60px 20px;
             opacity: 0;
-            transform: translateY(20px);
-
-            background: transparent; /* прозрачный, ведь фон уже частицы */
+            margin-top: 20px;      /* вместо transform */
+            transition: 
+              opacity 1s ease,
+              margin-top 1s ease;  /* плавно убираем margin-top */
+            background: transparent;
             z-index: 1;
         }
         .section.visible {
             opacity: 1;
-            transform: translateY(0);
+            margin-top: 0;         /* возвращаем в 0 при появлении */
         }
+
         .section h2 {
             font-size: 2rem;
             margin-bottom: 20px;
