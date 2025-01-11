@@ -857,15 +857,6 @@
         // Теперь #quote-text точно существует, можно вызвать changeLanguage('en')
         changeLanguage('en');
     });
-document.addEventListener('scroll', () => {
-    const parallaxElements = document.querySelectorAll('.parallax');
-    const scrollPosition = window.scrollY;
-
-    parallaxElements.forEach((el) => {
-        const speed = el.dataset.speed || 0.5; // Установите скорость параллакса через data-атрибут
-        el.style.transform = `translateY(${scrollPosition * speed}px)`;
-    });
-});
 
 </script>
 </body>
