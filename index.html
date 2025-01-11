@@ -78,7 +78,7 @@
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
-            background-attachment: fixed; /* Для десктопов */
+            will-change: transform;
         }
         .parallax-1 {
             background-image: url('1.jpg');
@@ -384,7 +384,7 @@
 </header>
 
 <!-- ====== Параллакс 1 ====== -->
-<div class="parallax parallax-1"></div>
+<div class="parallax" data-speed="0.3" style="background-image: url('1.jpg');"></div>
 
 <!-- ====== Секция: Обо мне (карусель) ====== -->
 <section class="section" id="about-section">
@@ -409,7 +409,7 @@
 </section>
 
 <!-- ====== Параллакс 2 ====== -->
-<div class="parallax parallax-2"></div>
+<div class="parallax" data-speed="0.5" style="background-image: url('2.jpg');"></div>
 
 <!-- ====== Секция: Цены (карусель) и способы оплаты ====== -->
 <section class="section pricing" id="pricing-section">
