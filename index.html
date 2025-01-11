@@ -130,23 +130,12 @@
 
         /* ====== Параллакс (если нужно) ====== */
         .parallax {
-            position: relative;
-            height: 50vh;
-            overflow: hidden;
-            z-index: 1;
-        }
-        .parallax::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 150%;
-            background-image: inherit;
-            background-size: cover;
-            background-position: center;
-            transform: translateY(-10%);
-            will-change: transform;
+          height: 60vh;
+          background-image: url('1.jpg');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-attachment: fixed; /* <-- фиксируем фон */
         }
         .parallax-1 {
             background-image: url('1.jpg');
