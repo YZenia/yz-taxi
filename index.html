@@ -372,7 +372,11 @@
             font-weight: bold;
             text-decoration: underline;
         }
-
+        @supports (-webkit-overflow-scrolling: touch) {
+          .parallax {
+            background-attachment: scroll !important; /* или другое */
+          }
+        }
         /* ====== Адаптивность ====== */
         @media (max-width: 768px) {
             header h1 {
