@@ -75,11 +75,22 @@
         .parallax {
             position: relative;
             height: 50vh;
-            background-position: center;
+            overflow: hidden;
+        }
+        .parallax::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 150%; /* Увеличиваем высоту для эффекта */
+            background-image: inherit;
             background-size: cover;
-            background-repeat: no-repeat;
+            background-position: center;
+            transform: translateY(-10%);
             will-change: transform;
         }
+
 
         .parallax-1 {
             background-image: url('1.jpg');
@@ -667,6 +678,15 @@
         renderAboutSlide();
         renderPriceSlide();
     }
+        document.addEventListener('scroll', () => {
+            const parallaxElements = document.querySelectorAll('.parallax::before');
+            const scrollPosition = window.scrollY;
+        
+            parallaxElements.forEach((el) => {
+                const speed = el.dataset.speed || 0.5; // Установите скорость параллакса через data-атрибут
+                el.style.transform = `translateY(${scrollPosition * speed}px)`;
+            });
+        });
 
     function setLanguage(lang) {
         const t = translations[lang];
