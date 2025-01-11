@@ -36,7 +36,7 @@
       background-repeat: no-repeat;
       background-size: cover;
       background-position: 50% 50%;
-      z-index: 0; /* частицы под всеми блоками */
+      z-index: 1; /* частицы под всеми блоками */
     }
 
     /* ---- stats.js ---- */
@@ -132,12 +132,7 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      background-attachment: fixed; /* фиксируем фон на десктопе */
-    
-      /* 3D-хаки */
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
-      -webkit-backface-visibility: hidden;
+
     }
     .parallax-1 {
       background-image: url('1.jpg');
