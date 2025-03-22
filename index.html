@@ -255,7 +255,7 @@
     }
     /* ==== Светящийся ореол с плавной сменой цветов ==== */
     /* Общая форма и поведение */
-    .payment-icon img {
+      .payment-icon img {
       width: 50px;
       height: auto;
       border-radius: 10px;
@@ -264,33 +264,44 @@
       filter: drop-shadow(0 0 0 transparent);
     }
 
-    /* Blik круглая */
     .payment-icon img[alt="Blik"] {
       border-radius: 50%;
     }
 
-    /* Glow visible (контур) */
+    /* Включаем glow при попадании в зону видимости */
     .payment-icon.glow-visible img {
-      animation: pulse-glow-outline 3s ease-in-out infinite;
+      animation-duration: 3s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
     }
 
-    /* Индивидуальные цвета свечения */
+    /* Цвет 1: CYAN */
     .payment-icon.glow-cyan.glow-visible img {
-      filter: drop-shadow(0 0 6px #0ff);
+      animation-name: glow-cyan;
     }
-    .payment-icon.glow-magenta.glow-visible img {
-      filter: drop-shadow(0 0 6px #f0f);
-    }
-    .payment-icon.glow-yellow.glow-visible img {
-      filter: drop-shadow(0 0 6px #ff0);
+    @keyframes glow-cyan {
+      0%, 100% { filter: drop-shadow(0 0 2px transparent); }
+      50%     { filter: drop-shadow(0 0 6px #0ff); }
     }
 
-    /* Пульсация тени */
-    @keyframes pulse-glow-outline {
-      0%   { filter: drop-shadow(0 0 3px transparent); }
-      50%  { filter: drop-shadow(0 0 6px currentColor); }
-      100% { filter: drop-shadow(0 0 3px transparent); }
+    /* Цвет 2: MAGENTA */
+    .payment-icon.glow-magenta.glow-visible img {
+      animation-name: glow-magenta;
     }
+    @keyframes glow-magenta {
+      0%, 100% { filter: drop-shadow(0 0 2px transparent); }
+      50%     { filter: drop-shadow(0 0 6px #f0f); }
+    }
+
+    /* Цвет 3: YELLOW */
+    .payment-icon.glow-yellow.glow-visible img {
+      animation-name: glow-yellow;
+    }
+    @keyframes glow-yellow {
+      0%, 100% { filter: drop-shadow(0 0 2px transparent); }
+      50%     { filter: drop-shadow(0 0 6px #ff0); }
+    }
+
 
 
 
@@ -702,11 +713,11 @@ const translations = {
     quoteTitle: "Cytat z przejazdu",
     pricingTitle: "Cennik",
     priceSlides: [
-      "3 zł za kilometr!",
+      "2 zł za kilometr!",
       "1 godzina lub ~20km. Koszt: 50 zł. Limit czasu: 1 godz.",
-      "4 godziny lub ~250km. Koszt: 400 zł. +1 zł za km dodatkowy.",
-      "Pełen dzień (Warszawa): 8h, 300km. Koszt: 550 zł. +1 zł za km.",
-      "Pełen dzień (dalekie trasy): 8h, 500km. Koszt: 800 zł. +1 zł za km."
+      "4 godziny lub ~250km. Koszt: 400 zł. +1 zł/km za extra km.",
+      "Pełen dzień (Warszawa): 8h, 300km. Koszt: 550 zł. +1 zł/km za extra km.",
+      "Pełen dzień (dalekie trasy): 8h, 500km. Koszt: 800 zł. +1 zł/km za extra km."
     ],
     paymentTitle: "Metody płatności",
     contactTitle: "Kontakt",
@@ -736,11 +747,11 @@ const translations = {
     quoteTitle: "Цитата поездки",
     pricingTitle: "Цены",
     priceSlides: [
-      "3 zł за километр!",
+      "2 zł за километр!",
       "Поездка на 1 час (~20 км). Стоимость 50 zł. Лимит времени: 1 час.",
-      "Поездка 4 часа (~250 км). Стоимость: 400 zł. +1 zł за км сверх.",
-      "Целый день (по Варшаве): 8 часов, 300 км. 550 zł. +1 zł за км.",
-      "Целый день (дальние поездки): 8 часов, 500 км. 800 zł. +1 zł за км."
+      "Поездка 4 часа (~250 км). Стоимость: 400 zł. больше км. то +1 zł за км.",
+      "Целый день (по Варшаве): 8 часов, 300 км. 550 zł. больше км. то +1 zł за км.",
+      "Целый день (дальние поездки): 8 часов, 500 км. 800 zł. больше км. то +1 zł за км."
     ],
     paymentTitle: "Способы оплаты",
     contactTitle: "Связаться",
