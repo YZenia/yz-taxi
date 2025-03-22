@@ -885,20 +885,6 @@ function copyToClipboard(value) {
     alert('Copied: ' + value);
   });
 }
-//анимация пкльсации при скроле иконок оплаты
-const paymentImages = document.querySelectorAll('.payment-methods img');
-
-const glowObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('glow-visible');
-    } else {
-      entry.target.classList.remove('glow-visible');
-    }
-  });
-}, { threshold: 0.3 });
-
-paymentImages.forEach(img => glowObserver.observe(img));
 // Анимация «печати» при скролле
 const buttonsSection = document.getElementById('contact-section');
 const mapButton      = document.getElementById('map-button');
@@ -985,6 +971,22 @@ window.addEventListener('DOMContentLoaded', () => {
   // Запускаем с английской версии (или любой другой)
   changeLanguage('en');
 });
+
+  // Включение glow-анимации при появлении payment-icons
+  const paymentImages = document.querySelectorAll('.payment-methods img');
+
+  const glowObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('glow-visible');
+      } else {
+        entry.target.classList.remove('glow-visible');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  paymentImages.forEach(img => glowObserver.observe(img));
+
 </script>
 </body>
 </html>
