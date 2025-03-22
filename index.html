@@ -253,34 +253,47 @@
       gap: 30px;
       margin-top: 30px;
     }
-    .payment-methods img {
+    .payment-icon {
       position: relative;
-      width: 50px;
-      border-radius: 10px;
+      display: inline-block;
+      border-radius: 12px;
       z-index: 1;
-      cursor: pointer;
       transition: transform 0.3s;
+      cursor: pointer;
+    }
+    .payment-icon img {
+      width: 50px;
+      height: auto;
+      border-radius: 10px;
+      display: block;
     }
 
-    .payment-methods img::after {
+    .payment-icon::after {
       content: "";
       position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
+      top: -15px;
+      left: -15px;
+      right: -15px;
+      bottom: -15px;
       border-radius: 50%;
       background: radial-gradient(circle, #0ff, #f0f, #ff0);
       opacity: 0;
       z-index: -1;
-      filter: blur(15px);
+      filter: blur(20px);
       transition: opacity 0.5s, transform 0.5s;
     }
 
-    .payment-methods img.glow-visible::after {
+    .payment-icon.glow-visible::after {
       animation: glow-pulse 2s infinite;
       opacity: 0.6;
     }
+
+    @keyframes glow-pulse {
+      0%   { transform: scale(1); opacity: 0.4; }
+      50%  { transform: scale(1.4); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.4; }
+    }
+
 
 
 
@@ -515,9 +528,15 @@
   </div>
   <h3 id="payment-title">Payment Methods</h3>
   <div class="payment-methods">
-    <img src="card.png" alt="Card" onclick="showPaymentPopup('card')">
-    <img src="pay.png" alt="Cash" onclick="showPaymentPopup('cash')">
-    <img src="blik.jpg" alt="Blik" onclick="showPaymentPopup('blik')">
+    <div class="payment-icon" onclick="showPaymentPopup('card')">
+      <img src="card.png" alt="Card">
+    </div>
+    <div class="payment-icon" onclick="showPaymentPopup('cash')">
+      <img src="pay.png" alt="Cash">
+    </div>
+    <div class="payment-icon" onclick="showPaymentPopup('blik')">
+      <img src="blik.jpg" alt="Blik">
+    </div>
   </div>
 </section>
 
