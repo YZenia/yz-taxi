@@ -255,67 +255,43 @@
     }
     /* ==== Светящийся ореол с плавной сменой цветов ==== */
     /* Общая форма и поведение */
-    .payment-icon {
-      position: relative;
-      display: inline-block;
-      border-radius: 12px;
-      z-index: 1;
-      transition: transform 0.3s;
-      cursor: pointer;
-    }
-
     .payment-icon img {
       width: 50px;
       height: auto;
       border-radius: 10px;
       display: block;
-      position: relative;
-      z-index: 2;
+      transition: filter 0.3s ease;
+      filter: drop-shadow(0 0 0 transparent);
     }
 
-    /* Круглая иконка только для Blik */
+    /* Blik круглая */
     .payment-icon img[alt="Blik"] {
       border-radius: 50%;
     }
 
-    /* Базовое свечение */
-    .payment-icon::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: inherit;
-      filter: blur(3px);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      z-index: 1;
+    /* Glow visible (контур) */
+    .payment-icon.glow-visible img {
+      animation: pulse-glow-outline 3s ease-in-out infinite;
     }
 
-    /* Активация свечения */
-    .payment-icon.glow-visible::before {
-      opacity: 0.5;
-      animation: glow-color-pulse 4s ease-in-out infinite;
+    /* Индивидуальные цвета свечения */
+    .payment-icon.glow-cyan.glow-visible img {
+      filter: drop-shadow(0 0 6px #0ff);
+    }
+    .payment-icon.glow-magenta.glow-visible img {
+      filter: drop-shadow(0 0 6px #f0f);
+    }
+    .payment-icon.glow-yellow.glow-visible img {
+      filter: drop-shadow(0 0 6px #ff0);
     }
 
-    /* Индивидуальные цвета */
-    .payment-icon.glow-cyan::before {
-      background: rgba(0, 255, 255, 0.6);
-    }
-    .payment-icon.glow-magenta::before {
-      background: rgba(255, 0, 255, 0.6);
-    }
-    .payment-icon.glow-yellow::before {
-      background: rgba(255, 255, 0, 0.6);
+    /* Пульсация тени */
+    @keyframes pulse-glow-outline {
+      0%   { filter: drop-shadow(0 0 3px transparent); }
+      50%  { filter: drop-shadow(0 0 6px currentColor); }
+      100% { filter: drop-shadow(0 0 3px transparent); }
     }
 
-    /* Плавное мигание */
-    @keyframes glow-color-pulse {
-      0%   { opacity: 0.3; transform: scale(1); }
-      50%  { opacity: 0.6; transform: scale(1.05); }
-      100% { opacity: 0.3; transform: scale(1); }
-    }
 
 
 
