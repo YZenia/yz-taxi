@@ -989,19 +989,20 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
   // Включение glow-анимации при появлении payment-icons
-  const paymentImages = document.querySelectorAll('.payment-methods img');
+const paymentIcons = document.querySelectorAll('.payment-icon');
 
-  const glowObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('glow-visible');
-      } else {
-        entry.target.classList.remove('glow-visible');
-      }
-    });
-  }, { threshold: 0.3 });
+const glowObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('glow-visible');
+    } else {
+      entry.target.classList.remove('glow-visible');
+    }
+  });
+}, { threshold: 0.3 });
 
-  paymentImages.forEach(img => glowObserver.observe(img));
+paymentIcons.forEach(icon => glowObserver.observe(icon));
+
 
 </script>
 </body>
