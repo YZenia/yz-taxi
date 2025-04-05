@@ -55,6 +55,38 @@
       background-position: 50% 50%;
       z-index: 1; /* частицы под всеми блоками */
     }
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .section {
+      will-change: opacity, margin-top;
+      transition: opacity 1s ease, margin-top 1s ease;
+      opacity: 0;
+      margin-top: 20px;
+    }
+
+    .section.visible {
+      opacity: 1;
+      margin-top: 0;
+    }
+
+    .parallax {
+      position: relative;
+      height: 60vh;
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      will-change: transform;
+      z-index: 0;
+    }
+
+    @supports (-webkit-overflow-scrolling: touch) {
+      .parallax {
+        background-attachment: scroll !important;
+      }
+    }
 
     /* ---- stats.js ---- */
     .count-particles {
