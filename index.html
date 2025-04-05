@@ -637,7 +637,7 @@
 particlesJS("particles-js", {
   "particles": {
     "number": {
-      "value":80,
+      "value":50,
       "density":{"enable":true,"value_area":800}
     },
     "color":{"value":"#ffffff"},
@@ -1044,6 +1044,19 @@ const glowObserver = new IntersectionObserver((entries) => {
 paymentIcons.forEach(icon => glowObserver.observe(icon));
 
 
+</script>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  // Ставим таймаут, чтобы дождаться рендера
+  setTimeout(() => {
+    // Сбрасываем скролл, а затем плавно двигаемся туда, куда нужно
+    window.scrollTo(0, 0);
+    // Если нужно якорь, то вызываем:
+    document.querySelector(location.hash)?.scrollIntoView({
+      behavior: 'smooth'
+    });
+  }, 50);
+});
 </script>
 </body>
 </html>
