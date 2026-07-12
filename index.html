@@ -1829,10 +1829,17 @@ async function loadSlots(dateString) {
 
   // Check locally submitted bookings
   const localBookings = JSON.parse(localStorage.getItem("taxi_local_bookings") || "{}");
+  const localTimes = JSON.parse(localStorage.getItem("taxi_local_bookings_times") || "{}");
+  const now = Date.now();
   if (localBookings[dateString]) {
     localBookings[dateString].forEach(slot => {
-      if (!occupiedSlots.includes(slot)) {
-        occupiedSlots.push(slot);
+      const key = `${dateString}_${slot}`;
+      const ts = localTimes[key] || 0;
+      // Only block locally if booked within the last 30 seconds (temporary fallback)
+      if (now - ts < 30000) {
+        if (!occupiedSlots.includes(slot)) {
+          occupiedSlots.push(slot);
+        }
       }
     });
   }
@@ -2426,8 +2433,14 @@ function showBookingSuccess(statusMsg, bookingId, payload) {
   if (!localBookings[selectedDateStr]) {
     localBookings[selectedDateStr] = [];
   }
-  localBookings[selectedDateStr].push(selectedTimeStr);
+  if (!localBookings[selectedDateStr].includes(selectedTimeStr)) {
+    localBookings[selectedDateStr].push(selectedTimeStr);
+  }
   localStorage.setItem("taxi_local_bookings", JSON.stringify(localBookings));
+
+  const localTimes = JSON.parse(localStorage.getItem("taxi_local_bookings_times") || "{}");
+  localTimes[`${selectedDateStr}_${selectedTimeStr}`] = Date.now();
+  localStorage.setItem("taxi_local_bookings_times", JSON.stringify(localTimes));
 
   // Initialize and save active booking status widget
   const activeBooking = {
