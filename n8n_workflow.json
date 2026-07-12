@@ -78,7 +78,7 @@
         "inlineKeyboard": {
           "rows": [
             {
-              "rowElms": [
+              "buttons": [
                 {
                   "text": "✅ Confirm",
                   "callback_data": "confirm:{{ $json.id }}"
@@ -90,7 +90,7 @@
               ]
             },
             {
-              "rowElms": [
+              "buttons": [
                 {
                   "text": "➕ Counter-Offer (+20 PLN)",
                   "callback_data": "counter:{{ $json.id }}:20"
