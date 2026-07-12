@@ -745,7 +745,13 @@
             "node": "Telegram: Alert Driver",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Telegram: Alert Driver": {
+      "main": [
+        [
           {
             "node": "Wait 10 Minutes",
             "type": "main",
