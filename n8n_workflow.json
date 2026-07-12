@@ -52,7 +52,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "INSERT INTO bookings (id, user_id, customer_name, customer_phone, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status) VALUES ('{{ $json.body.bookingId || $uuid }}', {{ $json.body.userId ? \"'\" + $json.body.userId + \"'\" : 'NULL' }}, '{{ $json.body.name }}', '{{ $json.body.phone }}', '{{ $json.body.date }}', '{{ $json.body.time }}', '{{ $json.body.pickup_address }}', '{{ $json.body.destination_address }}', {{ $json.body.estimated_distance }}, {{ $json.body.price }}, 'pending');",
+        "query": "INSERT INTO bookings (id, user_id, customer_name, customer_phone, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status) VALUES ('{{ $json.body.bookingId || $uuid }}', {{ $json.body.userId ? \"'\" + $json.body.userId + \"'\" : 'NULL' }}, '{{ $json.body.name }}', '{{ $json.body.phone }}', '{{ $json.body.date }}', '{{ $json.body.time }}', '{{ $json.body.pickup_address }}', '{{ $json.body.destination_address }}', {{ $json.body.estimated_distance }}, {{ $json.body.price }}, 'pending') RETURNING *;",
         "options": {}
       },
       "id": "d8a2ba63-47f7-4f96-8578-883c9182d1e4",
