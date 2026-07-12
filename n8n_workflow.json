@@ -676,6 +676,43 @@
           "name": "taxibook"
         }
       }
+    },
+    {
+      "parameters": {
+        "path": "bookings/slots",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "c4405cce-2d7a-4872-871e-c05f06d6a7a2",
+      "name": "Webhook: Get Slots",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1952,
+        4512
+      ],
+      "webhookId": "taxi-get-slots"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT booking_time FROM bookings WHERE booking_date = '{{ $json.query.date }}' AND status IN ('pending', 'confirmed', 'counter_offer');",
+        "options": {}
+      },
+      "id": "f5757a73-a36b-4caa-8a95-de67b759777c",
+      "name": "SQL: Fetch Slots",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2176,
+        4512
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "m0BW1GDkna5keKE9",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "connections": {
@@ -923,6 +960,17 @@
         [
           {
             "node": "Telegram: Send Test Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Get Slots": {
+      "main": [
+        [
+          {
+            "node": "SQL: Fetch Slots",
             "type": "main",
             "index": 0
           }

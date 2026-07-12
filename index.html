@@ -1137,7 +1137,7 @@ particlesJS("particles-js", {
 /* ==================================================
    0) API Integration Configuration (n8n Webhooks)
 ================================================== */
-const N8N_GET_SLOTS_URL = "";  // e.g., "https://your-server.com/webhook/bookings"
+const N8N_GET_SLOTS_URL = "https://jeff204-20204.mikrus.cloud/webhook/bookings/slots";  // e.g., "https://your-server.com/webhook/bookings"
 const N8N_BOOK_SLOT_URL = "https://jeff204-20204.mikrus.cloud/webhook/bookings";
 const N8N_GET_STATUS_URL = "https://jeff204-20204.mikrus.cloud/webhook/bookings/status";
 const N8N_ACTION_URL = "https://jeff204-20204.mikrus.cloud/webhook/bookings/action";
@@ -1806,7 +1806,15 @@ async function loadSlots(dateString) {
     try {
       const response = await fetch(`${N8N_GET_SLOTS_URL}?date=${dateString}`);
       if (response.ok) {
-        occupiedSlots = await response.json();
+        const rawSlots = await response.json();
+        if (Array.isArray(rawSlots)) {
+          occupiedSlots = rawSlots.map(item => {
+            if (typeof item === 'object' && item !== null) {
+              return item.booking_time || item.time;
+            }
+            return item;
+          }).filter(Boolean);
+        }
       } else {
         console.warn("n8n response not ok, falling back to mock data");
         occupiedSlots = getMockOccupiedSlots(dateString);
@@ -1874,17 +1882,8 @@ function renderSlots(occupiedSlots) {
 }
 
 function getMockOccupiedSlots(dateString) {
-  const hash = dateString.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const occupied = [];
-  
-  if (hash % 3 === 0) {
-    occupied.push("10:00", "11:00", "15:00", "19:00");
-  } else if (hash % 2 === 0) {
-    occupied.push("09:00", "14:00", "18:00", "21:00");
-  } else {
-    occupied.push("08:00", "13:00", "17:00", "20:00", "22:00");
-  }
-  return occupied;
+  // Disabling fake slots so the calendar only reflects real bookings
+  return [];
 }
 
 function openProfileModal() {
