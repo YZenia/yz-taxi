@@ -44,7 +44,7 @@
 
     /* ---- particles.js container ---- */
     #particles-js {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -54,6 +54,7 @@
       background-size: cover;
       background-position: 50% 50%;
       z-index: 1; /* частицы под всеми блоками */
+      pointer-events: none;
     }
     html {
       scroll-behavior: smooth;
@@ -1083,7 +1084,7 @@ particlesJS("particles-js", {
     }
   },
   "interactivity":{
-    "detect_on":"canvas",
+    "detect_on":"window",
     "events":{
       "onhover":{"enable":true,"mode":"repulse"},
       "onclick":{"enable":true,"mode":"push"},
@@ -1294,7 +1295,7 @@ const quotesPl = [
   "Podróż przywraca moc i miłość do życia.",
   "Nie cel, a droga jest celem.",
   "Gładka jazda może cię daleko zaprowadzić.",
-  "Szczęście to sposób podróżowania, a nie cel.",
+  "Szczęście to sposób podróżowania, а nie cel.",
   "Przygoda czeka tuż za rogiem!",
   "Dokądkolwiek idziesz, idź z całego serca.",
   "Dobrze rozpoczęte to w połowie zrobione."
