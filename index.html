@@ -2243,7 +2243,10 @@ async function submitBooking(event) {
     bookingData.price = 10.0 + bookingData.distance * rateDetails.baseRate;
   }
 
+  const bookingId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "booking-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
+
   const payload = {
+    bookingId: bookingId,
     date: selectedDateStr,
     time: selectedTimeStr,
     name: name,
@@ -2280,8 +2283,7 @@ async function submitBooking(event) {
       });
       
       if (response.ok) {
-        const res = await response.json().catch(() => ({}));
-        showBookingSuccess(statusMsg, res.bookingId, payload);
+        showBookingSuccess(statusMsg, bookingId, payload);
       } else {
         const errData = await response.json().catch(() => ({}));
         showBookingError(statusMsg, errData.error || "Server error");
