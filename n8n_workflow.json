@@ -73,29 +73,39 @@
     {
       "parameters": {
         "chatId": "429593682",
-        "text": "🚖 NEW RIDE REQUEST\n------------------------------------\n📅 Date: {{ $json.booking_date }}\n⏰ Time: {{ $json.booking_time }}\n👤 Client: {{ $json.customer_name }}\n📞 Phone: {{ $json.customer_phone }}\n\n📍 Pickup: {{ $json.pickup_address }}\n🏁 Destination: {{ $json.destination_address }}\nℹ️ Distance: {{ $json.estimated_distance }} km\n💵 Quoted Price: {{ $json.price }} PLN\n------------------------------------\nRespond within 10 minutes!",
+        "text": "=🚖 NEW RIDE REQUEST\n------------------------------------\n📅 Date: {{ $json.booking_date }}\n⏰ Time: {{ $json.booking_time }}\n👤 Client: {{ $json.customer_name }}\n📞 Phone: {{ $json.customer_phone }}\n\n📍 Pickup: {{ $json.pickup_address }}\n🏁 Destination: {{ $json.destination_address }}\nℹ️ Distance: {{ $json.estimated_distance }} km\n💵 Quoted Price: {{ $json.price }} PLN\n------------------------------------\nRespond within 10 minutes!",
         "replyMarkup": "inlineKeyboard",
         "inlineKeyboard": {
           "rows": [
             {
-              "buttons": [
-                {
-                  "text": "✅ Confirm",
-                  "callback_data": "confirm:{{ $json.id }}"
-                },
-                {
-                  "text": "❌ Decline",
-                  "callback_data": "decline:{{ $json.id }}"
-                }
-              ]
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ Confirm",
+                    "additionalFields": {
+                      "callback_data": "=confirm:{{ $json.id }}"
+                    }
+                  },
+                  {
+                    "text": "❌ Decline",
+                    "additionalFields": {
+                      "callback_data": "=decline:{{ $json.id }}"
+                    }
+                  }
+                ]
+              }
             },
             {
-              "buttons": [
-                {
-                  "text": "➕ Counter-Offer (+20 PLN)",
-                  "callback_data": "counter:{{ $json.id }}:20"
-                }
-              ]
+              "row": {
+                "buttons": [
+                  {
+                    "text": "➕ Counter-Offer (+20 PLN)",
+                    "additionalFields": {
+                      "callback_data": "=counter:{{ $json.id }}:20"
+                    }
+                  }
+                ]
+              }
             }
           ]
         },
