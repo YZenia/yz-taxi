@@ -879,10 +879,11 @@
     </div>
   </a>
     <h1 id="main-title">Y Z T A X I</h1>
-    <div class="language-switcher">
+    <div class="language-switcher" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
       <button onclick="changeLanguage('en')">EN</button>
       <button onclick="changeLanguage('pl')">PL</button>
       <button onclick="changeLanguage('ru')">RU</button>
+      <button id="profile-btn" onclick="openProfileModal()" style="border-color: #f0f; color: #f0f;">👤 Profile</button>
     </div>
 </header>
 
@@ -1012,6 +1013,54 @@
     </form>
     
     <div id="booking-status-message" style="margin-top: 15px; display: none; text-align: center; font-weight: bold;"></div>
+  </div>
+</div>
+
+<!-- ====== Модальное Окно Профиля и Истории ====== -->
+<div id="profile-modal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 500px; border-color: #f0f;">
+    <button class="close-btn" onclick="closeProfileModal()" style="border-color: #f0f; color: #f0f;">X</button>
+    <h3 id="profile-modal-title" style="background: linear-gradient(90deg, #f0f, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Your Profile</h3>
+    
+    <!-- Секция 1: Вход / Регистрация -->
+    <div id="auth-section">
+      <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 15px; text-align: left;" id="auth-notice">
+        You can use any nickname (Name & Surname) and password. No real credentials needed—just to protect and recover your ride history.
+      </p>
+      <form id="auth-form" onsubmit="submitAuth(event)">
+        <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+          <label for="auth-fullname" id="label-auth-fullname" style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #aaa;">Name & Surname</label>
+          <input type="text" id="auth-fullname" required placeholder="John Doe" style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; border-radius: 5px; color: #fff; box-sizing: border-box;">
+        </div>
+        <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+          <label for="auth-password" id="label-auth-password" style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #aaa;">Password / PIN</label>
+          <input type="password" id="auth-password" required placeholder="••••" style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; border-radius: 5px; color: #fff; box-sizing: border-box;">
+        </div>
+        <div class="form-group" id="auth-phone-group" style="margin-bottom: 15px; text-align: left;">
+          <label for="auth-phone" id="label-auth-phone" style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #aaa;">Phone Number (optional)</label>
+          <input type="tel" id="auth-phone" placeholder="+48 123 456 789" style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; border-radius: 5px; color: #fff; box-sizing: border-box;">
+        </div>
+        <button type="submit" class="submit-booking-btn" id="auth-submit-btn" style="margin-top: 15px;">Login / Register</button>
+      </form>
+      <div id="auth-status-message" style="margin-top: 15px; display: none; text-align: center; font-weight: bold;"></div>
+    </div>
+    
+    <!-- Секция 2: Профиль Авторизованного Пользователя -->
+    <div id="profile-section" style="display: none;">
+      <p style="margin-bottom: 5px; font-size: 1.1rem; font-weight: bold; text-align: left;">
+        <span id="profile-welcome">Welcome,</span> <span id="profile-user-name" style="color: #0ff;"></span>
+      </p>
+      <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 20px; text-align: left;">
+        <span id="profile-phone-label">Phone:</span> <span id="profile-user-phone" style="color: #fff;"></span>
+      </p>
+      
+      <h4 id="history-title" style="margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; text-align: left; font-weight: bold; color: #f0f;">Ride History</h4>
+      <div id="history-container" style="max-height: 200px; overflow-y: auto; font-size: 0.85rem; padding-right: 5px; text-align: left;">
+        <!-- Сюда вставляется история поездок -->
+      </div>
+      
+      <button onclick="logout()" class="submit-booking-btn" id="logout-btn" style="margin-top: 20px; border-color: #ff3366; color: #ff3366;">Log Out</button>
+    </div>
   </div>
 </div>
 
@@ -1147,6 +1196,8 @@ const N8N_GET_SLOTS_URL = "";  // e.g., "https://your-server.com/webhook/booking
 const N8N_BOOK_SLOT_URL = "";  // e.g., "https://your-server.com/webhook/bookings"
 const N8N_GET_STATUS_URL = ""; // e.g., "https://your-server.com/webhook/bookings/status"
 const N8N_ACTION_URL = "";     // e.g., "https://your-server.com/webhook/bookings/action"
+const N8N_AUTH_URL = "";       // e.g., "https://your-server.com/webhook/auth"
+const N8N_HISTORY_URL = "";    // e.g., "https://your-server.com/webhook/bookings/history"
 
 /* =========================
    2) Переводы и данные
@@ -1219,7 +1270,20 @@ const translations = {
     badgePending: "Pending Approval",
     badgeConfirmed: "Confirmed",
     badgeCounter: "Offer Received",
-    badgeRejected: "Declined"
+    badgeRejected: "Declined",
+    profileBtnText: "Profile",
+    profileModalTitle: "Your Profile",
+    authNotice: "You can use any nickname (Name & Surname) and password. No real credentials needed—just to protect and recover your ride history.",
+    labelAuthFullname: "Name & Surname",
+    labelAuthPassword: "Password / PIN",
+    labelAuthPhone: "Phone Number (optional)",
+    authSubmitBtn: "Login / Register",
+    profileWelcome: "Welcome,",
+    profilePhoneLabel: "Phone:",
+    historyTitle: "Ride History",
+    logoutBtn: "Log Out",
+    noHistory: "No rides yet.",
+    statusLabel: "Status:"
   },
   pl: {
     mainTitle: "Y Z T A X I",
@@ -1288,7 +1352,20 @@ const translations = {
     badgePending: "Oczekuje",
     badgeConfirmed: "Potwierdzony",
     badgeCounter: "Nowa Oferta",
-    badgeRejected: "Anulowany"
+    badgeRejected: "Anulowany",
+    profileBtnText: "Profil",
+    profileModalTitle: "Twój Profil",
+    authNotice: "Możesz użyć dowolnego pseudonimu (Imię i Nazwisko) oraz hasła. Prawdziwe dane nie są wymagane — służą jedynie do ochrony i odzyskiwania historii przejazdów.",
+    labelAuthFullname: "Imię i Nazwisko",
+    labelAuthPassword: "Hasło / PIN",
+    labelAuthPhone: "Numer Telefonu (opcjonalnie)",
+    authSubmitBtn: "Zaloguj / Zarejestruj",
+    profileWelcome: "Witaj,",
+    profilePhoneLabel: "Telefon:",
+    historyTitle: "Historia Przejazdów",
+    logoutBtn: "Wyloguj się",
+    noHistory: "Brak przejazdów.",
+    statusLabel: "Status:"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -1357,7 +1434,20 @@ const translations = {
     badgePending: "Ожидание",
     badgeConfirmed: "Подтвержден",
     badgeCounter: "Есть Предложение",
-    badgeRejected: "Отклонен"
+    badgeRejected: "Отклонен",
+    profileBtnText: "Профиль",
+    profileModalTitle: "Ваш Профиль",
+    authNotice: "Вы можете использовать любое имя, фамилию и пароль. Настоящие данные вводить не обязательно — это нужно только для защиты и восстановления истории поездок.",
+    labelAuthFullname: "Имя и Фамилия",
+    labelAuthPassword: "Пароль / PIN",
+    labelAuthPhone: "Номер Телефона (опционально)",
+    authSubmitBtn: "Войти / Создать",
+    profileWelcome: "Добро пожаловать,",
+    profilePhoneLabel: "Телефон:",
+    historyTitle: "История Поездок",
+    logoutBtn: "Выйти",
+    noHistory: "Поездок пока нет.",
+    statusLabel: "Статус:"
   }
 };
 
@@ -1458,6 +1548,25 @@ function setLanguage(lang) {
     document.getElementById('label-pickup').textContent = t.labelPickup;
     document.getElementById('label-destination').textContent = t.labelDestination;
     document.getElementById('btn-submit-booking').textContent = t.btnSubmitBooking;
+  }
+
+  // Profile translations
+  if (document.getElementById('profile-btn')) {
+    document.getElementById('profile-btn').textContent = "👤 " + t.profileBtnText;
+  }
+  if (document.getElementById('profile-modal-title')) {
+    document.getElementById('profile-modal-title').textContent = t.profileModalTitle;
+    document.getElementById('auth-notice').textContent = t.authNotice;
+    document.getElementById('label-auth-fullname').textContent = t.labelAuthFullname;
+    document.getElementById('label-auth-password').textContent = t.labelAuthPassword;
+    if (document.getElementById('label-auth-phone')) {
+      document.getElementById('label-auth-phone').textContent = t.labelAuthPhone;
+    }
+    document.getElementById('auth-submit-btn').textContent = t.authSubmitBtn;
+    document.getElementById('profile-welcome').textContent = t.profileWelcome;
+    document.getElementById('profile-phone-label').textContent = t.profilePhoneLabel;
+    document.getElementById('history-title').textContent = t.historyTitle;
+    document.getElementById('logout-btn').textContent = t.logoutBtn;
   }
 
   // Calculator panel translations
@@ -1630,6 +1739,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderPriceSlide();
   // Запускаем с английской версии (или любой другой)
   changeLanguage('en');
+  initUserAuth();
 });
 
   // Включение glow-анимации при появлении payment-icons
@@ -1815,6 +1925,266 @@ function getMockOccupiedSlots(dateString) {
   return occupied;
 }
 
+function openProfileModal() {
+  const modal = document.getElementById("profile-modal");
+  if (!modal) return;
+  
+  modal.classList.add("show");
+  
+  const currentUserJson = localStorage.getItem("currentUser");
+  if (currentUserJson) {
+    try {
+      const currentUser = JSON.parse(currentUserJson);
+      document.getElementById("auth-section").style.display = "none";
+      document.getElementById("profile-section").style.display = "block";
+      document.getElementById("profile-user-name").textContent = currentUser.fullName;
+      document.getElementById("profile-user-phone").textContent = currentUser.phone || "-";
+      loadRideHistory(currentUser.id);
+    } catch (e) {
+      showLoggedOutUI();
+    }
+  } else {
+    showLoggedOutUI();
+  }
+}
+
+function showLoggedOutUI() {
+  document.getElementById("auth-section").style.display = "block";
+  document.getElementById("profile-section").style.display = "none";
+  const authForm = document.getElementById("auth-form");
+  if (authForm) authForm.reset();
+  const statusMsg = document.getElementById("auth-status-message");
+  if (statusMsg) {
+    statusMsg.style.display = "none";
+    statusMsg.textContent = "";
+  }
+}
+
+function closeProfileModal() {
+  const modal = document.getElementById("profile-modal");
+  if (modal) {
+    modal.classList.remove("show");
+  }
+}
+
+async function submitAuth(event) {
+  event.preventDefault();
+  const statusMsg = document.getElementById("auth-status-message");
+  const submitBtn = document.getElementById("auth-submit-btn");
+  if (!statusMsg || !submitBtn) return;
+  
+  const fullName = document.getElementById("auth-fullname").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const phone = document.getElementById("auth-phone").value.trim();
+  
+  statusMsg.style.display = "block";
+  statusMsg.style.color = "#0ff";
+  statusMsg.textContent = currentLanguage === "ru" ? "Авторизация..." : (currentLanguage === "pl" ? "Autoryzacja..." : "Authorizing...");
+  submitBtn.disabled = true;
+  
+  if (N8N_AUTH_URL) {
+    try {
+      const response = await fetch(N8N_AUTH_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, password, phone })
+      });
+      
+      if (response.ok) {
+        const res = await response.json();
+        if (res.success) {
+          localStorage.setItem("currentUser", JSON.stringify({
+            id: res.userId,
+            fullName: res.fullName,
+            phone: res.phone
+          }));
+          
+          // Pre-fill booking form
+          const nameInput = document.getElementById("client-name");
+          const phoneInput = document.getElementById("client-phone");
+          if (nameInput) nameInput.value = res.fullName;
+          if (phoneInput && res.phone) phoneInput.value = res.phone;
+          
+          statusMsg.style.color = "#0f0";
+          statusMsg.textContent = currentLanguage === "ru" ? "Успешно!" : (currentLanguage === "pl" ? "Sukces!" : "Success!");
+          
+          setTimeout(() => {
+            document.getElementById("auth-section").style.display = "none";
+            document.getElementById("profile-section").style.display = "block";
+            document.getElementById("profile-user-name").textContent = res.fullName;
+            document.getElementById("profile-user-phone").textContent = res.phone || "-";
+            loadRideHistory(res.userId);
+            
+            // Clean up status message
+            statusMsg.style.display = "none";
+          }, 1000);
+        } else {
+          statusMsg.style.color = "#ff3366";
+          statusMsg.textContent = res.message || "Error";
+        }
+      } else {
+        statusMsg.style.color = "#ff3366";
+        statusMsg.textContent = "Server error";
+      }
+    } catch (e) {
+      console.error(e);
+      statusMsg.style.color = "#ff3366";
+      statusMsg.textContent = "Connection error";
+    } finally {
+      submitBtn.disabled = false;
+    }
+  } else {
+    // Mock local success if URL not configured
+    setTimeout(() => {
+      const mockUserId = "mock-user-" + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem("currentUser", JSON.stringify({
+        id: mockUserId,
+        fullName: fullName,
+        phone: phone || "+48 111 222 333"
+      }));
+      
+      const nameInput = document.getElementById("client-name");
+      const phoneInput = document.getElementById("client-phone");
+      if (nameInput) nameInput.value = fullName;
+      if (phoneInput) phoneInput.value = phone || "+48 111 222 333";
+      
+      statusMsg.style.color = "#0f0";
+      statusMsg.textContent = "Success (Simulated)";
+      
+      setTimeout(() => {
+        document.getElementById("auth-section").style.display = "none";
+        document.getElementById("profile-section").style.display = "block";
+        document.getElementById("profile-user-name").textContent = fullName;
+        document.getElementById("profile-user-phone").textContent = phone || "+48 111 222 333";
+        loadRideHistory(mockUserId);
+        
+        statusMsg.style.display = "none";
+      }, 1000);
+      submitBtn.disabled = false;
+    }, 1000);
+  }
+}
+
+async function loadRideHistory(userId) {
+  const container = document.getElementById("history-container");
+  if (!container) return;
+  
+  container.innerHTML = `<p style="color: #aaa;">${currentLanguage === "ru" ? "Загрузка истории..." : (currentLanguage === "pl" ? "Ładowanie historii..." : "Loading history...")}</p>`;
+  
+  if (N8N_HISTORY_URL) {
+    try {
+      const response = await fetch(`${N8N_HISTORY_URL}?userId=${userId}`);
+      if (response.ok) {
+        const bookings = await response.json();
+        renderHistoryList(bookings, container);
+      } else {
+        container.innerHTML = `<p style="color: #ff3366;">Error loading history</p>`;
+      }
+    } catch (e) {
+      console.error(e);
+      container.innerHTML = `<p style="color: #ff3366;">Connection error</p>`;
+    }
+  } else {
+    // Mock history if URL not configured
+    setTimeout(() => {
+      const mockHistory = [
+        {
+          id: "mock-1",
+          booking_date: "2026-07-10",
+          booking_time: "14:00",
+          pickup_address: "Warsaw Central Station",
+          destination_address: "Chopin Airport",
+          price: 50.0,
+          status: "confirmed"
+        },
+        {
+          id: "mock-2",
+          booking_date: "2026-07-08",
+          booking_time: "20:00",
+          pickup_address: "Nowy Świat 1",
+          destination_address: "Krakowskie Przedmieście 10",
+          price: 25.0,
+          status: "rejected"
+        }
+      ];
+      renderHistoryList(mockHistory, container);
+    }, 800);
+  }
+}
+
+function renderHistoryList(bookings, container) {
+  const t = translations[currentLanguage];
+  if (!bookings || bookings.length === 0) {
+    container.innerHTML = `<p style="color: #aaa; text-align: center;">${t.noHistory || "No rides yet."}</p>`;
+    return;
+  }
+  
+  let html = `<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">`;
+  bookings.forEach(b => {
+    const datePart = b.booking_date.split("T")[0];
+    const formattedDate = datePart.split("-").reverse().join(".");
+    let statusColor = "#aaa";
+    let statusText = b.status;
+    
+    if (b.status === "confirmed") {
+      statusColor = "#0f0";
+      statusText = t.badgeConfirmed || "Confirmed";
+    } else if (b.status === "rejected") {
+      statusColor = "#ff3366";
+      statusText = t.badgeRejected || "Declined";
+    } else if (b.status === "pending") {
+      statusColor = "#0ff";
+      statusText = t.badgePending || "Pending";
+    } else if (b.status === "counter_offer") {
+      statusColor = "#f0f";
+      statusText = t.badgeCounter || "New Offer";
+    }
+    
+    const finalPrice = b.proposed_price || b.price;
+    
+    html += `
+      <tr style="border-bottom: 1px solid #222; vertical-align: top;">
+        <td style="padding: 8px 0; color: #fff;">
+          <strong>📅 ${formattedDate} &nbsp; ⏰ ${b.booking_time}</strong><br>
+          <span style="font-size: 0.75rem; color: #888;">📍 ${b.pickup_address} → 🏁 ${b.destination_address}</span>
+        </td>
+        <td style="padding: 8px 0; text-align: right; white-space: nowrap; width: 80px;">
+          <strong style="color: #0ff;">${finalPrice} PLN</strong><br>
+          <span style="font-size: 0.75rem; color: ${statusColor}; font-weight: bold;">${statusText}</span>
+        </td>
+      </tr>
+    `;
+  });
+  html += `</table>`;
+  container.innerHTML = html;
+}
+
+function logout() {
+  localStorage.removeItem("currentUser");
+  showLoggedOutUI();
+  
+  // Clear name/phone from booking form
+  const nameInput = document.getElementById("client-name");
+  const phoneInput = document.getElementById("client-phone");
+  if (nameInput) nameInput.value = "";
+  if (phoneInput) phoneInput.value = "";
+}
+
+function initUserAuth() {
+  const currentUserJson = localStorage.getItem("currentUser");
+  if (currentUserJson) {
+    try {
+      const currentUser = JSON.parse(currentUserJson);
+      const nameInput = document.getElementById("client-name");
+      const phoneInput = document.getElementById("client-phone");
+      if (nameInput && currentUser.fullName) nameInput.value = currentUser.fullName;
+      if (phoneInput && currentUser.phone) phoneInput.value = currentUser.phone;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}
+
 function openBookingModal(date, time) {
   selectedDateStr = date;
   selectedTimeStr = time;
@@ -1883,6 +2253,16 @@ async function submitBooking(event) {
     estimated_distance: bookingData.distance,
     price: bookingData.price
   };
+
+  const currentUserJson = localStorage.getItem("currentUser");
+  if (currentUserJson) {
+    try {
+      const currentUser = JSON.parse(currentUserJson);
+      if (currentUser.id) {
+        payload.userId = currentUser.id;
+      }
+    } catch (e) {}
+  }
   
   statusMsg.style.display = "block";
   statusMsg.style.color = "#0ff";
