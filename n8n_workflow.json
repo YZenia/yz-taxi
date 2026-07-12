@@ -2,13 +2,13 @@
   "nodes": [
     {
       "parameters": {},
-      "id": "28845c80-7a01-4153-8b75-6750bcac3733",
+      "id": "1219a621-f044-4d2d-bd8d-28a0ed87c555",
       "name": "Manual Trigger: Setup",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -576,
-        1456
+        1952,
+        2752
       ]
     },
     {
@@ -17,13 +17,13 @@
         "query": "CREATE TABLE IF NOT EXISTS booking_users (\n    id VARCHAR(36) PRIMARY KEY,\n    full_name VARCHAR(150) UNIQUE NOT NULL,\n    password_hash VARCHAR(255) NOT NULL,\n    phone VARCHAR(50),\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE TABLE IF NOT EXISTS bookings (\n    id VARCHAR(36) PRIMARY KEY,\n    user_id VARCHAR(36) REFERENCES booking_users(id),\n    customer_name VARCHAR(100) NOT NULL,\n    customer_phone VARCHAR(50) NOT NULL,\n    booking_date DATE NOT NULL,\n    booking_time VARCHAR(5) NOT NULL,\n    pickup_address TEXT NOT NULL,\n    destination_address TEXT NOT NULL,\n    estimated_distance REAL NOT NULL,\n    price REAL NOT NULL,\n    status VARCHAR(30) DEFAULT 'pending',\n    proposed_price REAL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE INDEX IF NOT EXISTS idx_bookings_date_status ON bookings(booking_date, status);\nCREATE INDEX IF NOT EXISTS idx_bookings_user_id ON bookings(user_id);",
         "options": {}
       },
-      "id": "c72e4685-6af5-434c-997c-73d56817630c",
+      "id": "ced8d78b-a093-4078-81d0-7c18bbba9c92",
       "name": "SQL: Setup Tables",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -352,
-        1456
+        2176,
+        2752
       ],
       "credentials": {
         "postgres": {
@@ -39,13 +39,13 @@
         "responseMode": "lastNode",
         "options": {}
       },
-      "id": "7737a0ac-2bc3-470f-8fe7-7a98eba0442a",
+      "id": "5ca4c8be-b3eb-4508-ab2f-a58bae640533",
       "name": "Webhook: Create Booking",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -576,
-        1808
+        1952,
+        3104
       ],
       "webhookId": "taxi-create-booking"
     },
@@ -55,13 +55,13 @@
         "query": "INSERT INTO bookings (id, user_id, customer_name, customer_phone, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status) VALUES ('{{ $json.body.bookingId || $uuid }}', {{ $json.body.userId ? \"'\" + $json.body.userId + \"'\" : 'NULL' }}, '{{ $json.body.name }}', '{{ $json.body.phone }}', '{{ $json.body.date }}', '{{ $json.body.time }}', '{{ $json.body.pickup_address }}', '{{ $json.body.destination_address }}', {{ $json.body.estimated_distance }}, {{ $json.body.price }}, 'pending');",
         "options": {}
       },
-      "id": "fcfb0fec-6685-4e05-bcfe-d4420c4ae5b7",
+      "id": "d8a2ba63-47f7-4f96-8578-883c9182d1e4",
       "name": "SQL: Save Pending Booking",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -352,
-        1808
+        2176,
+        3104
       ],
       "credentials": {
         "postgres": {
@@ -75,45 +75,21 @@
         "chatId": "429593682",
         "text": "=🚖 NEW RIDE REQUEST\n------------------------------------\n📅 Date: {{ $('Webhook: Create Booking').item.json.body.date }}\n⏰ Time: {{ $('Webhook: Create Booking').item.json.body.time }}\n👤 Client: {{ $('Webhook: Create Booking').item.json.body.name }}\n📞 Phone: {{ $('Webhook: Create Booking').item.json.body.phone }}\n\n📍 Pickup: {{ $('Webhook: Create Booking').item.json.body.pickup_address }}\n🏁 Destination: {{ $('Webhook: Create Booking').item.json.body.destination_address }}\nℹ️ Distance: {{ $('Webhook: Create Booking').item.json.body.estimated_distance }} km\n💵 Quoted Price: {{ $('Webhook: Create Booking').item.json.body.price }} PLN\n------------------------------------\nRespond within 10 minutes!",
         "replyMarkup": "inlineKeyboard",
-        "keyboardElm": {
-          "rows": [
-            {
-              "rowElms": [
-                {
-                  "text": "✅ Confirm",
-                  "callback_data": "={{ \"confirm:\" + $('Webhook: Create Booking').item.json.body.bookingId }}"
-                },
-                {
-                  "text": "❌ Decline",
-                  "callback_data": "={{ \"decline:\" + $('Webhook: Create Booking').item.json.body.bookingId }}"
-                }
-              ]
-            },
-            {
-              "rowElms": [
-                {
-                  "text": "➕ Counter-Offer (+20 PLN)",
-                  "callback_data": "={{ \"counter:\" + $('Webhook: Create Booking').item.json.body.bookingId + \":20\" }}"
-                }
-              ]
-            }
-          ]
-        },
         "additionalFields": {}
       },
-      "id": "69538aee-9387-496e-8367-3c1f5c803b7e",
+      "id": "b916bf74-e0ef-472e-b8b4-761ca9012cb9",
       "name": "Telegram: Alert Driver",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -144,
-        1808
+        2384,
+        3104
       ],
       "webhookId": "59fa92a0-f003-4d45-bd67-310c7ebe0b16",
       "credentials": {
         "telegramApi": {
-          "id": "36lh16wT2FcjOJvt",
-          "name": "Telegram account"
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
         }
       }
     },
@@ -122,13 +98,13 @@
         "amount": 10,
         "unit": "minutes"
       },
-      "id": "4719aed7-2ec1-4cb0-b4d9-8a286142cf13",
+      "id": "e784d6e6-3e93-46c4-ad1e-0827a2ff4c49",
       "name": "Wait 10 Minutes",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -144,
-        1648
+        2384,
+        2944
       ],
       "webhookId": "taxi-wait-timeout"
     },
@@ -138,13 +114,13 @@
         "query": "SELECT status FROM bookings WHERE id = '{{ $('Webhook: Create Booking').item.json.body.bookingId }}';",
         "options": {}
       },
-      "id": "d9ab4901-8768-4f23-84b7-b1a35b5572a2",
+      "id": "b2022ab8-cfa6-4cd4-9e04-4ee07abc32ae",
       "name": "SQL: Check Status (Timeout)",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        96,
-        1648
+        2624,
+        2944
       ],
       "credentials": {
         "postgres": {
@@ -177,13 +153,13 @@
         },
         "options": {}
       },
-      "id": "73f3bda7-05f3-434b-8b53-16622acef466",
+      "id": "761ee19f-b166-4a90-9362-aa629d00b9f8",
       "name": "If Still Pending?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        304,
-        1648
+        2832,
+        2944
       ]
     },
     {
@@ -192,13 +168,13 @@
         "query": "UPDATE bookings SET status = 'rejected' WHERE id = '{{ $('Webhook: Create Booking').item.json.body.bookingId }}';",
         "options": {}
       },
-      "id": "f443cbc7-25c7-40a0-802c-5b9b0fca5bf5",
+      "id": "9cdb57fa-ff28-4711-8585-92336a0e58fb",
       "name": "SQL: Auto-Reject",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        528,
-        1600
+        3056,
+        2896
       ],
       "credentials": {
         "postgres": {
@@ -213,19 +189,19 @@
         "text": "=⏳ Booking request for {{ $('Webhook: Create Booking').item.json.body.name }} ({{ $('Webhook: Create Booking').item.json.body.time }}) expired (10 min timeout) and has been automatically declined.",
         "additionalFields": {}
       },
-      "id": "ca2cefc2-ba40-45b6-99ef-7412ca19fe13",
+      "id": "32dc30dd-e864-4ca2-a51c-19d04a18c53b",
       "name": "Telegram: Alert Timeout",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        752,
-        1600
+        3280,
+        2896
       ],
       "webhookId": "086874ec-b5b1-473e-a975-483ab882e21c",
       "credentials": {
         "telegramApi": {
-          "id": "36lh16wT2FcjOJvt",
-          "name": "Telegram account"
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
         }
       }
     },
@@ -236,19 +212,19 @@
         ],
         "additionalFields": {}
       },
-      "id": "3cadfbd6-f8fc-434b-867a-9fd9a49eed9b",
+      "id": "b69feccd-1968-48a9-a898-039c46963f13",
       "name": "Telegram: Driver Callback",
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.1,
       "position": [
-        -576,
-        2064
+        1952,
+        3360
       ],
       "webhookId": "taxi-driver-callback",
       "credentials": {
         "telegramApi": {
-          "id": "36lh16wT2FcjOJvt",
-          "name": "Telegram account"
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
         }
       }
     },
@@ -256,13 +232,13 @@
       "parameters": {
         "jsCode": "const callbackData = items[0].json.callback_query.data;\nconst parts = callbackData.split(':');\nconst action = parts[0];\nconst bookingId = parts[1];\nconst surcharge = parts[2] ? parseFloat(parts[2]) : 0;\n\nreturn [{\n  json: {\n    action,\n    bookingId,\n    surcharge,\n    callbackQueryId: items[0].json.callback_query.id,\n    messageId: items[0].json.callback_query.message.message_id\n  }\n}];"
       },
-      "id": "29786c37-4807-4451-9e9f-269acf9209af",
+      "id": "a623f96f-acd9-4baf-998b-b15688b777bb",
       "name": "Parse Callback Payload",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -352,
-        2064
+        2176,
+        3360
       ]
     },
     {
@@ -289,13 +265,13 @@
         },
         "options": {}
       },
-      "id": "81bc3572-b27f-43bc-b519-faa31795b4ff",
+      "id": "9596ae4d-6557-46a9-887c-5767f8e16840",
       "name": "If Action = Confirm?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -144,
-        2064
+        2384,
+        3360
       ]
     },
     {
@@ -304,13 +280,13 @@
         "query": "UPDATE bookings SET status = 'confirmed' WHERE id = '{{ $json.bookingId }}';",
         "options": {}
       },
-      "id": "55bae586-c814-4578-ba58-1ac43f273c93",
+      "id": "120c2910-3452-47dc-adeb-3721db2801ea",
       "name": "SQL: Confirm Status",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        112,
-        2000
+        2640,
+        3296
       ],
       "credentials": {
         "postgres": {
@@ -343,13 +319,13 @@
         },
         "options": {}
       },
-      "id": "d48b1d06-ad95-4dce-bea7-099b5b5f6614",
+      "id": "c731333b-862c-4d13-9123-60f09e913b53",
       "name": "If Action = Decline?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        112,
-        2160
+        2640,
+        3456
       ]
     },
     {
@@ -358,13 +334,13 @@
         "query": "UPDATE bookings SET status = 'rejected' WHERE id = '{{ $('Parse Callback Payload').item.json.bookingId }}';",
         "options": {}
       },
-      "id": "98be10ef-df5d-4a5e-8088-595f252c96c1",
+      "id": "04a4888c-8560-469a-88f3-5bfbcd59d8b0",
       "name": "SQL: Decline Status",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        352,
-        2128
+        2880,
+        3424
       ],
       "credentials": {
         "postgres": {
@@ -379,13 +355,13 @@
         "query": "UPDATE bookings SET status = 'counter_offer', proposed_price = price + {{ $('Parse Callback Payload').item.json.surcharge }} WHERE id = '{{ $('Parse Callback Payload').item.json.bookingId }}' RETURNING proposed_price;",
         "options": {}
       },
-      "id": "b6df34b1-694e-4c00-a81c-9197ed2889b9",
+      "id": "f75c3a68-cbae-4674-ac19-fde0d241fc44",
       "name": "SQL: Add Price Surcharge",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        352,
-        2256
+        2880,
+        3552
       ],
       "credentials": {
         "postgres": {
@@ -400,19 +376,19 @@
         "text": "=✅ Ride confirmed! Customer has been notified.",
         "additionalFields": {}
       },
-      "id": "e59ac7d7-67b8-49dc-8ffd-06cf7a18d500",
+      "id": "bc7c8712-3bfc-4b36-8cc6-93c0a7222976",
       "name": "Telegram: Confirm Msg",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        352,
-        2000
+        2880,
+        3296
       ],
       "webhookId": "474fe1f1-c647-4d61-9577-eccdff1d30db",
       "credentials": {
         "telegramApi": {
-          "id": "36lh16wT2FcjOJvt",
-          "name": "Telegram account"
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
         }
       }
     },
@@ -422,19 +398,19 @@
         "text": "=❌ Ride declined.",
         "additionalFields": {}
       },
-      "id": "01e1d0a3-e42f-4645-8f93-cece24659496",
+      "id": "10034fd7-c830-431c-b666-6c863ab8ea5e",
       "name": "Telegram: Decline Msg",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        576,
-        2128
+        3104,
+        3424
       ],
       "webhookId": "80e4c590-4527-49c1-be8e-86b763b186c4",
       "credentials": {
         "telegramApi": {
-          "id": "36lh16wT2FcjOJvt",
-          "name": "Telegram account"
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
         }
       }
     },
@@ -444,19 +420,19 @@
         "text": "=➕ Proposed new price: {{ $json.proposed_price }} PLN. Waiting for client response...",
         "additionalFields": {}
       },
-      "id": "1aa85d13-1bcd-4ea6-be6f-6944326b6791",
+      "id": "2fc8a310-9ce7-46de-8007-494f61c1ddbf",
       "name": "Telegram: Counter-Offer Sent Msg",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        576,
-        2256
+        3104,
+        3552
       ],
       "webhookId": "9f455843-e044-411c-9e0f-975354536621",
       "credentials": {
         "telegramApi": {
-          "id": "36lh16wT2FcjOJvt",
-          "name": "Telegram account"
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
         }
       }
     },
@@ -466,13 +442,13 @@
         "responseMode": "lastNode",
         "options": {}
       },
-      "id": "d5b39979-3f02-45b5-81b1-2f2c1435d819",
+      "id": "c4405cce-2d7a-4872-871e-c05f06d6a7a1",
       "name": "Webhook: Get Status",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -576,
-        2416
+        1952,
+        3712
       ],
       "webhookId": "taxi-get-status"
     },
@@ -482,13 +458,13 @@
         "query": "SELECT status, proposed_price FROM bookings WHERE id = '{{ $json.query.id }}';",
         "options": {}
       },
-      "id": "e97084ff-082d-4a27-9dff-fa55e96e6e43",
+      "id": "f5757a73-a36b-4caa-8a95-de67b759777b",
       "name": "SQL: Fetch Current Status",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -352,
-        2416
+        2176,
+        3712
       ],
       "credentials": {
         "postgres": {
@@ -504,13 +480,13 @@
         "responseMode": "lastNode",
         "options": {}
       },
-      "id": "2c8ae143-1cff-444a-aabe-2342a3a0738f",
+      "id": "293c0bcd-af72-4075-a2fd-9d234e2e0c59",
       "name": "Webhook: Client Action",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -576,
-        2576
+        1952,
+        3872
       ],
       "webhookId": "taxi-client-action"
     },
@@ -520,13 +496,13 @@
         "query": "UPDATE bookings SET status = '{{ $json.body.action === \"accept\" ? \"confirmed\" : \"rejected\" }}' WHERE id = '{{ $json.body.id }}' RETURNING customer_name, customer_phone, booking_time, price, status;",
         "options": {}
       },
-      "id": "5d00f65c-647b-4da2-8a87-57591032b556",
+      "id": "5dd8bbf2-e483-47cf-82fe-71a1fb610143",
       "name": "SQL: Save Client Action",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -352,
-        2576
+        2176,
+        3872
       ],
       "credentials": {
         "postgres": {
@@ -541,19 +517,19 @@
         "text": "=💬 CLIENT RESPONSE:\nClient {{ $json.customer_name }} ({{ $json.booking_time }}) has {{ $json.status === 'confirmed' ? '✅ ACCEPTED' : '❌ DECLINED' }} your price. Final Price: {{ $json.price }} PLN.",
         "additionalFields": {}
       },
-      "id": "2b6ffb31-8651-42cc-8b83-d72b23061e93",
+      "id": "4b77ac89-cd49-45d9-b1ed-dee499dcf4bb",
       "name": "Telegram: Alert Client Response",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -144,
-        2576
+        2384,
+        3872
       ],
       "webhookId": "aa0badaf-11c1-4fbd-9334-e8145248c619",
       "credentials": {
         "telegramApi": {
-          "id": "36lh16wT2FcjOJvt",
-          "name": "Telegram account"
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
         }
       }
     },
@@ -564,13 +540,13 @@
         "responseMode": "lastNode",
         "options": {}
       },
-      "id": "2563cafd-2cff-4c6a-973b-f70356e9e013",
+      "id": "3a8ff2e6-14f6-4814-8d6b-1626899dd41f",
       "name": "Webhook: User Auth",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -576,
-        2736
+        1952,
+        4032
       ],
       "webhookId": "taxi-user-auth"
     },
@@ -580,13 +556,13 @@
         "query": "WITH existing_user AS (\n  SELECT id, full_name, password_hash, phone FROM booking_users WHERE full_name = '{{ $json.body.fullName }}'\n),\nnew_user AS (\n  INSERT INTO booking_users (id, full_name, password_hash, phone)\n  SELECT '{{ $uuid }}', '{{ $json.body.fullName }}', '{{ $json.body.password }}', {{ $json.body.phone ? \"'\" + $json.body.phone + \"'\" : 'NULL' }}\n  WHERE NOT EXISTS (SELECT 1 FROM existing_user)\n  RETURNING id, full_name, password_hash, phone\n)\nSELECT id, full_name, password_hash, phone, 'registered' as action FROM new_user\nUNION ALL\nSELECT id, full_name, password_hash, phone, 'login' as action FROM existing_user;",
         "options": {}
       },
-      "id": "94e5ad3b-7f00-4874-971e-3eff1b0edbb6",
+      "id": "7a8b064f-f784-44c0-addc-0bb37b02d616",
       "name": "SQL: Auth Router",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -352,
-        2736
+        2176,
+        4032
       ],
       "credentials": {
         "postgres": {
@@ -599,13 +575,13 @@
       "parameters": {
         "jsCode": "const user = items[0]?.json;\nconst submittedPassword = $('Webhook: User Auth').item.json.body.password;\n\nif (!user) {\n  return [{ json: { success: false, error: 'no_user_returned', message: 'Ошибка при авторизации' } }];\n}\n\nif (user.action === 'login') {\n  if (user.password_hash === submittedPassword) {\n    return [{ json: { success: true, userId: user.id, fullName: user.full_name, phone: user.phone, action: 'login' } }];\n  } else {\n    return [{ json: { success: false, error: 'invalid_password', message: 'Неверный пароль для этого имени' } }];\n  }\n} else {\n  return [{ json: { success: true, userId: user.id, fullName: user.full_name, phone: user.phone, action: 'register' } }];\n}"
       },
-      "id": "9b8732d0-6b3f-48cd-bff1-2bdd81762212",
+      "id": "0d6a9846-34c3-42fb-8483-cbcdf670d497",
       "name": "Code: Verify Auth",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -144,
-        2736
+        2384,
+        4032
       ]
     },
     {
@@ -614,13 +590,13 @@
         "responseMode": "lastNode",
         "options": {}
       },
-      "id": "998d578b-6089-4b7f-b833-97db77992e41",
+      "id": "621a74cb-2749-4854-8d81-74a7779e27b9",
       "name": "Webhook: Get History",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -576,
-        2896
+        1952,
+        4192
       ],
       "webhookId": "taxi-bookings-history"
     },
@@ -630,13 +606,13 @@
         "query": "SELECT id, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status, proposed_price FROM bookings WHERE user_id = '{{ $json.query.userId }}' ORDER BY booking_date DESC, booking_time DESC;",
         "options": {}
       },
-      "id": "5f7985a9-331c-4048-8581-f9621b77db2b",
+      "id": "87c8e56b-98d1-4b7f-89ba-e47e304310f3",
       "name": "SQL: Fetch History",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -352,
-        2896
+        2176,
+        4192
       ],
       "credentials": {
         "postgres": {
