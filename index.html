@@ -1744,7 +1744,7 @@ paymentIcons.forEach(icon => glowObserver.observe(icon));
 
 
 /* ==============================================
-   4) Scroll-Driven Video Scrubbing and Lerping
+   4) Smooth Background Video & Scroll Card Transitions
 ============================================== */
 const videoSection = document.getElementById('video-scroll-section');
 const video = document.getElementById('scroll-video');
@@ -1754,14 +1754,25 @@ const textCards = [
   document.getElementById('card-3')
 ];
 
-let targetScrollPercent = 0;
-let currentScrollPercent = 0;
-const scrollLerpEase = 0.08;
 let isVideoInView = false;
+
+if (video) {
+  video.autoplay = true;
+  video.loop = true;
+  video.muted = true;
+  video.playsInline = true;
+}
 
 const videoIntersectionObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     isVideoInView = entry.isIntersecting;
+    if (video) {
+      if (isVideoInView) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    }
   });
 }, { threshold: 0.05 });
 videoIntersectionObserver.observe(videoSection);
@@ -1778,7 +1789,7 @@ window.addEventListener('scroll', () => {
     const scrolledOffset = -rect.top;
     let percent = scrolledOffset / totalScrubPath;
     percent = Math.max(0, Math.min(1, percent));
-    targetScrollPercent = percent;
+    updateTextCards(percent);
   }
 });
 
@@ -1803,30 +1814,6 @@ function setActiveCard(index) {
     }
   });
 }
-
-function scrubVideoLoop() {
-  if (isVideoInView && video.duration) {
-    currentScrollPercent += (targetScrollPercent - currentScrollPercent) * scrollLerpEase;
-    
-    if (Math.abs(targetScrollPercent - currentScrollPercent) > 0.0001) {
-      video.currentTime = currentScrollPercent * video.duration;
-      updateTextCards(currentScrollPercent);
-    }
-  }
-  requestAnimationFrame(scrubVideoLoop);
-}
-
-video.addEventListener('loadedmetadata', () => {
-  video.pause();
-  video.currentTime = 0;
-});
-
-// Fallback in case metadata event already fired
-if (video.readyState >= 1) {
-  video.pause();
-}
-
-requestAnimationFrame(scrubVideoLoop);
 
 
 /* ==============================================
@@ -2102,7 +2089,7 @@ function showBookingSuccess(statusMsg, bookingId, payload) {
   
   const successText = currentLanguage === "ru" 
     ? "✓ Запрос успешно отправлен! Таксист свяжется с вами." 
-    : (currentLanguage === "pl" ? "✓ Zapytanie wysłane! Taksówkarz skontaktuje się z Tobą." : "✓ Request sent! The driver will contact you.");
+    : (currentLanguage === "pl" ? "✓ Zapytanie wysłane! Taksówkarz skontaktuje się з Тобою." : "✓ Request sent! The driver will contact you.");
   
   statusMsg.textContent = successText;
   
