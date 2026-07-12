@@ -2111,6 +2111,18 @@ function renderHistoryList(bookings, container) {
     
     const finalPrice = b.proposed_price || b.price;
     
+    let cancelBtnHtml = "";
+    if (b.status === "pending" || b.status === "confirmed" || b.status === "counter_offer") {
+      const cancelText = currentLanguage === "ru" ? "Отмена" : (currentLanguage === "pl" ? "Anuluj" : "Cancel");
+      cancelBtnHtml = `
+        <br><button onclick="cancelBookingFromHistory('${b.id}')" 
+                style="margin-top: 5px; padding: 2px 8px; border-radius: 4px; border: 1px solid #ff3366; background: transparent; color: #ff3366; font-size: 0.7rem; cursor: pointer; transition: all 0.2s;"
+                onmouseover="this.style.background='rgba(255,51,102,0.1)'"
+                onmouseout="this.style.background='transparent'">
+          ${cancelText}
+        </button>`;
+    }
+    
     html += `
       <tr style="border-bottom: 1px solid #222; vertical-align: top;">
         <td style="padding: 8px 0; color: #fff;">
@@ -2120,12 +2132,59 @@ function renderHistoryList(bookings, container) {
         <td style="padding: 8px 0; text-align: right; white-space: nowrap; width: 80px;">
           <strong style="color: #0ff;">${finalPrice} PLN</strong><br>
           <span style="font-size: 0.75rem; color: ${statusColor}; font-weight: bold;">${statusText}</span>
+          ${cancelBtnHtml}
         </td>
       </tr>
     `;
   });
   html += `</table>`;
   container.innerHTML = html;
+}
+
+async function cancelBookingFromHistory(bookingId) {
+  const confirmMsg = currentLanguage === "ru" 
+    ? "Вы уверены, что хотите отменить этот заказ?" 
+    : (currentLanguage === "pl" ? "Czy na pewno chcesz anulować to zamówienie?" : "Are you sure you want to cancel this booking?");
+  if (!confirm(confirmMsg)) return;
+
+  if (N8N_ACTION_URL) {
+    try {
+      const response = await fetch(N8N_ACTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: bookingId, action: "decline" })
+      });
+      if (response.ok) {
+        // If this booking is the currently tracked one in the active widget, dismiss the widget
+        const activeBooking = JSON.parse(localStorage.getItem("active_taxi_booking"));
+        if (activeBooking && activeBooking.id === bookingId) {
+          dismissStatusWidget();
+        }
+        // Reload history
+        const currentUserJson = localStorage.getItem("currentUser");
+        if (currentUserJson) {
+          const currentUser = JSON.parse(currentUserJson);
+          loadRideHistory(currentUser.id);
+        }
+      } else {
+        alert("Failed to cancel booking on server.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Network error while cancelling.");
+    }
+  } else {
+    // Simulated cancel
+    const activeBooking = JSON.parse(localStorage.getItem("active_taxi_booking"));
+    if (activeBooking && activeBooking.id === bookingId) {
+      dismissStatusWidget();
+    }
+    const currentUserJson = localStorage.getItem("currentUser");
+    if (currentUserJson) {
+      const currentUser = JSON.parse(currentUserJson);
+      loadRideHistory(currentUser.id);
+    }
+  }
 }
 
 function logout() {
@@ -2466,6 +2525,7 @@ function renderStatusWidget(booking) {
   const timerBox = document.getElementById("widget-timer-container");
   const counterBox = document.getElementById("widget-counter-box");
   const priceBox = document.getElementById("widget-price-box");
+  const generalCancelBtn = document.getElementById("widget-general-cancel-btn");
 
   if (!badge) return;
 
@@ -2477,6 +2537,10 @@ function renderStatusWidget(booking) {
     if (timerBox) timerBox.style.display = "flex";
     if (counterBox) counterBox.style.display = "none";
     if (priceBox) priceBox.style.display = "flex";
+    if (generalCancelBtn) {
+      generalCancelBtn.style.display = "block";
+      generalCancelBtn.textContent = currentLanguage === "ru" ? "Отменить заказ" : (currentLanguage === "pl" ? "Anuluj zamówienie" : "Cancel Request");
+    }
   } else if (booking.status === "confirmed") {
     badge.classList.add("confirmed");
     badge.textContent = t.badgeConfirmed || "Confirmed";
@@ -2484,11 +2548,16 @@ function renderStatusWidget(booking) {
     if (counterBox) counterBox.style.display = "none";
     if (priceBox) priceBox.style.display = "flex";
     document.getElementById("widget-val-price").textContent = `${booking.price} PLN`;
+    if (generalCancelBtn) {
+      generalCancelBtn.style.display = "block";
+      generalCancelBtn.textContent = currentLanguage === "ru" ? "Отменить заказ" : (currentLanguage === "pl" ? "Anuluj zamówienie" : "Cancel Request");
+    }
   } else if (booking.status === "counter_offer") {
     badge.classList.add("counter_offer");
     badge.textContent = t.badgeCounter || "Offer Received";
     if (timerBox) timerBox.style.display = "none";
     if (priceBox) priceBox.style.display = "none";
+    if (generalCancelBtn) generalCancelBtn.style.display = "none";
     
     document.getElementById("widget-val-counter-price").textContent = booking.proposed_price;
     if (counterBox) counterBox.style.display = "block";
@@ -2498,6 +2567,7 @@ function renderStatusWidget(booking) {
     if (timerBox) timerBox.style.display = "none";
     if (counterBox) counterBox.style.display = "none";
     if (priceBox) priceBox.style.display = "flex";
+    if (generalCancelBtn) generalCancelBtn.style.display = "none";
   }
 }
 
@@ -2712,6 +2782,7 @@ window.addEventListener('DOMContentLoaded', () => {
         <button class="status-action-btn decline" onclick="respondToCounter(false)" id="widget-btn-decline">Cancel Request</button>
       </div>
     </div>
+    <button id="widget-general-cancel-btn" onclick="respondToCounter(false)" style="margin-top: 15px; width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px dashed #ff3366; background: transparent; color: #ff3366; font-size: 0.85rem; font-weight: bold; cursor: pointer; display: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,51,102,0.1)'" onmouseout="this.style.background='transparent'">Cancel Request</button>
   </div>
 </div>
 
