@@ -1953,7 +1953,10 @@ async function submitAuth(event) {
       });
       
       if (response.ok) {
-        const res = await response.json();
+        let res = await response.json();
+        if (Array.isArray(res)) {
+          res = res[0] || {};
+        }
         if (res.success) {
           localStorage.setItem("currentUser", JSON.stringify({
             id: res.userId,
@@ -2534,8 +2537,11 @@ function startStatusWidgetEngine(booking) {
       try {
         const response = await fetch(`${N8N_GET_STATUS_URL}?id=${booking.id}`);
         if (response.ok) {
-          const res = await response.json();
-          if (res.status !== booking.status) {
+          let res = await response.json();
+          if (Array.isArray(res)) {
+            res = res[0] || {};
+          }
+          if (res.status && res.status !== booking.status) {
             booking.status = res.status;
             if (res.proposed_price) {
               booking.proposed_price = res.proposed_price;
