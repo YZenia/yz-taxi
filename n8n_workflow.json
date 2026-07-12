@@ -620,6 +620,38 @@
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {},
+      "id": "e187baf9-e1b1-43fd-9bb1-aa428761b227",
+      "name": "Manual Trigger: Test Telegram",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        4352
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "429593682",
+        "text": "🔔 Test message from your Taxi Bot! If you receive this, the integration is working perfectly.",
+        "additionalFields": {}
+      },
+      "id": "ee9d83c4-cd13-4db6-9b94-7a8b164239a0",
+      "name": "Telegram: Send Test Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2176,
+        4352
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
+        }
+      }
     }
   ],
   "connections": {
@@ -856,6 +888,17 @@
         [
           {
             "node": "SQL: Fetch History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger: Test Telegram": {
+      "main": [
+        [
+          {
+            "node": "Telegram: Send Test Message",
             "type": "main",
             "index": 0
           }
