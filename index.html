@@ -89,37 +89,7 @@
       }
     }
 
-    /* ---- stats.js ---- */
-    .count-particles {
-      background: #000022;
-      position: absolute;
-      top: 48px;
-      left: 0;
-      width: 80px;
-      color: #13E8E9;
-      font-size: 0.8em;
-      text-align: left;
-      text-indent: 4px;
-      line-height: 14px;
-      padding-bottom: 2px;
-      font-weight: bold;
-      user-select: none;
-      border-radius: 0 0 3px 3px;
-    }
-    .js-count-particles {
-      font-size: 1.1em;
-    }
-    #stats {
-      -webkit-user-select: none;
-      user-select: none;
-      margin-top: 5px;
-      margin-left: 5px;
-      border-radius: 3px 3px 0 0;
-      overflow: hidden;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+
 
     /* ====== Шапка ====== */
     header {
@@ -864,12 +834,7 @@
 
 <!-- particles.js container -->
 <div id="particles-js"></div>
-<!-- stats - count particles -->
-<div class="count-particles">
-  <span class="js-count-particles"></span>
-</div>
-<!-- Статистика FPS и кол-ва частиц -->
-<div id="stats"></div>
+
 
 <!-- ====== Шапка ====== -->
 <header>
@@ -1110,9 +1075,8 @@
   </div>
 </div>
 
-<!-- Подключение скриптов particles.js и stats.js (HTTPS!) -->
+<!-- Подключение скрипта particles.js -->
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script src="https://threejs.org/examples/js/libs/stats.min.js"></script>
 
 <script>
 /* =========================
@@ -1166,28 +1130,7 @@ particlesJS("particles-js", {
   "retina_detect":true
 });
 
-/* ----- stats.js ---- */
-var count_particles, stats, update;
-if (typeof Stats !== 'undefined') {
-  stats = new Stats();
-  stats.setMode(0); // 0: fps, 1: ms
-  stats.domElement.style.position = 'absolute';
-  stats.domElement.style.left = '0px';
-  stats.domElement.style.top = '0px';
-  document.body.appendChild(stats.domElement);
-}
 
-count_particles = document.querySelector('.js-count-particles');
-update = function() {
-  if (stats) stats.begin();
-  if (stats) stats.end();
-  if (window.pJSDom && window.pJSDom[0].pJS.particles &&
-      window.pJSDom[0].pJS.particles.array && count_particles) {
-    count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
-  }
-  requestAnimationFrame(update);
-};
-requestAnimationFrame(update);
 </script>
 
 <script>
