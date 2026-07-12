@@ -1852,11 +1852,31 @@ function renderSlots(occupiedSlots) {
     const isOccupied = occupiedSlots.includes(time);
     const night = isNightRate(time);
     
+    // Check if slot is in the past
+    let isPast = false;
+    if (selectedDateStr) {
+      const now = new Date();
+      const [selYear, selMonth, selDay] = selectedDateStr.split("-").map(num => parseInt(num, 10));
+      const selDateMidnight = new Date(selYear, selMonth - 1, selDay);
+      const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      
+      if (selDateMidnight < todayMidnight) {
+        isPast = true;
+      } else if (selYear === now.getFullYear() && (selMonth - 1) === now.getMonth() && selDay === now.getDate()) {
+        const [slotHour, slotMin] = time.split(":").map(num => parseInt(num, 10));
+        const currentHour = now.getHours();
+        const currentMin = now.getMinutes();
+        if (slotHour < currentHour || (slotHour === currentHour && slotMin <= currentMin)) {
+          isPast = true;
+        }
+      }
+    }
+    
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "slot-btn";
     
-    if (isOccupied) {
+    if (isOccupied || isPast) {
       btn.className += " occupied";
     } else if (night) {
       btn.className += " night-rate";
@@ -1864,16 +1884,19 @@ function renderSlots(occupiedSlots) {
       btn.className += " day-rate";
     }
     
-    const labelText = isOccupied 
-      ? (t.statusTaken || "Occupied") 
-      : (night ? (t.nightRateLabel || "Night Rate (+50%)") : (t.dayRateLabel || "Day Rate"));
+    const pastText = currentLanguage === "ru" ? "Прошло" : (currentLanguage === "pl" ? "Minęło" : "Passed");
+    const labelText = isPast
+      ? pastText
+      : (isOccupied 
+        ? (t.statusTaken || "Occupied") 
+        : (night ? (t.nightRateLabel || "Night Rate (+50%)") : (t.dayRateLabel || "Day Rate")));
     
     btn.innerHTML = `
       <span class="slot-time">${time}</span>
       <span class="slot-label">${labelText}</span>
     `;
     
-    if (!isOccupied) {
+    if (!isOccupied && !isPast) {
       btn.onclick = () => openBookingModal(selectedDateStr, time);
     }
     
