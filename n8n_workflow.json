@@ -36,6 +36,7 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "bookings",
+        "responseMode": "lastNode",
         "options": {}
       },
       "id": "7737a0ac-2bc3-470f-8fe7-7a98eba0442a",
@@ -462,6 +463,7 @@
     {
       "parameters": {
         "path": "bookings/status",
+        "responseMode": "lastNode",
         "options": {}
       },
       "id": "d5b39979-3f02-45b5-81b1-2f2c1435d819",
@@ -499,6 +501,7 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "bookings/action",
+        "responseMode": "lastNode",
         "options": {}
       },
       "id": "2c8ae143-1cff-444a-aabe-2342a3a0738f",
@@ -558,6 +561,7 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "auth",
+        "responseMode": "lastNode",
         "options": {}
       },
       "id": "2563cafd-2cff-4c6a-973b-f70356e9e013",
@@ -607,6 +611,7 @@
     {
       "parameters": {
         "path": "bookings/history",
+        "responseMode": "lastNode",
         "options": {}
       },
       "id": "998d578b-6089-4b7f-b833-97db77992e41",
