@@ -10,11 +10,12 @@
       "id": "0df8b420-5c68-45e0-bb12-fbfb019b88cf",
       "name": "Webhook: Create Booking",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
+      "typeVersion": 2.1,
       "position": [
         380,
         240
-      ]
+      ],
+      "webhookId": "taxi-create-booking"
     },
     {
       "parameters": {
@@ -24,7 +25,7 @@
       "id": "8c59f2a9-7c8d-4f11-b8d9-2c709abdb101",
       "name": "SQL: Save Pending Booking",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1.1,
+      "typeVersion": 2.5,
       "position": [
         600,
         240
@@ -33,24 +34,24 @@
     {
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=🚖 NEW RIDE REQUEST\\n------------------------------------\\n📅 Date: {{ $node[\"Webhook: Create Booking\"].json.body.date }}\\n⏰ Time: {{ $node[\"Webhook: Create Booking\"].json.body.time }}\\n👤 Client: {{ $node[\"Webhook: Create Booking\"].json.body.name }}\\n📞 Phone: {{ $node[\"Webhook: Create Booking\"].json.body.phone }}\\n💬 Telegram: @{{ $node[\"Webhook: Create Booking\"].json.body.telegram }}\\n\\n📍 Pickup: {{ $node[\"Webhook: Create Booking\"].json.body.pickup_address }}\\n🏁 Destination: {{ $node[\"Webhook: Create Booking\"].json.body.destination_address }}\\n\u00e2\u0084\u00b9\u00ef\u00b8\u008f Distance: {{ $node[\"Webhook: Create Booking\"].json.body.estimated_distance }} km\\n\u00f0\u009f\u0092\u00b5 Quoted Price: {{ $node[\"Webhook: Create Booking\"].json.body.price }} PLN\\n------------------------------------\\nRespond within 10 minutes!",
+        "text": "=🚖 NEW RIDE REQUEST\n------------------------------------\n📅 Date: {{ $('Webhook: Create Booking').item.json.body.date }}\n⏰ Time: {{ $('Webhook: Create Booking').item.json.body.time }}\n👤 Client: {{ $('Webhook: Create Booking').item.json.body.name }}\n📞 Phone: {{ $('Webhook: Create Booking').item.json.body.phone }}\n💬 Telegram: @{{ $('Webhook: Create Booking').item.json.body.telegram }}\n\n📍 Pickup: {{ $('Webhook: Create Booking').item.json.body.pickup_address }}\n🏁 Destination: {{ $('Webhook: Create Booking').item.json.body.destination_address }}\nℹ️ Distance: {{ $('Webhook: Create Booking').item.json.body.estimated_distance }} km\n💵 Quoted Price: {{ $('Webhook: Create Booking').item.json.body.price }} PLN\n------------------------------------\nRespond within 10 minutes!",
         "additionalFields": {
           "reply_markup": {
             "inline_keyboard": [
               [
                 {
                   "text": "✅ Confirm",
-                  "callback_data": "={{ \"confirm:\" + $node[\"Webhook: Create Booking\"].json.body.bookingId }}"
+                  "callback_data": "={{ \"confirm:\" + $('Webhook: Create Booking').item.json.body.bookingId }}"
                 },
                 {
                   "text": "❌ Decline",
-                  "callback_data": "={{ \"decline:\" + $node[\"Webhook: Create Booking\"].json.body.bookingId }}"
+                  "callback_data": "={{ \"decline:\" + $('Webhook: Create Booking').item.json.body.bookingId }}"
                 }
               ],
               [
                 {
                   "text": "➕ Counter-Offer (+20 PLN)",
-                  "callback_data": "={{ \"counter:\" + $node[\"Webhook: Create Booking\"].json.body.bookingId + \":20\" }}"
+                  "callback_data": "={{ \"counter:\" + $('Webhook: Create Booking').item.json.body.bookingId + \":20\" }}"
                 }
               ]
             ]
@@ -60,7 +61,7 @@
       "id": "c1f8a2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
       "name": "Telegram: Alert Driver",
       "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         820,
         240
@@ -68,27 +69,30 @@
     },
     {
       "parameters": {
+        "resume": "timeInterval",
         "amount": 10,
-        "unit": "minutes"
+        "unit": "minutes",
+        "options": {}
       },
       "id": "f5e6d7c8-b9a8-7675-6453-210123456789",
       "name": "Wait 10 Minutes",
       "type": "n8n-nodes-base.wait",
-      "typeVersion": 1,
+      "typeVersion": 1.1,
       "position": [
         820,
         80
-      ]
+      ],
+      "webhookId": "taxi-wait-timeout"
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=SELECT status FROM bookings WHERE id = '{{ $node[\"Webhook: Create Booking\"].json.body.bookingId }}';"
+        "query": "=SELECT status FROM bookings WHERE id = '{{ $('Webhook: Create Booking').item.json.body.bookingId }}';"
       },
       "id": "e2d3c4b5-a6a7-8889-9001-123456789012",
       "name": "SQL: Check Status (Timeout)",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1.1,
+      "typeVersion": 2.5,
       "position": [
         1040,
         80
@@ -97,18 +101,29 @@
     {
       "parameters": {
         "conditions": {
-          "string": [
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
             {
-              "value1": "={{ $json.status }}",
-              "value2": "pending"
+              "id": "condition-pending",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "pending",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         }
       },
       "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
       "name": "If Still Pending?",
       "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
+      "typeVersion": 2.2,
       "position": [
         1260,
         80
@@ -117,12 +132,12 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE bookings SET status = 'rejected' WHERE id = '{{ $node[\"Webhook: Create Booking\"].json.body.bookingId }}';"
+        "query": "=UPDATE bookings SET status = 'rejected' WHERE id = '{{ $('Webhook: Create Booking').item.json.body.bookingId }}';"
       },
       "id": "6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
       "name": "SQL: Auto-Reject",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1.1,
+      "typeVersion": 2.5,
       "position": [
         1480,
         40
@@ -131,12 +146,12 @@
     {
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=⏳ Booking request for {{ $node[\"Webhook: Create Booking\"].json.body.name }} ({{ $node[\"Webhook: Create Booking\"].json.body.time }}) expired (10 min timeout) and has been automatically declined."
+        "text": "=⏳ Booking request for {{ $('Webhook: Create Booking').item.json.body.name }} ({{ $('Webhook: Create Booking').item.json.body.time }}) expired (10 min timeout) and has been automatically declined."
       },
       "id": "4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8a9b",
       "name": "Telegram: Alert Timeout",
       "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         1700,
         40
@@ -146,25 +161,27 @@
       "parameters": {
         "updates": [
           "callback_query"
-        ]
+        ],
+        "additionalFields": {}
       },
       "id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
       "name": "Telegram: Driver Callback",
       "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1,
+      "typeVersion": 1.1,
       "position": [
         380,
         500
-      ]
+      ],
+      "webhookId": "taxi-driver-callback"
     },
     {
       "parameters": {
-        "jsCode": "const callbackData = items[0].json.callback_query.data;\\nconst parts = callbackData.split(':');\\nconst action = parts[0];\\nconst bookingId = parts[1];\\nconst surcharge = parts[2] ? parseFloat(parts[2]) : 0;\\n\\nreturn [{\\n  json: {\\n    action,\\n    bookingId,\\n    surcharge,\\n    callbackQueryId: items[0].json.callback_query.id,\\n    messageId: items[0].json.callback_query.message.message_id\\n  }\\n}];"
+        "jsCode": "const callbackData = items[0].json.callback_query.data;\nconst parts = callbackData.split(':');\nconst action = parts[0];\nconst bookingId = parts[1];\nconst surcharge = parts[2] ? parseFloat(parts[2]) : 0;\n\nreturn [{\n  json: {\n    action,\n    bookingId,\n    surcharge,\n    callbackQueryId: items[0].json.callback_query.id,\n    messageId: items[0].json.callback_query.message.message_id\n  }\n}];"
       },
       "id": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
       "name": "Parse Callback Payload",
       "type": "n8n-nodes-base.code",
-      "typeVersion": 1,
+      "typeVersion": 2,
       "position": [
         600,
         500
@@ -173,18 +190,29 @@
     {
       "parameters": {
         "conditions": {
-          "string": [
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
             {
-              "value1": "={{ $json.action }}",
-              "value2": "confirm"
+              "id": "condition-confirm",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "confirm",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         }
       },
       "id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
       "name": "If Action = Confirm?",
       "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
+      "typeVersion": 2.2,
       "position": [
         820,
         500
@@ -198,7 +226,7 @@
       "id": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
       "name": "SQL: Confirm Status",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1.1,
+      "typeVersion": 2.5,
       "position": [
         1060,
         440
@@ -207,18 +235,29 @@
     {
       "parameters": {
         "conditions": {
-          "string": [
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
             {
-              "value1": "={{ $node[\"Parse Callback Payload\"].json.action }}",
-              "value2": "decline"
+              "id": "condition-decline",
+              "leftValue": "={{ $('Parse Callback Payload').item.json.action }}",
+              "rightValue": "decline",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         }
       },
       "id": "5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
       "name": "If Action = Decline?",
       "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
+      "typeVersion": 2.2,
       "position": [
         1060,
         600
@@ -227,12 +266,12 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE bookings SET status = 'rejected' WHERE id = '{{ $node[\"Parse Callback Payload\"].json.bookingId }}';"
+        "query": "=UPDATE bookings SET status = 'rejected' WHERE id = '{{ $('Parse Callback Payload').item.json.bookingId }}';"
       },
       "id": "6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
       "name": "SQL: Decline Status",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1.1,
+      "typeVersion": 2.5,
       "position": [
         1300,
         560
@@ -241,12 +280,12 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=UPDATE bookings SET status = 'counter_offer', proposed_price = price + {{ $node[\"Parse Callback Payload\"].json.surcharge }} WHERE id = '{{ $node[\"Parse Callback Payload\"].json.bookingId }}' RETURNING proposed_price;"
+        "query": "=UPDATE bookings SET status = 'counter_offer', proposed_price = price + {{ $('Parse Callback Payload').item.json.surcharge }} WHERE id = '{{ $('Parse Callback Payload').item.json.bookingId }}' RETURNING proposed_price;"
       },
       "id": "7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
       "name": "SQL: Add Price Surcharge",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1.1,
+      "typeVersion": 2.5,
       "position": [
         1300,
         700
@@ -260,7 +299,7 @@
       "id": "8b9c0d1e-2f3a-4b5c-6d7e-8f9a0b1c2d3e",
       "name": "Telegram: Confirm Msg",
       "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         1300,
         440
@@ -274,7 +313,7 @@
       "id": "9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f",
       "name": "Telegram: Decline Msg",
       "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         1520,
         560
@@ -288,7 +327,7 @@
       "id": "0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a",
       "name": "Telegram: Counter-Offer Sent Msg",
       "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         1520,
         700
@@ -296,17 +335,19 @@
     },
     {
       "parameters": {
+        "httpMethod": "GET",
         "path": "bookings/status",
         "options": {}
       },
       "id": "f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c",
       "name": "Webhook: Get Status",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
+      "typeVersion": 2.1,
       "position": [
         380,
         860
-      ]
+      ],
+      "webhookId": "taxi-get-status"
     },
     {
       "parameters": {
@@ -316,7 +357,7 @@
       "id": "a3b4c5d6-e7f8-9a0b-1c2d-3e4f5a6b7c8d",
       "name": "SQL: Fetch Current Status",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1.1,
+      "typeVersion": 2.5,
       "position": [
         600,
         860
@@ -328,24 +369,25 @@
         "path": "bookings/action",
         "options": {}
       },
-      "id": "b4c5d6e7-f8g9-0a1b-2c3d-4e5f6a7b8c9d",
+      "id": "b4c5d6e7-f8a9-0a1b-2c3d-4e5f6a7b8c9d",
       "name": "Webhook: Client Action",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
+      "typeVersion": 2.1,
       "position": [
         380,
         1020
-      ]
+      ],
+      "webhookId": "taxi-client-action"
     },
     {
       "parameters": {
         "operation": "executeQuery",
         "query": "=UPDATE bookings SET status = '{{ $json.body.action === \"accept\" ? \"confirmed\" : \"rejected\" }}' WHERE id = '{{ $json.body.id }}' RETURNING customer_name, customer_phone, booking_time, price, status;"
       },
-      "id": "c5d6e7f8-g9a0-1b2c-3d4e-5f6a7b8c9d0e",
+      "id": "c5d6e7f8-a9a0-1b2c-3d4e-5f6a7b8c9d0e",
       "name": "SQL: Save Client Action",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1.1,
+      "typeVersion": 2.5,
       "position": [
         600,
         1020
@@ -354,12 +396,12 @@
     {
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=💬 CLIENT RESPONSE:\\nClient {{ $json.customer_name }} ({{ $json.booking_time }}) has {{ $json.status === 'confirmed' ? '✅ ACCEPTED' : '❌ DECLINED' }} your price. Final Price: {{ $json.price }} PLN."
+        "text": "=💬 CLIENT RESPONSE:\nClient {{ $json.customer_name }} ({{ $json.booking_time }}) has {{ $json.status === 'confirmed' ? '✅ ACCEPTED' : '❌ DECLINED' }} your price. Final Price: {{ $json.price }} PLN."
       },
-      "id": "d6e7f8g9-a0b1-2c3d-4e5f-6a7b8c9d0e1f",
+      "id": "d6e7f8a9-a0b1-2c3d-4e5f-6a7b8c9d0e1f",
       "name": "Telegram: Alert Client Response",
       "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.1,
+      "typeVersion": 1.2,
       "position": [
         820,
         1020
@@ -564,6 +606,8 @@
       ]
     }
   },
-  "settings": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
   "id": "1"
 }
