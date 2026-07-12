@@ -489,89 +489,6 @@
     }
 
 
-    /* ====== Скролл-видео ====== */
-    #video-scroll-section {
-      position: relative;
-      height: 300vh;
-      background: #000;
-    }
-    .video-sticky-container {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      width: 100%;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 0;
-    }
-    #scroll-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.6;
-    }
-    .video-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.8) 100%);
-      z-index: 1;
-    }
-    .video-content-container {
-      position: relative;
-      z-index: 2;
-      width: 90%;
-      max-width: 800px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .video-text-card {
-      position: absolute;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 255, 255, 0.3);
-      padding: 30px 40px;
-      border-radius: 15px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      pointer-events: none;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
-      max-width: 500px;
-    }
-    .video-text-card.active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-      border-color: #0ff;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-    }
-    .video-text-card h2 {
-      font-size: 2.2rem;
-      margin-top: 0;
-      margin-bottom: 15px;
-      background: linear-gradient(90deg, #0ff, #f0f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .video-text-card p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #e0e0e0;
-      margin: 0;
-    }
-
-
     /* ====== Секция Бронирования ====== */
     #booking-section {
       max-width: 900px;
@@ -925,12 +842,6 @@
       .payment-methods img {
         width: 60px;
       }
-      .video-text-card h2 {
-        font-size: 1.6rem;
-      }
-      .video-text-card p {
-        font-size: 0.95rem;
-      }
     }
   </style>
 
@@ -962,27 +873,8 @@
     </div>
 </header>
 
-<!-- ====== Секция со скролл-видео (заменяет старый Параллакс 1) ====== -->
-<div id="video-scroll-section">
-  <div class="video-sticky-container">
-    <video id="scroll-video" muted playsinline preload="auto" src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-streets-at-night-11915-large.mp4"></video>
-    <div class="video-overlay"></div>
-    <div class="video-content-container">
-      <div class="video-text-card active" id="card-1">
-        <h2 id="video-card1-title">Warszawa from Above</h2>
-        <p id="video-card1-text">Experience a premium taxi service with a view.</p>
-      </div>
-      <div class="video-text-card" id="card-2">
-        <h2 id="video-card2-title">Anytime, Anywhere</h2>
-        <p id="video-card2-text">Fast rides around Warsaw, day or night. Standard or night rates apply.</p>
-      </div>
-      <div class="video-text-card" id="card-3">
-        <h2 id="video-card3-title">Comfort & Reliability</h2>
-        <p id="video-card3-text">Your ideal journey starts here. Book your slot below!</p>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- ====== Параллакс 1 ====== -->
+<div class="parallax parallax-1"></div>
 
 <!-- ====== Секция: Обо мне (карусель) ====== -->
 <section class="section">
@@ -1328,7 +1220,7 @@ const translations = {
     mainTitle: "Y Z T A X I",
     aboutTitle: "O mnie",
     aboutSlides: [
-      "Jestem kreatywnym marzycielem, который uwielbia wyobrażać i realizować pomysły...",
+      "Jestem kreatywnym marzycielem, który uwielbia wyobrażać i realizować pomysły...",
       "Jestem niestrudzonym odkrywcą — zawsze podekscytowany nowymi odkryciami...",
       "Jestem społecznym entuzjastą — lubię rozmowy i pracę w zespole...",
       "Jestem zorientowanym na cel optymistą, który dostrzega możliwości wszędzie..."
@@ -1356,43 +1248,7 @@ const translations = {
     cashDesc: "Zapłać kierowcy ustaloną kwotę w gotówce.",
     blikTitle: "Płatność Blik",
     blikDesc: "Skopiuj numer telefonu ",
-    blikDesc2: " aby dokonać płatności Blik za przejazd Tytul 'Taxi'.",
-    videoCard1Title: "Warszawa z góry",
-    videoCard1Text: "Przeżyj przejazd taksówką klasy premium z pięknym widokiem.",
-    videoCard2Title: "Zawsze i wszędzie",
-    videoCard2Text: "Szybkie przejazdy po Warszawie, w dzień i w nocy. Obowiązują stawki dzienne i nocne.",
-    videoCard3Title: "Komfort i niezawodność",
-    videoCard3Text: "Twoja idealna podróż zaczyna się tutaj. Zarezerwuj swój termin poniżej!",
-    bookingTitle: "Zarezerwuj Przejazd",
-    bookingDesc: "Wybierz dzień i wolny przedział czasowy. Uwaga: Stawki nocne (18:00 - 08:00) mają zmieniony cennik.",
-    legendDayText: "Taryfa Dzienna (08:00 - 18:00)",
-    legendNightText: "Taryfa Nocna (18:00 - 08:00)",
-    legendOccupiedText: "Zajęte / Oczekuje",
-    bookingModalTitle: "Rezerwacja Terminu",
-    labelName: "Twoje Imię",
-    labelPhone: "Numer Telefonu",
-    labelTelegram: "Nazwa Użytkownika Telegram",
-    labelPickup: "Adres odbioru",
-    labelDestination: "Adres docelowy",
-    btnSubmitBooking: "Potwierdź rezerwację",
-    dayRateLabel: "Taryfa dzienna",
-    nightRateLabel: "Taryfa Nocna (+50%)",
-    statusTaken: "Zajęty",
-    statusPending: "Oczekuje na zatwierdzenie",
-    calcDistance: "Szac. Odległość:",
-    calcRate: "Taryfa:",
-    calcSurcharge: "Dopłata za szczyt:",
-    calcTotal: "Szacowana Cena:",
-    widgetTitle: "Status Aktywnego Przejazdu",
-    widgetTimerLabel: "Potwierdzenie za:",
-    widgetLblPrice: "Zablokowana cena:",
-    widgetLblCounterMsg: "Kierowca zaproponował inną cenę:",
-    widgetBtnAccept: "Akceptuj",
-    widgetBtnDecline: "Odrzuć i Anuluj",
-    badgePending: "Oczekuje",
-    badgeConfirmed: "Potwierdzony",
-    badgeCounter: "Nowa Oferta",
-    badgeRejected: "Anulowany"
+    blikDesc2: " aby dokonać płatności Blik za przejazd Tytul 'Taxi'."
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -1426,43 +1282,7 @@ const translations = {
     cashDesc: "Оплатите водителю оговорённую сумму наличными.",
     blikTitle: "Оплата Blik",
     blikDesc: "Скопируйте номер телефона ",
-    blikDesc2: " Титул для оплаты поездки 'Taxi' через Blik.",
-    videoCard1Title: "Варшава с высоты",
-    videoCard1Text: "Поездки премиум-класса на такси с шикарным видом.",
-    videoCard2Title: "В любое время и место",
-    videoCard2Text: "Быстрые поездки по Варшаве, днем и ночью. Действуют дневной и ночной тарифы.",
-    videoCard3Title: "Комфорт и надежность",
-    videoCard3Text: "Ваша идеальная поездка начинается здесь. Забронируйте время ниже!",
-    bookingTitle: "Забронировать поездку",
-    bookingDesc: "Выберите день и свободное время. Примечание: В ночное время (18:00 - 08:00) действует измененный тариф.",
-    legendDayText: "Дневной Тариф (08:00 - 18:00)",
-    legendNightText: "Ночной Тариф (18:00 - 08:00)",
-    legendOccupiedText: "Занято / Ожидает",
-    bookingModalTitle: "Бронирование Времени",
-    labelName: "Ваше Имя",
-    labelPhone: "Номер Телефона",
-    labelTelegram: "Имя Пользователя Telegram",
-    labelPickup: "Адрес Откуда",
-    labelDestination: "Адрес Куда",
-    btnSubmitBooking: "Подтвердить Запрос Бронирования",
-    dayRateLabel: "День",
-    nightRateLabel: "Ночь (+50%)",
-    statusTaken: "Занято",
-    statusPending: "Ожидает одобрения",
-    calcDistance: "Расстояние:",
-    calcRate: "Тариф:",
-    calcSurcharge: "Пиковая наценка:",
-    calcTotal: "Стоимость:",
-    widgetTitle: "Статус Активной Поездки",
-    widgetTimerLabel: "Подтверждение в течение:",
-    widgetLblPrice: "Цена Зафиксирована:",
-    widgetLblCounterMsg: "Водитель предложил другую цену:",
-    widgetBtnAccept: "Принять",
-    widgetBtnDecline: "Отклонить Поездку",
-    badgePending: "Ожидание",
-    badgeConfirmed: "Подтвержден",
-    badgeCounter: "Есть Предложение",
-    badgeRejected: "Отклонен"
+    blikDesc2: " Титул для оплаты поездки 'Taxi' через Blik."
   }
 };
 
@@ -1539,16 +1359,6 @@ function setLanguage(lang) {
   document.getElementById('call-text').setAttribute('data-text', t.callText);
   document.getElementById('telegram-text').setAttribute('data-text', t.telegramText);
   document.getElementById('map-button').setAttribute('data-text', t.mapButton);
-
-  // Video card translations
-  if (document.getElementById('video-card1-title')) {
-    document.getElementById('video-card1-title').textContent = t.videoCard1Title;
-    document.getElementById('video-card1-text').textContent  = t.videoCard1Text;
-    document.getElementById('video-card2-title').textContent = t.videoCard2Title;
-    document.getElementById('video-card2-text').textContent  = t.videoCard2Text;
-    document.getElementById('video-card3-title').textContent = t.videoCard3Title;
-    document.getElementById('video-card3-text').textContent  = t.videoCard3Text;
-  }
 
   // Booking calendar translations
   if (document.getElementById('booking-title')) {
@@ -1752,79 +1562,6 @@ const glowObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 
 paymentIcons.forEach(icon => glowObserver.observe(icon));
-
-
-/* ==============================================
-   4) Smooth Background Video & Scroll Card Transitions
-============================================== */
-const videoSection = document.getElementById('video-scroll-section');
-const video = document.getElementById('scroll-video');
-const textCards = [
-  document.getElementById('card-1'),
-  document.getElementById('card-2'),
-  document.getElementById('card-3')
-];
-
-let isVideoInView = false;
-
-if (video) {
-  video.autoplay = true;
-  video.loop = true;
-  video.muted = true;
-  video.playsInline = true;
-}
-
-const videoIntersectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    isVideoInView = entry.isIntersecting;
-    if (video) {
-      if (isVideoInView) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    }
-  });
-}, { threshold: 0.05 });
-videoIntersectionObserver.observe(videoSection);
-
-window.addEventListener('scroll', () => {
-  if (!isVideoInView) return;
-  
-  const rect = videoSection.getBoundingClientRect();
-  const sectionHeight = rect.height;
-  const viewportHeight = window.innerHeight;
-  
-  const totalScrubPath = sectionHeight - viewportHeight;
-  if (totalScrubPath > 0) {
-    const scrolledOffset = -rect.top;
-    let percent = scrolledOffset / totalScrubPath;
-    percent = Math.max(0, Math.min(1, percent));
-    updateTextCards(percent);
-  }
-});
-
-function updateTextCards(percent) {
-  if (percent <= 0.28) {
-    setActiveCard(0);
-  } else if (percent > 0.38 && percent <= 0.68) {
-    setActiveCard(1);
-  } else if (percent > 0.75) {
-    setActiveCard(2);
-  } else {
-    setActiveCard(-1);
-  }
-}
-
-function setActiveCard(index) {
-  textCards.forEach((card, i) => {
-    if (i === index) {
-      card.classList.add('active');
-    } else {
-      card.classList.remove('active');
-    }
-  });
-}
 
 
 /* ==============================================
