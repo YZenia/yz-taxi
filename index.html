@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="shortcut icon" href="favicon.ico">
-  <link rel="manifest" href="/site.webmanifest">  
+  <link rel="manifest" href="site.webmanifest">  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Taxi Service</title>
@@ -1168,19 +1168,21 @@ particlesJS("particles-js", {
 
 /* ----- stats.js ---- */
 var count_particles, stats, update;
-stats = new Stats();
-stats.setMode(0); // 0: fps, 1: ms
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.left = '0px';
-stats.domElement.style.top = '0px';
-document.body.appendChild(stats.domElement);
+if (typeof Stats !== 'undefined') {
+  stats = new Stats();
+  stats.setMode(0); // 0: fps, 1: ms
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.left = '0px';
+  stats.domElement.style.top = '0px';
+  document.body.appendChild(stats.domElement);
+}
 
 count_particles = document.querySelector('.js-count-particles');
 update = function() {
-  stats.begin();
-  stats.end();
+  if (stats) stats.begin();
+  if (stats) stats.end();
   if (window.pJSDom && window.pJSDom[0].pJS.particles &&
-      window.pJSDom[0].pJS.particles.array) {
+      window.pJSDom[0].pJS.particles.array && count_particles) {
     count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
   }
   requestAnimationFrame(update);
@@ -2708,9 +2710,15 @@ window.addEventListener('DOMContentLoaded', () => {
     // Сбрасываем скролл, а затем плавно двигаемся туда, куда нужно
     window.scrollTo(0, 0);
     // Если нужно якорь, то вызываем:
-    document.querySelector(location.hash)?.scrollIntoView({
-      behavior: 'smooth'
-    });
+    if (location.hash && location.hash.startsWith("#") && location.hash.length > 1) {
+      try {
+        document.querySelector(location.hash)?.scrollIntoView({
+          behavior: 'smooth'
+        });
+      } catch (e) {
+        console.error("Scroll to hash target not found:", e);
+      }
+    }
   }, 50);
 });
 </script>
