@@ -883,7 +883,7 @@
       <button onclick="changeLanguage('en')">EN</button>
       <button onclick="changeLanguage('pl')">PL</button>
       <button onclick="changeLanguage('ru')">RU</button>
-      <button id="profile-btn" onclick="openProfileModal()" style="border-color: #f0f; color: #f0f;">👤 Profile</button>
+      <button id="profile-btn" onclick="openProfileModal()" style="border-color: #f0f; color: #f0f;">👤 <span id="profile-btn-label">Profile</span></button>
     </div>
 </header>
 
@@ -1214,11 +1214,11 @@ const translations = {
     quoteTitle: "Quote of the Ride",
     pricingTitle: "Pricing",
     priceSlides: [
-      "2 zł. K I L O M E T E R !",
-      "1 hour or ~20km. Price: 50 zł. Time limit: 1 hour.",
-      "4 hours or ~250km. Price: 400 zł. +1 zł per extra km.",
-      "Full day (in Warsaw): 8 hours, 300km. Price: 550 zł. +1 zł per extra km.",
-      "Full day (long distances): 8 hours, 500km. Price: 800 zł. +1 zł per extra km."
+      { label: "Per KM",     price: 2,   unit: "PLN/km",  desc: "Standard per-kilometer rate",                         fixedPrice: null, fixedKm: null,  hours: null },
+      { label: "1 Hour",     price: 50,  unit: "PLN",     desc: "Up to 1 hour or ~20 km",                              fixedPrice: 50,   fixedKm: 20,    hours: 1    },
+      { label: "4 Hours",    price: 400, unit: "PLN",     desc: "Up to 4 hours or ~250 km (+1 zł/extra km)",           fixedPrice: 400,  fixedKm: 250,   hours: 4    },
+      { label: "Full Day",   price: 550, unit: "PLN",     desc: "8 hours, 300 km in Warsaw (+1 zł/extra km)",          fixedPrice: 550,  fixedKm: 300,   hours: 8    },
+      { label: "Long Day",   price: 800, unit: "PLN",     desc: "8 hours, 500 km long distance (+1 zł/extra km)",      fixedPrice: 800,  fixedKm: 500,   hours: 8    }
     ],
     paymentTitle: "Payment Methods",
     contactTitle: "Contact Me",
@@ -1295,11 +1295,11 @@ const translations = {
     quoteTitle: "Cytat z przejazdu",
     pricingTitle: "Cennik",
     priceSlides: [
-      "2 zł K I L O M E T E R!",
-      "1 godzina lub ~20km. Koszt: 50 zł. Limit czasu: 1 godz.",
-      "4 godziny lub ~250km. Koszt: 400 zł. +1 zł/km za extra km.",
-      "Pełen dzień (Warszawa): 8h, 300km. Koszt: 550 zł. +1 zł/km za extra km.",
-      "Pełen dzień (dalekie trasy): 8h, 500km. Koszt: 800 zł. +1 zł/km za extra km."
+      { label: "Za KM",        price: 2,   unit: "PLN/km",  desc: "Standardowa stawka za kilometr",                           fixedPrice: null, fixedKm: null,  hours: null },
+      { label: "1 Godzina",    price: 50,  unit: "PLN",     desc: "Do 1 godziny lub ~20 km",                                  fixedPrice: 50,   fixedKm: 20,    hours: 1    },
+      { label: "4 Godziny",    price: 400, unit: "PLN",     desc: "Do 4 godzin lub ~250 km (+1 zł/extra km)",                 fixedPrice: 400,  fixedKm: 250,   hours: 4    },
+      { label: "Cały Dzień",   price: 550, unit: "PLN",     desc: "8 godzin, 300 km w Warszawie (+1 zł/extra km)",            fixedPrice: 550,  fixedKm: 300,   hours: 8    },
+      { label: "Długa Trasa",  price: 800, unit: "PLN",     desc: "8 godzin, 500 km długa trasa (+1 zł/extra km)",            fixedPrice: 800,  fixedKm: 500,   hours: 8    }
     ],
     paymentTitle: "Metody płatności",
     contactTitle: "Kontakt",
@@ -1722,9 +1722,29 @@ function renderPriceSlide() {
   const slides = container.querySelectorAll('.slide');
   slides.forEach(s => s.remove());
 
+  const plan = priceSlides[currentPriceIndex];
   const slideDiv = document.createElement('div');
   slideDiv.className = 'slide active';
-  slideDiv.innerHTML = priceSlides[currentPriceIndex];
+
+  if (typeof plan === 'object' && plan !== null) {
+    const isPerKm = plan.fixedPrice === null;
+    const bookLabel = currentLanguage === 'ru' ? 'Забронировать этот план' : (currentLanguage === 'pl' ? 'Zarezerwuj ten plan' : 'Book this plan');
+    const scrollLabel = currentLanguage === 'ru' ? '↓ Выбрать время ↓' : (currentLanguage === 'pl' ? '↓ Wybierz czas ↓' : '↓ Pick a time ↓');
+    slideDiv.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0">
+        <div style="font-size:0.85rem;letter-spacing:3px;text-transform:uppercase;color:#aaa;">${plan.label}</div>
+        <div style="font-size:2.6rem;font-weight:900;color:#0ff;line-height:1;">${plan.price} <span style="font-size:1rem;font-weight:400">${plan.unit}</span></div>
+        <div style="font-size:0.9rem;color:#ccc;text-align:center;max-width:280px;">${plan.desc}</div>
+        ${!isPerKm ? `<button onclick="bookPricingPlan(${JSON.stringify(plan).replace(/"/g,'&quot;')})"
+          style="margin-top:8px;padding:10px 28px;border-radius:30px;border:2px solid #0ff;background:rgba(0,255,255,0.1);color:#0ff;font-weight:700;cursor:pointer;font-size:0.95rem;letter-spacing:1px;transition:all 0.2s;"
+          onmouseover="this.style.background='rgba(0,255,255,0.25)'"
+          onmouseout="this.style.background='rgba(0,255,255,0.1)'">
+          ${bookLabel}
+        </button>` : `<div style="color:#f0f;font-size:0.9rem;margin-top:6px;">${scrollLabel}</div>`}
+      </div>`;
+  } else {
+    slideDiv.innerHTML = plan;
+  }
   container.insertBefore(slideDiv, container.querySelector('.arrows'));
 }
 
@@ -2002,6 +2022,10 @@ async function submitAuth(event) {
           if (nameInput) nameInput.value = res.fullName;
           if (phoneInput && res.phone) phoneInput.value = res.phone;
           
+          // Update profile button label
+          const profileLabel = document.getElementById("profile-btn-label");
+          if (profileLabel) profileLabel.textContent = res.fullName.split(" ")[0];
+          
           statusMsg.style.color = "#0f0";
           statusMsg.textContent = currentLanguage === "ru" ? "Успешно!" : (currentLanguage === "pl" ? "Sukces!" : "Success!");
           
@@ -2176,10 +2200,31 @@ function initUserAuth() {
       const phoneInput = document.getElementById("client-phone");
       if (nameInput && currentUser.fullName) nameInput.value = currentUser.fullName;
       if (phoneInput && currentUser.phone) phoneInput.value = currentUser.phone;
+      // Update profile button to show logged-in user's name
+      const profileLabel = document.getElementById("profile-btn-label");
+      if (profileLabel) profileLabel.textContent = currentUser.fullName.split(" ")[0];
     } catch (e) {
       console.error(e);
     }
   }
+}
+
+function bookPricingPlan(plan) {
+  // Scroll to booking section
+  const bookingSection = document.getElementById("booking-section");
+  if (bookingSection) {
+    bookingSection.scrollIntoView({ behavior: "smooth" });
+  }
+  // Store the plan price so when user picks a slot the price is pre-set
+  window._pricingPlan = plan;
+  // Show a hint toast
+  const toast = document.createElement("div");
+  const planLabel = plan.label;
+  const planPrice = `${plan.price} PLN`;
+  toast.textContent = `✓ Plan selected: ${planLabel} — ${planPrice}. Now pick a date & time below.`;
+  toast.style.cssText = "position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);border:1px solid #0ff;color:#0ff;padding:12px 20px;border-radius:10px;font-size:0.9rem;z-index:10000;pointer-events:none;text-align:center;max-width:90vw;";
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
 }
 
 function openBookingModal(date, time) {
@@ -2238,6 +2283,12 @@ async function submitBooking(event) {
     bookingData.distance = calculateEstimatedDistance(pickup, destination);
     const rateDetails = calculateRateDetails(selectedTimeStr);
     bookingData.price = 10.0 + bookingData.distance * rateDetails.baseRate;
+  }
+
+  // If a pricing plan was pre-selected, use its fixed price
+  if (window._pricingPlan && window._pricingPlan.fixedPrice !== null) {
+    bookingData.price = window._pricingPlan.fixedPrice;
+    bookingData.distance = window._pricingPlan.fixedKm || 0;
   }
 
   const bookingId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "booking-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
@@ -2569,9 +2620,34 @@ function saveBookingState(booking) {
   localStorage.setItem("active_taxi_booking", JSON.stringify(booking));
 }
 
+function minimizeStatusWidget() {
+  const widget = document.getElementById("booking-status-widget");
+  if (widget) widget.style.display = "none";
+
+  // Create or show the bubble
+  let bubble = document.getElementById("booking-bubble");
+  if (!bubble) {
+    bubble = document.createElement("div");
+    bubble.id = "booking-bubble";
+    bubble.title = "Active booking";
+    bubble.style.cssText = "position:fixed;bottom:24px;right:24px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#f0f,#0ff);display:flex;align-items:center;justify-content:center;font-size:1.6rem;cursor:pointer;z-index:9999;box-shadow:0 0 18px rgba(0,255,255,0.5);animation:pulse 2s infinite;";
+    bubble.innerHTML = "🚖";
+    bubble.onclick = () => {
+      bubble.remove();
+      const bk = JSON.parse(localStorage.getItem("active_taxi_booking"));
+      if (bk) showStatusWidget(bk);
+    };
+    document.body.appendChild(bubble);
+  } else {
+    bubble.style.display = "flex";
+  }
+}
+
 function dismissStatusWidget() {
   const widget = document.getElementById("booking-status-widget");
   if (widget) widget.style.display = "none";
+  const bubble = document.getElementById("booking-bubble");
+  if (bubble) bubble.remove();
   
   clearInterval(statusTimerInterval);
   clearInterval(statusPollingInterval);
@@ -2642,7 +2718,10 @@ window.addEventListener('DOMContentLoaded', () => {
 <div id="booking-status-widget" class="status-widget-container" style="display: none;">
   <div class="status-widget-header">
     <span class="status-widget-title" id="widget-title">Active Booking Status</span>
-    <button class="status-widget-close" onclick="dismissStatusWidget()">×</button>
+    <div style="display:flex;gap:6px;">
+      <button class="status-widget-close" onclick="minimizeStatusWidget()" title="Minimize" style="font-size:1rem;padding:0 8px;">—</button>
+      <button class="status-widget-close" onclick="dismissStatusWidget()" title="Close">×</button>
+    </div>
   </div>
   <div class="status-widget-body">
     <div class="status-badge-container">
