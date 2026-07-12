@@ -191,24 +191,28 @@
     }
 
     /* ====== Параллакс ====== */
-    .parallax {
+    .parallax-container {
+      position: relative;
       height: 60vh;
+      background: #000;
+      clip-path: inset(0);
+      z-index: 0;
+    }
+    .parallax-fixed-media {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-
-    }
-    .parallax-1 {
-      background-image: url('1.jpg');
+      pointer-events: none;
+      z-index: 0;
     }
     .parallax-2 {
       background-image: url('2.jpg');
-    }
-    /* Отключаем fixed на iOS, чтобы не дёргалось */
-    @supports (-webkit-overflow-scrolling: touch) {
-      .parallax {
-        background-attachment: scroll !important;
-      }
     }
 
     /* ====== Секции ====== */
@@ -488,6 +492,8 @@
       font-weight: bold;
       text-decoration: underline;
     }
+
+
 
 
     /* ====== Секция Бронирования ====== */
@@ -843,6 +849,12 @@
       .payment-methods img {
         width: 60px;
       }
+      .video-text-card h2 {
+        font-size: 1.6rem;
+      }
+      .video-text-card p {
+        font-size: 0.95rem;
+      }
     }
   </style>
 
@@ -874,8 +886,12 @@
     </div>
 </header>
 
-<!-- ====== Параллакс 1 ====== -->
-<div class="parallax parallax-1"></div>
+<!-- ====== Видео-бэкграунд (вместо Параллакса 1) ====== -->
+<div class="parallax-container">
+  <video autoplay muted loop playsinline preload="none" poster="1.jpg" class="parallax-fixed-media">
+    <source src="background.mp4" type="video/mp4">
+  </video>
+</div>
 
 <!-- ====== Секция: Обо мне (карусель) ====== -->
 <section class="section">
@@ -898,7 +914,9 @@
 </section>
 
 <!-- ====== Параллакс 2 ====== -->
-<div class="parallax parallax-2"></div>
+<div class="parallax-container">
+  <div class="parallax-fixed-media parallax-2"></div>
+</div>
 
 <!-- ====== Секция: Цены и способы оплаты ====== -->
 <section class="section pricing" id="pricing-section">
@@ -1239,7 +1257,43 @@ const translations = {
     cashDesc: "Zapłać kierowcy ustaloną kwotę w gotówce.",
     blikTitle: "Płatność Blik",
     blikDesc: "Skopiuj numer telefonu ",
-    blikDesc2: " aby dokonać płatności Blik za przejazd Tytul 'Taxi'."
+    blikDesc2: " aby dokonać płatności Blik za przejazd Tytul 'Taxi'.",
+    videoCard1Title: "Warszawa z góry",
+    videoCard1Text: "Przeżyj przejazd taksówką klasy premium z pięknym widokiem.",
+    videoCard2Title: "Zawsze i wszędzie",
+    videoCard2Text: "Szybkie przejazdy po Warszawie, w dzień i w nocy. Obowiązują stawki dzienne i nocne.",
+    videoCard3Title: "Komfort i niezawodność",
+    videoCard3Text: "Twoja idealna podróż zaczyna się tutaj. Zarezerwuj swój termin poniżej!",
+    bookingTitle: "Zarezerwuj Przejazd",
+    bookingDesc: "Wybierz dzień i wolny przedział czasowy. Uwaga: Stawki nocne (18:00 - 08:00) mają zmieniony cennik.",
+    legendDayText: "Taryfa Dzienna (08:00 - 18:00)",
+    legendNightText: "Taryfa Nocna (18:00 - 08:00)",
+    legendOccupiedText: "Zajęte / Oczekuje",
+    bookingModalTitle: "Rezerwacja Terminu",
+    labelName: "Twoje Imię",
+    labelPhone: "Numer Telefonu",
+    labelTelegram: "Nazwa Użytkownika Telegram",
+    labelPickup: "Adres odbioru",
+    labelDestination: "Adres docelowy",
+    btnSubmitBooking: "Potwierdź rezerwację",
+    dayRateLabel: "Taryfa dzienna",
+    nightRateLabel: "Taryfa Nocna (+50%)",
+    statusTaken: "Zajęty",
+    statusPending: "Oczekuje na zatwierdzenie",
+    calcDistance: "Szac. Odległość:",
+    calcRate: "Taryfa:",
+    calcSurcharge: "Dopłata za szczyt:",
+    calcTotal: "Szacowana Cena:",
+    widgetTitle: "Status Aktywnego Przejazdu",
+    widgetTimerLabel: "Potwierdzenie za:",
+    widgetLblPrice: "Zablokowana cena:",
+    widgetLblCounterMsg: "Kierowca zaproponował inną cenę:",
+    widgetBtnAccept: "Akceptuj",
+    widgetBtnDecline: "Odrzuć i Anuluj",
+    badgePending: "Oczekuje",
+    badgeConfirmed: "Potwierdzony",
+    badgeCounter: "Nowa Oferta",
+    badgeRejected: "Anulowany"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -1273,7 +1327,43 @@ const translations = {
     cashDesc: "Оплатите водителю оговорённую сумму наличными.",
     blikTitle: "Оплата Blik",
     blikDesc: "Скопируйте номер телефона ",
-    blikDesc2: " Титул для оплаты поездки 'Taxi' через Blik."
+    blikDesc2: " Титул для оплаты поездки 'Taxi' через Blik.",
+    videoCard1Title: "Варшава с высоты",
+    videoCard1Text: "Поездки премиум-класса на такси с шикарным видом.",
+    videoCard2Title: "В любое время и место",
+    videoCard2Text: "Быстрые поездки по Варшаве, днем и ночью. Действуют дневной и ночной тарифы.",
+    videoCard3Title: "Комфорт и надежность",
+    videoCard3Text: "Ваша идеальная поездка начинается здесь. Забронируйте время ниже!",
+    bookingTitle: "Забронировать поездку",
+    bookingDesc: "Выберите день и свободное время. Примечание: В ночное время (18:00 - 08:00) действует измененный тариф.",
+    legendDayText: "Дневной Тариф (08:00 - 18:00)",
+    legendNightText: "Ночной Тариф (18:00 - 08:00)",
+    legendOccupiedText: "Занято / Ожидает",
+    bookingModalTitle: "Бронирование Времени",
+    labelName: "Ваше Имя",
+    labelPhone: "Номер Телефона",
+    labelTelegram: "Имя Пользователя Telegram",
+    labelPickup: "Адрес Откуда",
+    labelDestination: "Адрес Куда",
+    btnSubmitBooking: "Подтвердить Запрос Бронирования",
+    dayRateLabel: "День",
+    nightRateLabel: "Ночь (+50%)",
+    statusTaken: "Занято",
+    statusPending: "Ожидает одобрения",
+    calcDistance: "Расстояние:",
+    calcRate: "Тариф:",
+    calcSurcharge: "Пиковая наценка:",
+    calcTotal: "Стоимость:",
+    widgetTitle: "Статус Активной Поездки",
+    widgetTimerLabel: "Подтверждение в течение:",
+    widgetLblPrice: "Цена Зафиксирована:",
+    widgetLblCounterMsg: "Водитель предложил другую цену:",
+    widgetBtnAccept: "Принять",
+    widgetBtnDecline: "Отклонить Поездку",
+    badgePending: "Ожидание",
+    badgeConfirmed: "Подтвержден",
+    badgeCounter: "Есть Предложение",
+    badgeRejected: "Отклонен"
   }
 };
 
@@ -1290,13 +1380,13 @@ const quotesEn = [
   "Well begun is half done."
 ];
 const quotesPl = [
-  "Podróż tysiąca mil zaczyna się od одного крока.",
+  "Podróż tysiąca mil zaczyna się od jednego kroku.",
   "Prędkość jest użyteczna tylko, jeśli biegniesz we właściwym kierunku.",
   "Życie to podróż, którą trzeba odbyć, bez względu na złe drogi.",
   "Podróż przywraca moc i miłość do życia.",
   "Nie cel, a droga jest celem.",
   "Gładka jazda może cię daleko zaprowadzić.",
-  "Szczęście to sposób podróżowania, а nie cel.",
+  "Szczęście to sposób podróżowania, a nie cel.",
   "Przygoda czeka tuż za rogiem!",
   "Dokądkolwiek idziesz, idź z całego serca.",
   "Dobrze rozpoczęte to w połowie zrobione."
@@ -1350,6 +1440,16 @@ function setLanguage(lang) {
   document.getElementById('call-text').setAttribute('data-text', t.callText);
   document.getElementById('telegram-text').setAttribute('data-text', t.telegramText);
   document.getElementById('map-button').setAttribute('data-text', t.mapButton);
+
+  // Video card translations
+  if (document.getElementById('video-card1-title')) {
+    document.getElementById('video-card1-title').textContent = t.videoCard1Title;
+    document.getElementById('video-card1-text').textContent  = t.videoCard1Text;
+    document.getElementById('video-card2-title').textContent = t.videoCard2Title;
+    document.getElementById('video-card2-text').textContent  = t.videoCard2Text;
+    document.getElementById('video-card3-title').textContent = t.videoCard3Title;
+    document.getElementById('video-card3-text').textContent  = t.videoCard3Text;
+  }
 
   // Booking calendar translations
   if (document.getElementById('booking-title')) {
@@ -1553,6 +1653,9 @@ const glowObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 
 paymentIcons.forEach(icon => glowObserver.observe(icon));
+
+
+
 
 
 /* ==============================================
@@ -1828,7 +1931,7 @@ function showBookingSuccess(statusMsg, bookingId, payload) {
   
   const successText = currentLanguage === "ru" 
     ? "✓ Запрос успешно отправлен! Таксист свяжется с вами." 
-    : (currentLanguage === "pl" ? "✓ Zapytanie wysłane! Taksówkarz skontaktuje się з Тобою." : "✓ Request sent! The driver will contact you.");
+    : (currentLanguage === "pl" ? "✓ Zapytanie wysłane! Taksówkarz skontaktuje się z Tobą." : "✓ Request sent! The driver will contact you.");
   
   statusMsg.textContent = successText;
   
@@ -1885,7 +1988,6 @@ function calculateEstimatedDistance(pickup, destination) {
   return parseFloat(dist.toFixed(1));
 }
 
-// Peak rates check: 07:00-10:00 (7, 8, 9) and 15:00-18:00 (15, 16, 17)
 function calculateRateDetails(timeStr) {
   if (!timeStr) return { baseRate: 2.0, surcharge: 0.0, isPeak: false, isNight: false };
   const hour = parseInt(timeStr.split(":")[0], 10);
@@ -2062,7 +2164,7 @@ function startStatusWidgetEngine(booking) {
       return;
     }
 
-    if (N8N_GET_SLOTS_URL) {
+    if (N8N_GET_STATUS_URL) {
       try {
         const response = await fetch(`${N8N_GET_STATUS_URL}?id=${booking.id}`);
         if (response.ok) {
@@ -2097,7 +2199,6 @@ function saveBookingState(booking) {
   localStorage.setItem("active_taxi_booking", JSON.stringify(booking));
 }
 
-// Client dismisses status widget
 function dismissStatusWidget() {
   const widget = document.getElementById("booking-status-widget");
   if (widget) widget.style.display = "none";
@@ -2111,7 +2212,6 @@ function dismissStatusWidget() {
   }
 }
 
-// Response to counter offer
 async function respondToCounter(isAccepted) {
   const booking = JSON.parse(localStorage.getItem("active_taxi_booking"));
   if (!booking) return;
