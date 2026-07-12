@@ -2,6 +2,31 @@
   "name": "Taxi Booking & Confirmation System",
   "nodes": [
     {
+      "parameters": {},
+      "id": "a9b8c7d6-e5f4-3c2b-1a09-876543210fed",
+      "name": "Manual Trigger: Setup",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS bookings (\n    id VARCHAR(36) PRIMARY KEY,\n    customer_name VARCHAR(100) NOT NULL,\n    customer_phone VARCHAR(50) NOT NULL,\n    booking_date DATE NOT NULL,\n    booking_time VARCHAR(5) NOT NULL,\n    pickup_address TEXT NOT NULL,\n    destination_address TEXT NOT NULL,\n    estimated_distance REAL NOT NULL,\n    price REAL NOT NULL,\n    status VARCHAR(30) DEFAULT 'pending',\n    proposed_price REAL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE INDEX IF NOT EXISTS idx_bookings_date_status ON bookings(booking_date, status);"
+      },
+      "id": "f1e2d3c4-b5a6-7788-9900-112233445566",
+      "name": "SQL: Setup Tables",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        600,
+        -100
+      ]
+    },
+    {
       "parameters": {
         "httpMethod": "POST",
         "path": "bookings",
@@ -409,6 +434,17 @@
     }
   ],
   "connections": {
+    "Manual Trigger: Setup": {
+      "main": [
+        [
+          {
+            "node": "SQL: Setup Tables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Webhook: Create Booking": {
       "main": [
         [
