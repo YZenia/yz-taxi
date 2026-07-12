@@ -15,7 +15,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "CREATE TABLE IF NOT EXISTS bookings (\n    id VARCHAR(36) PRIMARY KEY,\n    customer_name VARCHAR(100) NOT NULL,\n    customer_phone VARCHAR(50) NOT NULL,\n    booking_date DATE NOT NULL,\n    booking_time VARCHAR(5) NOT NULL,\n    pickup_address TEXT NOT NULL,\n    destination_address TEXT NOT NULL,\n    estimated_distance REAL NOT NULL,\n    price REAL NOT NULL,\n    status VARCHAR(30) DEFAULT 'pending',\n    proposed_price REAL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE INDEX IF NOT EXISTS idx_bookings_date_status ON bookings(booking_date, status);"
+        "query": "CREATE TABLE IF NOT EXISTS users (\n    id VARCHAR(36) PRIMARY KEY,\n    full_name VARCHAR(150) UNIQUE NOT NULL,\n    password_hash VARCHAR(255) NOT NULL,\n    phone VARCHAR(50),\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE TABLE IF NOT EXISTS bookings (\n    id VARCHAR(36) PRIMARY KEY,\n    user_id VARCHAR(36) REFERENCES users(id),\n    customer_name VARCHAR(100) NOT NULL,\n    customer_phone VARCHAR(50) NOT NULL,\n    booking_date DATE NOT NULL,\n    booking_time VARCHAR(5) NOT NULL,\n    pickup_address TEXT NOT NULL,\n    destination_address TEXT NOT NULL,\n    estimated_distance REAL NOT NULL,\n    price REAL NOT NULL,\n    status VARCHAR(30) DEFAULT 'pending',\n    proposed_price REAL,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\nCREATE INDEX IF NOT EXISTS idx_bookings_date_status ON bookings(booking_date, status);\nCREATE INDEX IF NOT EXISTS idx_bookings_user_id ON bookings(user_id);"
       },
       "id": "f1e2d3c4-b5a6-7788-9900-112233445566",
       "name": "SQL: Setup Tables",
@@ -45,7 +45,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=INSERT INTO bookings (id, customer_name, customer_phone, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status) VALUES ('{{ $json.body.bookingId || $uuid }}', '{{ $json.body.name }}', '{{ $json.body.phone }}', '{{ $json.body.date }}', '{{ $json.body.time }}', '{{ $json.body.pickup_address }}', '{{ $json.body.destination_address }}', {{ $json.body.estimated_distance }}, {{ $json.body.price }}, 'pending');"
+        "query": "=INSERT INTO bookings (id, user_id, customer_name, customer_phone, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status) VALUES ('{{ $json.body.bookingId || $uuid }}', {{ $json.body.userId ? \"'\" + $json.body.userId + \"'\" : 'NULL' }}, '{{ $json.body.name }}', '{{ $json.body.phone }}', '{{ $json.body.date }}', '{{ $json.body.time }}', '{{ $json.body.pickup_address }}', '{{ $json.body.destination_address }}', {{ $json.body.estimated_distance }}, {{ $json.body.price }}, 'pending');"
       },
       "id": "8c59f2a9-7c8d-4f11-b8d9-2c709abdb101",
       "name": "SQL: Save Pending Booking",
@@ -431,6 +431,79 @@
         820,
         1020
       ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "auth",
+        "options": {}
+      },
+      "id": "b9a8c7d6-e5f4-3c2b-1a09-876543210fed",
+      "name": "Webhook: User Auth",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        380,
+        1180
+      ],
+      "webhookId": "taxi-user-auth"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=WITH existing_user AS (\n  SELECT id, full_name, password_hash, phone FROM users WHERE full_name = '{{ $json.body.fullName }}'\n),\nnew_user AS (\n  INSERT INTO users (id, full_name, password_hash, phone)\n  SELECT '{{ $uuid }}', '{{ $json.body.fullName }}', '{{ $json.body.password }}', {{ $json.body.phone ? \"'\" + $json.body.phone + \"'\" : 'NULL' }}\n  WHERE NOT EXISTS (SELECT 1 FROM existing_user)\n  RETURNING id, full_name, password_hash, phone\n)\nSELECT id, full_name, password_hash, phone, 'registered' as action FROM new_user\nUNION ALL\nSELECT id, full_name, password_hash, phone, 'login' as action FROM existing_user;"
+      },
+      "id": "c1e2d3c4-b5a6-7788-9900-112233445566",
+      "name": "SQL: Auth Router",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        600,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const user = items[0]?.json;\nconst submittedPassword = $('Webhook: User Auth').item.json.body.password;\n\nif (!user) {\n  return [{ json: { success: false, error: 'no_user_returned', message: 'Ошибка при авторизации' } }];\n}\n\nif (user.action === 'login') {\n  if (user.password_hash === submittedPassword) {\n    return [{ json: { success: true, userId: user.id, fullName: user.full_name, phone: user.phone, action: 'login' } }];\n  } else {\n    return [{ json: { success: false, error: 'invalid_password', message: 'Неверный пароль для этого имени' } }];\n  }\n} else {\n  return [{ json: { success: true, userId: user.id, fullName: user.full_name, phone: user.phone, action: 'register' } }];\n}"
+      },
+      "id": "d1e2d3c4-b5a6-7788-9900-112233445566",
+      "name": "Code: Verify Auth",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "bookings/history",
+        "options": {}
+      },
+      "id": "e1e2d3c4-b5a6-7788-9900-112233445566",
+      "name": "Webhook: Get History",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        380,
+        1340
+      ],
+      "webhookId": "taxi-bookings-history"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT id, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status, proposed_price FROM bookings WHERE user_id = '{{ $json.query.userId }}' ORDER BY booking_date DESC, booking_time DESC;"
+      },
+      "id": "f1e2d3c4-b5a6-7788-9900-112233445567",
+      "name": "SQL: Fetch History",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        600,
+        1340
+      ]
     }
   ],
   "connections": {
@@ -635,6 +708,39 @@
         [
           {
             "node": "Telegram: Alert Client Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: User Auth": {
+      "main": [
+        [
+          {
+            "node": "SQL: Auth Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL: Auth Router": {
+      "main": [
+        [
+          {
+            "node": "Code: Verify Auth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Get History": {
+      "main": [
+        [
+          {
+            "node": "SQL: Fetch History",
             "type": "main",
             "index": 0
           }
