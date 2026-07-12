@@ -2180,7 +2180,16 @@ async function cancelBookingFromHistory(bookingId) {
         // If this booking is the currently tracked one in the active widget, dismiss the widget
         const activeBooking = JSON.parse(localStorage.getItem("active_taxi_booking"));
         if (activeBooking && activeBooking.id === bookingId) {
+          const localBookings = JSON.parse(localStorage.getItem("taxi_local_bookings") || "{}");
+          if (localBookings[activeBooking.date]) {
+            localBookings[activeBooking.date] = localBookings[activeBooking.date].filter(t => t !== activeBooking.time);
+            localStorage.setItem("taxi_local_bookings", JSON.stringify(localBookings));
+          }
           dismissStatusWidget();
+        }
+        // Always trigger reload slots to free up calendar
+        if (typeof selectedDateStr !== "undefined") {
+          loadSlots(selectedDateStr);
         }
         // Reload history
         const currentUserJson = localStorage.getItem("currentUser");
@@ -2737,6 +2746,13 @@ async function respondToCounter(isAccepted) {
     }
     if (!localBookings[booking.date].includes(booking.time)) {
       localBookings[booking.date].push(booking.time);
+      localStorage.setItem("taxi_local_bookings", JSON.stringify(localBookings));
+    }
+    loadSlots(booking.date);
+  } else if (booking.status === "rejected") {
+    const localBookings = JSON.parse(localStorage.getItem("taxi_local_bookings") || "{}");
+    if (localBookings[booking.date]) {
+      localBookings[booking.date] = localBookings[booking.date].filter(t => t !== booking.time);
       localStorage.setItem("taxi_local_bookings", JSON.stringify(localBookings));
     }
     loadSlots(booking.date);

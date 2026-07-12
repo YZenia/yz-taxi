@@ -73,7 +73,7 @@
     {
       "parameters": {
         "chatId": "429593682",
-        "text": "=🚖 NEW RIDE REQUEST\n------------------------------------\n📅 Date: {{ $('Webhook: Create Booking').item.json.body.date }}\n⏰ Time: {{ $('Webhook: Create Booking').item.json.body.time }}\n👤 Client: {{ $('Webhook: Create Booking').item.json.body.name }}\n📞 Phone: {{ $('Webhook: Create Booking').item.json.body.phone }}\n\n📍 Pickup: {{ $('Webhook: Create Booking').item.json.body.pickup_address }}\n🏁 Destination: {{ $('Webhook: Create Booking').item.json.body.destination_address }}\nℹ️ Distance: {{ $('Webhook: Create Booking').item.json.body.estimated_distance }} km\n💵 Quoted Price: {{ $('Webhook: Create Booking').item.json.body.price }} PLN\n------------------------------------\nRespond within 10 minutes!",
+        "text": "🚖 NEW RIDE REQUEST\n------------------------------------\n📅 Date: {{ $json.booking_date }}\n⏰ Time: {{ $json.booking_time }}\n👤 Client: {{ $json.customer_name }}\n📞 Phone: {{ $json.customer_phone }}\n\n📍 Pickup: {{ $json.pickup_address }}\n🏁 Destination: {{ $json.destination_address }}\nℹ️ Distance: {{ $json.estimated_distance }} km\n💵 Quoted Price: {{ $json.price }} PLN\n------------------------------------\nRespond within 10 minutes!",
         "replyMarkup": "inlineKeyboard",
         "keyboardElm": {
           "rows": [
@@ -81,11 +81,11 @@
               "rowElms": [
                 {
                   "text": "✅ Confirm",
-                  "callback_data": "={{ \"confirm:\" + $('Webhook: Create Booking').item.json.body.bookingId }}"
+                  "callback_data": "confirm:{{ $json.id }}"
                 },
                 {
                   "text": "❌ Decline",
-                  "callback_data": "={{ \"decline:\" + $('Webhook: Create Booking').item.json.body.bookingId }}"
+                  "callback_data": "decline:{{ $json.id }}"
                 }
               ]
             },
@@ -93,7 +93,7 @@
               "rowElms": [
                 {
                   "text": "➕ Counter-Offer (+20 PLN)",
-                  "callback_data": "={{ \"counter:\" + $('Webhook: Create Booking').item.json.body.bookingId + \":20\" }}"
+                  "callback_data": "counter:{{ $json.id }}:20"
                 }
               ]
             }
