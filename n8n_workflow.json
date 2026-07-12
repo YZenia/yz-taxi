@@ -20,7 +20,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "=INSERT INTO bookings (id, customer_name, customer_phone, customer_telegram, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status) VALUES ('{{ $json.body.bookingId || $uuid }}', '{{ $json.body.name }}', '{{ $json.body.phone }}', '{{ $json.body.telegram }}', '{{ $json.body.date }}', '{{ $json.body.time }}', '{{ $json.body.pickup_address }}', '{{ $json.body.destination_address }}', {{ $json.body.estimated_distance }}, {{ $json.body.price }}, 'pending');"
+        "query": "=INSERT INTO bookings (id, customer_name, customer_phone, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status) VALUES ('{{ $json.body.bookingId || $uuid }}', '{{ $json.body.name }}', '{{ $json.body.phone }}', '{{ $json.body.date }}', '{{ $json.body.time }}', '{{ $json.body.pickup_address }}', '{{ $json.body.destination_address }}', {{ $json.body.estimated_distance }}, {{ $json.body.price }}, 'pending');"
       },
       "id": "8c59f2a9-7c8d-4f11-b8d9-2c709abdb101",
       "name": "SQL: Save Pending Booking",
