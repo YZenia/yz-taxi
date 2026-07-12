@@ -2066,8 +2066,13 @@ async function loadRideHistory(userId) {
     try {
       const response = await fetch(`${N8N_HISTORY_URL}?userId=${userId}`);
       if (response.ok) {
-        const bookings = await response.json();
-        renderHistoryList(bookings, container);
+        let bookings = await response.json();
+        if (!Array.isArray(bookings)) {
+          bookings = [bookings];
+        }
+        // Filter out empty items from n8n alwaysOutputData
+        const validBookings = bookings.filter(b => b && b.id);
+        renderHistoryList(validBookings, container);
       } else {
         container.innerHTML = `<p style="color: #ff3366;">Error loading history</p>`;
       }
@@ -2621,6 +2626,13 @@ function startStatusWidgetEngine(booking) {
       booking.status = "rejected";
       saveBookingState(booking);
       renderStatusWidget(booking);
+      
+      const localBookings = JSON.parse(localStorage.getItem("taxi_local_bookings") || "{}");
+      if (localBookings[booking.date]) {
+        localBookings[booking.date] = localBookings[booking.date].filter(t => t !== booking.time);
+        localStorage.setItem("taxi_local_bookings", JSON.stringify(localBookings));
+      }
+      loadSlots(booking.date);
     } else {
       const minutes = Math.floor(remaining / 60);
       const seconds = remaining % 60;
@@ -2649,6 +2661,17 @@ function startStatusWidgetEngine(booking) {
             }
             saveBookingState(booking);
             renderStatusWidget(booking);
+            
+            if (booking.status === "rejected") {
+              const localBookings = JSON.parse(localStorage.getItem("taxi_local_bookings") || "{}");
+              if (localBookings[booking.date]) {
+                localBookings[booking.date] = localBookings[booking.date].filter(t => t !== booking.time);
+                localStorage.setItem("taxi_local_bookings", JSON.stringify(localBookings));
+              }
+              loadSlots(booking.date);
+            } else if (booking.status === "confirmed") {
+              loadSlots(booking.date);
+            }
           }
         }
       } catch (e) {

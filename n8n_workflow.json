@@ -640,6 +640,7 @@
         "query": "SELECT id, booking_date, booking_time, pickup_address, destination_address, estimated_distance, price, status, proposed_price FROM bookings WHERE user_id = '{{ $json.query.userId }}' ORDER BY booking_date DESC, booking_time DESC;",
         "options": {}
       },
+      "alwaysOutputData": true,
       "id": "87c8e56b-98d1-4b7f-89ba-e47e304310f3",
       "name": "SQL: Fetch History",
       "type": "n8n-nodes-base.postgres",
