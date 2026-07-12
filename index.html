@@ -2072,6 +2072,28 @@ async function loadRideHistory(userId) {
         }
         // Filter out empty items from n8n alwaysOutputData
         const validBookings = bookings.filter(b => b && b.id);
+        
+        // Self-healing: Sync browser local storage with server status (free up rejected slots)
+        const localBookings = JSON.parse(localStorage.getItem("taxi_local_bookings") || "{}");
+        let localChanged = false;
+        validBookings.forEach(b => {
+          if (b.status === "rejected" || b.status === "cancelled") {
+            if (localBookings[b.booking_date]) {
+              const beforeCount = localBookings[b.booking_date].length;
+              localBookings[b.booking_date] = localBookings[b.booking_date].filter(t => t !== b.booking_time);
+              if (localBookings[b.booking_date].length !== beforeCount) {
+                localChanged = true;
+              }
+            }
+          }
+        });
+        if (localChanged) {
+          localStorage.setItem("taxi_local_bookings", JSON.stringify(localBookings));
+          if (typeof selectedDateStr !== "undefined") {
+            loadSlots(selectedDateStr);
+          }
+        }
+        
         renderHistoryList(validBookings, container);
       } else {
         container.innerHTML = `<p style="color: #ff3366;">Error loading history</p>`;
