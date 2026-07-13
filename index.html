@@ -950,7 +950,7 @@
         <label for="ride-pickup" id="label-pickup">Pickup Address</label>
         <input type="text" id="ride-pickup" required placeholder="Warsaw Central Station">
       </div>
-      <div class="form-group">
+      <div class="form-group" id="destination-group">
         <label for="ride-destination" id="label-destination">Destination Address</label>
         <input type="text" id="ride-destination" required placeholder="Chopin Airport">
       </div>
@@ -1321,11 +1321,11 @@ const translations = {
     quoteTitle: "Цитата поездки",
     pricingTitle: "Цены",
     priceSlides: [
-      "2 zł К И Л О М Е Т Р!",
-      "Поездка на 1 час (~20 км). Стоимость 50 zł. Лимит времени: 1 час.",
-      "Поездка 4 часа (~250 км). Стоимость: 400 zł. больше км. то +1 zł за км.",
-      "Целый день (по Варшаве): 8 часов, 300 км. 550 zł. больше км. то +1 zł за км.",
-      "Целый день (дальние поездки): 8 часов, 500 км. 800 zł. больше км. то +1 zł за км."
+      { label: "За КМ",        price: 2,   unit: "PLN/км",  desc: "Стандартный тариф за километр",                             fixedPrice: null, fixedKm: null,  hours: null },
+      { label: "1 Час",        price: 50,  unit: "PLN",     desc: "До 1 часа или ~20 км",                                      fixedPrice: 50,   fixedKm: 20,    hours: 1    },
+      { label: "4 Часа",       price: 400, unit: "PLN",     desc: "До 4 часов или ~250 км (+1 zł/км доп.)",                    fixedPrice: 400,  fixedKm: 250,   hours: 4    },
+      { label: "Целый День",   price: 550, unit: "PLN",     desc: "8 часов, 300 км по Варшаве (+1 zł/км доп.)",                fixedPrice: 550,  fixedKm: 300,   hours: 8    },
+      { label: "Дальняя Дист", price: 800, unit: "PLN",     desc: "8 часов, 500 км дальняя дистанция (+1 zł/км доп.)",         fixedPrice: 800,  fixedKm: 500,   hours: 8    }
     ],
     paymentTitle: "Способы оплаты",
     contactTitle: "Связаться",
@@ -2292,8 +2292,12 @@ function bookPricingPlan(plan) {
   // Show a hint toast
   const toast = document.createElement("div");
   const planLabel = plan.label;
-  const planPrice = `${plan.price} PLN`;
-  toast.textContent = `✓ Plan selected: ${planLabel} — ${planPrice}. Now pick a date & time below.`;
+  const planPrice = `${plan.price + 10} PLN`;
+  const toastMsg = currentLanguage === "ru"
+    ? `✓ Выбран план: ${planLabel} — ${planPrice} (включая 10 PLN за посадку). Выберите дату и время ниже.`
+    : (currentLanguage === "pl" ? `✓ Wybrano plan: ${planLabel} — ${planPrice} (w tym 10 PLN opłaty startowej). Wybierz datę i czas poniżej.` : `✓ Plan selected: ${planLabel} — ${planPrice} (includes 10 PLN pickup fee). Now pick a date & time below.`);
+  
+  toast.textContent = toastMsg;
   toast.style.cssText = "position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);border:1px solid #0ff;color:#0ff;padding:12px 20px;border-radius:10px;font-size:0.9rem;z-index:10000;pointer-events:none;text-align:center;max-width:90vw;";
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3500);
@@ -2305,11 +2309,16 @@ function openBookingModal(date, time) {
   
   const modal = document.getElementById("booking-modal");
   const modalInfo = document.getElementById("booking-modal-info");
+  const destGroup = document.getElementById("destination-group");
+  const destInput = document.getElementById("ride-destination");
+  const calcBox = document.getElementById("calculator-result");
   
   // Reset calculator UI
-  const calcBox = document.getElementById("calculator-result");
   if (calcBox) calcBox.style.display = "none";
   bookingData = {}; // Clear previous data
+  
+  const currentUserJson = localStorage.getItem("currentUser");
+  const isUserRegistered = !!currentUserJson;
   
   if (modal && modalInfo) {
     const formattedDate = date.split("-").reverse().join(".");
@@ -2319,6 +2328,54 @@ function openBookingModal(date, time) {
       : (translations[currentLanguage].dayRateLabel || "Day Rate");
       
     modalInfo.innerHTML = `📅 ${formattedDate} &nbsp;&nbsp;&nbsp; ⏰ ${time} (${rateText})`;
+    
+    // Manage fields if a package/plan is chosen
+    if (window._pricingPlan && window._pricingPlan.fixedPrice !== null) {
+      if (isUserRegistered) {
+        // Hide destination for registered clients booking a plan
+        if (destGroup) destGroup.style.display = "none";
+        if (destInput) {
+          destInput.removeAttribute("required");
+          destInput.value = `Plan: ${window._pricingPlan.label}`;
+        }
+      } else {
+        // Unregistered clients still need to provide details
+        if (destGroup) destGroup.style.display = "block";
+        if (destInput) {
+          destInput.setAttribute("required", "required");
+          destInput.value = "";
+        }
+      }
+      
+      const planPrice = window._pricingPlan.fixedPrice;
+      const baseFare = 10.0;
+      const total = planPrice + baseFare;
+      
+      bookingData.price = total;
+      bookingData.distance = window._pricingPlan.fixedKm || 0;
+      
+      // Render plan details in calculation box
+      if (calcBox) {
+        calcBox.style.display = "block";
+        document.getElementById("calc-val-distance").textContent = window._pricingPlan.fixedKm ? `${window._pricingPlan.fixedKm} km limit` : "-";
+        document.getElementById("calc-val-rate").textContent = `${window._pricingPlan.price} PLN`;
+        
+        const peakRow = document.getElementById("calc-peak-row");
+        if (peakRow) {
+          peakRow.style.display = "flex";
+          document.getElementById("calc-val-surcharge").textContent = `+10.00 PLN ${currentLanguage === "ru" ? "Посадка" : (currentLanguage === "pl" ? "Opłata startowa" : "Pickup Fee")}`;
+        }
+        document.getElementById("calc-val-total").textContent = `${total.toFixed(2)} PLN`;
+      }
+    } else {
+      // Regular per-KM ride
+      if (destGroup) destGroup.style.display = "block";
+      if (destInput) {
+        destInput.setAttribute("required", "required");
+        destInput.value = "";
+      }
+    }
+    
     modal.classList.add("show");
   }
 }
@@ -2455,6 +2512,9 @@ function showBookingSuccess(statusMsg, bookingId, payload) {
     timestamp: Date.now()
   };
   saveBookingState(activeBooking);
+  
+  // Clear selected pricing plan
+  window._pricingPlan = null;
   
   setTimeout(() => {
     closeBookingModal();
