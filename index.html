@@ -1143,6 +1143,7 @@ const N8N_GET_STATUS_URL = "https://jeff204-20204.mikrus.cloud/webhook/bookings/
 const N8N_ACTION_URL = "https://jeff204-20204.mikrus.cloud/webhook/bookings/action";
 const N8N_AUTH_URL = "https://jeff204-20204.mikrus.cloud/webhook/auth";
 const N8N_HISTORY_URL = "https://jeff204-20204.mikrus.cloud/webhook/bookings/history";
+const N8N_GET_LOCATION_URL = "https://jeff204-20204.mikrus.cloud/webhook/driver/location";
 
 /* =========================
    2) Переводы и данные
@@ -2640,6 +2641,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   checkActiveBookingOnLoad();
+  loadDriverLocation();
 });
 
 function checkActiveBookingOnLoad() {
@@ -2654,6 +2656,26 @@ function checkActiveBookingOnLoad() {
   } else {
     showStatusWidget(active);
     startStatusWidgetEngine(active);
+  }
+}
+
+async function loadDriverLocation() {
+  if (N8N_GET_LOCATION_URL) {
+    try {
+      const response = await fetch(N8N_GET_LOCATION_URL);
+      if (response.ok) {
+        const data = await response.json();
+        const url = data.url || (Array.isArray(data) && data[0] && data[0].url);
+        if (url) {
+          const mapBtn = document.getElementById("map-button");
+          if (mapBtn) {
+            mapBtn.href = url;
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load driver location URL:", e);
+    }
   }
 }
 

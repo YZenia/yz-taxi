@@ -242,7 +242,8 @@
     {
       "parameters": {
         "updates": [
-          "callback_query"
+          "callback_query",
+          "message"
         ],
         "additionalFields": {}
       },
@@ -264,7 +265,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const callbackData = items[0].json.callback_query.data;\nconst parts = callbackData.split(':');\nconst action = parts[0];\nconst bookingId = parts[1];\nconst surcharge = parts[2] ? parseFloat(parts[2]) : 0;\n\nreturn [{\n  json: {\n    action,\n    bookingId,\n    surcharge,\n    callbackQueryId: items[0].json.callback_query.id,\n    messageId: items[0].json.callback_query.message.message_id\n  }\n}];"
+        "jsCode": "const callbackQuery = items[0].json.callback_query;\nif (callbackQuery) {\n  const parts = callbackQuery.data.split(':');\n  const action = parts[0];\n  const bookingId = parts[1];\n  const surcharge = parts[2] ? parseFloat(parts[2]) : 0;\n  return [{\n    json: {\n      type: \"callback\",\n      action,\n      bookingId,\n      surcharge,\n      callbackQueryId: callbackQuery.id,\n      messageId: callbackQuery.message.message_id,\n      chatId: callbackQuery.message.chat.id\n    }\n  }];\n} else if (items[0].json.message) {\n  return [{\n    json: {\n      type: \"message\",\n      text: items[0].json.message.text,\n      chatId: items[0].json.message.chat.id,\n      messageId: items[0].json.message.message_id\n    }\n  }];\n}\nreturn [];"
       },
       "id": "a623f96f-acd9-4baf-998b-b15688b777bb",
       "name": "Parse Callback Payload",
@@ -724,6 +725,226 @@
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition-callback",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "callback",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "81881881-8188-4818-8818-818818818818",
+      "name": "If Callback or Message?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2384,
+        3560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition-contains-http",
+              "leftValue": "={{ $json.text.toLowerCase().includes('http') }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "82882882-8288-4828-8828-828828828828",
+      "name": "If Map Link?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2640,
+        3760
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO driver_location (url) VALUES ('{{ $json.text }}') RETURNING *;",
+        "options": {}
+      },
+      "id": "83883883-8388-4838-8838-838838838838",
+      "name": "SQL: Save Driver Location",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2896,
+        3700
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "m0BW1GDkna5keKE9",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Parse Callback Payload').item.json.chatId }}",
+        "text": "=✅ Location link updated successfully!\nNew URL:\n{{ $json.url }}",
+        "additionalFields": {}
+      },
+      "id": "84884884-8488-4848-8848-848848848848",
+      "name": "Telegram: Location Saved Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3152,
+        3700
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Parse Callback Payload').item.json.chatId }}",
+        "text": "=❌ Link not recognized.\n\nPlease reply with a valid Google Maps location link starting with http or https.",
+        "additionalFields": {}
+      },
+      "id": "85885858-8585-4858-8858-858858585858",
+      "name": "Telegram: Invalid Link Response",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2896,
+        3880
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 22 * * *"
+            }
+          ]
+        }
+      },
+      "id": "86886886-8688-4868-8868-868868868868",
+      "name": "Schedule: Location Reminder",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1952,
+        4500
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "429593682",
+        "text": "🗺️ Daily Reminder: Please reply to this message with the updated Google Maps real-time location link for the website.",
+        "additionalFields": {}
+      },
+      "id": "87887887-8788-4878-8878-878878878878",
+      "name": "Telegram: Send Location Reminder",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        4500
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "xxCBwgC3RZjWqpt2",
+          "name": "taxibook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "driver/location",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "88888888-8888-4888-8888-888888888888",
+      "name": "Webhook: Get Location",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1952,
+        4800
+      ],
+      "webhookId": "driver-location"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT url FROM driver_location ORDER BY updated_at DESC LIMIT 1;",
+        "options": {}
+      },
+      "id": "89889899-8989-4899-8989-898989898989",
+      "name": "SQL: Fetch Location",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2176,
+        4800
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "m0BW1GDkna5keKE9",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    url: items[0].json.url\n  }\n}];"
+      },
+      "id": "90990990-9090-4909-9090-909909909090",
+      "name": "Format Location Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        4800
+      ]
     }
   ],
   "connections": {
@@ -830,7 +1051,7 @@
       "main": [
         [
           {
-            "node": "If Action = Confirm?",
+            "node": "If Callback or Message?",
             "type": "main",
             "index": 0
           }
@@ -988,6 +1209,86 @@
         [
           {
             "node": "SQL: Fetch Slots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Callback or Message?": {
+      "main": [
+        [
+          {
+            "node": "If Action = Confirm?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If Map Link?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Map Link?": {
+      "main": [
+        [
+          {
+            "node": "SQL: Save Driver Location",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram: Invalid Link Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL: Save Driver Location": {
+      "main": [
+        [
+          {
+            "node": "Telegram: Location Saved Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule: Location Reminder": {
+      "main": [
+        [
+          {
+            "node": "Telegram: Send Location Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Get Location": {
+      "main": [
+        [
+          {
+            "node": "SQL: Fetch Location",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL: Fetch Location": {
+      "main": [
+        [
+          {
+            "node": "Format Location Response",
             "type": "main",
             "index": 0
           }
