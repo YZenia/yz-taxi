@@ -771,11 +771,11 @@
           "conditions": [
             {
               "id": "condition-contains-http",
-              "leftValue": "={{ $json.text.toLowerCase().includes('http') }}",
-              "rightValue": "true",
+              "leftValue": "={{ $json.text }}",
+              "rightValue": "https?://",
               "operator": {
                 "type": "string",
-                "operation": "equals"
+                "operation": "regex"
               }
             }
           ],
@@ -815,7 +815,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $('Parse Callback Payload').item.json.chatId }}",
+        "chatId": "={{ $('Parse Callback Payload').first().json.chatId }}",
         "text": "=✅ Location link updated successfully!\nNew URL:\n{{ $json.url }}",
         "additionalFields": {}
       },
@@ -836,7 +836,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $('Parse Callback Payload').item.json.chatId }}",
+        "chatId": "={{ $('Parse Callback Payload').first().json.chatId }}",
         "text": "=❌ Link not recognized.\n\nPlease reply with a valid Google Maps location link starting with http or https.",
         "additionalFields": {}
       },
