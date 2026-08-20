@@ -27,6 +27,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+
+  <!-- Leaflet Interactive Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <style>
     /* ---- reset ---- */
     body {
@@ -1084,6 +1088,89 @@
         transform: scale(0.95);
       }
     }
+
+    /* ====== Address Autocomplete 2026 UI ====== */
+    .input-autocomplete-wrapper {
+      position: relative;
+      width: 100%;
+    }
+    .autocomplete-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: rgba(12, 16, 26, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 255, 255, 0.35);
+      border-radius: 12px;
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 10005;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 255, 255, 0.15);
+      display: none;
+      text-align: left;
+    }
+    .autocomplete-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+    .autocomplete-item:hover {
+      background: rgba(0, 255, 255, 0.15);
+    }
+    .autocomplete-item .main-name {
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .autocomplete-item .sub-name {
+      color: #888;
+      font-size: 0.75rem;
+      margin-top: 2px;
+    }
+
+    /* ====== Interactive Leaflet Map Styling ====== */
+    #live-leaflet-map {
+      width: 100%;
+      max-width: 680px;
+      height: 320px;
+      margin: 25px auto 15px auto;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 255, 255, 0.15);
+      overflow: hidden;
+      z-index: 1;
+    }
+    .leaflet-popup-content-wrapper {
+      background: rgba(14, 18, 28, 0.95) !important;
+      backdrop-filter: blur(15px);
+      color: #fff !important;
+      border: 1px solid #0ff !important;
+      border-radius: 12px !important;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3) !important;
+    }
+    .leaflet-popup-tip {
+      background: rgba(14, 18, 28, 0.95) !important;
+    }
+    .custom-taxi-marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      filter: drop-shadow(0 0 10px #00ff88);
+      animation: bounceMarker 2s infinite;
+    }
+    @keyframes bounceMarker {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
   </style>
 
 </head>
@@ -1213,25 +1300,31 @@
 
       <div class="form-group">
         <label for="ride-pickup" id="label-pickup">Pickup Address</label>
-        <input type="text" id="ride-pickup" required placeholder="Warsaw Central Station">
+        <div class="input-autocomplete-wrapper">
+          <input type="text" id="ride-pickup" required placeholder="Warsaw Central Station" autocomplete="off">
+          <div id="pickup-suggestions" class="autocomplete-dropdown"></div>
+        </div>
       </div>
 
       <!-- Quick Warsaw Destinations Chips -->
       <div class="quick-locations-container">
         <span class="quick-loc-label" id="quick-loc-title">⚡ Quick Warsaw Destinations:</span>
         <div class="quick-chips">
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Chopina (WAW)', 14)">✈️ Chopin Airport</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Modlin (WMI)', 40)">✈️ Modlin Airport</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Warszawa Centralna', 5)">🚆 Dworzec Centralny</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Pałac Kultury i Nauki', 4)">🏛️ Pałac Kultury</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Westfield Arkadia', 7)">🛍️ Arkadia</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Stare Miasto (Old Town)', 6)">🏰 Stare Miasto</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Chopina (WAW)', 52.1672, 20.9679)">✈️ Chopin Airport</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Modlin (WMI)', 52.4511, 20.6517)">✈️ Modlin Airport</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Warszawa Centralna', 52.2289, 21.0032)">🚆 Dworzec Centralny</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Pałac Kultury i Nauki', 52.2319, 21.0067)">🏛️ Pałac Kultury</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Westfield Arkadia', 52.2571, 20.9845)">🛍️ Arkadia</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Stare Miasto (Old Town)', 52.2497, 21.0122)">🏰 Stare Miasto</button>
         </div>
       </div>
 
       <div class="form-group" id="destination-group">
         <label for="ride-destination" id="label-destination">Destination Address</label>
-        <input type="text" id="ride-destination" required placeholder="Chopin Airport">
+        <div class="input-autocomplete-wrapper">
+          <input type="text" id="ride-destination" required placeholder="Chopin Airport" autocomplete="off">
+          <div id="dest-suggestions" class="autocomplete-dropdown"></div>
+        </div>
       </div>
       <!-- Digital Ride Receipt Fare Preview -->
       <div id="calculator-result" class="digital-fare-card" style="display: none;">
@@ -1333,8 +1426,9 @@
 <section class="section" id="map-section">
   <h2 id="map-title">Where I am?</h2>
   <p id="map-description">
-    Click the button below to open my location in Google Maps:
+    Real-time driver location in Warsaw:
   </p>
+  <div id="live-leaflet-map"></div>
   <a
     id="map-button"
     href="https://maps.app.goo.gl/gdtUjPeBp2JFzsf76"
@@ -2043,6 +2137,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // Запускаем с английской версии (или любой другой)
   changeLanguage('en');
   initUserAuth();
+  fetchDriverLocation();
+  initAddressAutocomplete();
 
   // Register Service Worker for PWA 2026 support
   if ('serviceWorker' in navigator) {
@@ -2067,10 +2163,6 @@ const glowObserver = new IntersectionObserver((entries) => {
 
 paymentIcons.forEach(icon => glowObserver.observe(icon));
 
-
-
-
-
 /* ==============================================
    4.5) Security & Modern UI Utility Functions (2026)
 ============================================== */
@@ -2094,23 +2186,300 @@ function triggerHaptic(duration = 15) {
   } catch (e) {}
 }
 
-// 1-Click Quick Destination Selector
-function setQuickDestination(destName, estKm) {
+/* ==============================================
+   4.6) Interactive Cyberpunk Leaflet Map (2026)
+============================================== */
+let liveMapInstance = null;
+let liveTaxiMarker = null;
+
+function initLeafletMap(lat = 52.2297, lon = 21.0122) {
+  const mapContainer = document.getElementById("live-leaflet-map");
+  if (!mapContainer || typeof L === "undefined") return;
+
+  if (liveMapInstance) {
+    liveMapInstance.setView([lat, lon], 12);
+    if (liveTaxiMarker) {
+      liveTaxiMarker.setLatLng([lat, lon]);
+    }
+    return;
+  }
+
+  try {
+    liveMapInstance = L.map('live-leaflet-map', {
+      zoomControl: false
+    }).setView([lat, lon], 12);
+
+    // CartoDB Dark Matter tiles (free, dark cyberpunk style)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; CARTO &copy; OpenStreetMap',
+      maxZoom: 19
+    }).addTo(liveMapInstance);
+
+    L.control.zoom({ position: 'bottomright' }).addTo(liveMapInstance);
+
+    // Custom Glowing Taxi Icon
+    const taxiIcon = L.divIcon({
+      className: 'custom-taxi-marker',
+      html: '🚖',
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+      popupAnchor: [0, -18]
+    });
+
+    liveTaxiMarker = L.marker([lat, lon], { icon: taxiIcon }).addTo(liveMapInstance);
+    
+    const popupContent = `
+      <div style="text-align:center;padding:4px;font-family:inherit;">
+        <strong style="color:#0ff;font-size:1rem;letter-spacing:1px;">YZ TAXI</strong>
+        <div style="font-size:0.8rem;color:#00ff88;margin-top:2px;">● Online in Warsaw</div>
+        <div style="font-size:0.75rem;color:#aaa;margin-top:4px;">Available for Immediate / Pre-booking</div>
+      </div>
+    `;
+    liveTaxiMarker.bindPopup(popupContent);
+  } catch (e) {
+    console.warn("Leaflet map initialization error:", e);
+  }
+}
+
+async function fetchDriverLocation() {
+  if (typeof N8N_GET_LOCATION_URL !== "undefined" && N8N_GET_LOCATION_URL) {
+    try {
+      const res = await fetch(N8N_GET_LOCATION_URL);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.url) {
+          const mapBtn = document.getElementById("map-button");
+          if (mapBtn) mapBtn.href = data.url;
+        }
+        if (data && data.lat && data.lon) {
+          initLeafletMap(parseFloat(data.lat), parseFloat(data.lon));
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn("Live driver location unavailable, using Warsaw center:", e);
+    }
+  }
+  initLeafletMap(52.2297, 21.0122);
+}
+
+/* ==============================================
+   4.7) Smart Warsaw Autocomplete & Route Distance
+============================================== */
+let debouncePickupTimer = null;
+let debounceDestTimer = null;
+
+function initAddressAutocomplete() {
+  const pickupInput = document.getElementById("ride-pickup");
+  const destInput = document.getElementById("ride-destination");
+  const pickupSuggestions = document.getElementById("pickup-suggestions");
+  const destSuggestions = document.getElementById("dest-suggestions");
+
+  if (pickupInput && pickupSuggestions) {
+    pickupInput.addEventListener("input", () => {
+      clearTimeout(debouncePickupTimer);
+      const query = pickupInput.value.trim();
+      if (query.length < 3) {
+        pickupSuggestions.style.display = "none";
+        return;
+      }
+      debouncePickupTimer = setTimeout(() => {
+        fetchPhotonSuggestions(query, pickupSuggestions, (item) => {
+          pickupInput.value = item.name;
+          pickupInput.dataset.lat = item.lat;
+          pickupInput.dataset.lon = item.lon;
+          pickupSuggestions.style.display = "none";
+          calculateAccurateRoute();
+        });
+      }, 250);
+    });
+  }
+
+  if (destInput && destSuggestions) {
+    destInput.addEventListener("input", () => {
+      clearTimeout(debounceDestTimer);
+      const query = destInput.value.trim();
+      if (query.length < 3) {
+        destSuggestions.style.display = "none";
+        return;
+      }
+      debounceDestTimer = setTimeout(() => {
+        fetchPhotonSuggestions(query, destSuggestions, (item) => {
+          destInput.value = item.name;
+          destInput.dataset.lat = item.lat;
+          destInput.dataset.lon = item.lon;
+          destSuggestions.style.display = "none";
+          calculateAccurateRoute();
+        });
+      }, 250);
+    });
+  }
+
+  // Close suggestions when clicking outside
+  document.addEventListener("click", (e) => {
+    if (pickupSuggestions && !pickupSuggestions.contains(e.target) && e.target !== pickupInput) {
+      pickupSuggestions.style.display = "none";
+    }
+    if (destSuggestions && !destSuggestions.contains(e.target) && e.target !== destInput) {
+      destSuggestions.style.display = "none";
+    }
+  });
+}
+
+async function fetchPhotonSuggestions(query, container, onSelect) {
+  try {
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lat=52.2297&lon=21.0122&limit=5`;
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const data = await res.json();
+    
+    container.innerHTML = "";
+    if (!data.features || data.features.length === 0) {
+      container.style.display = "none";
+      return;
+    }
+
+    data.features.forEach(feat => {
+      const p = feat.properties || {};
+      const street = p.name || p.street || query;
+      const housenumber = p.housenumber ? ` ${p.housenumber}` : '';
+      const district = p.district || p.suburb || p.city || 'Warszawa';
+      const displayName = `${street}${housenumber}`;
+      const subName = `${district}, ${p.country || 'Poland'}`;
+      
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "autocomplete-item";
+      itemDiv.innerHTML = `
+        <span class="main-name">📍 ${escapeHtml(displayName)}</span>
+        <span class="sub-name">${escapeHtml(subName)}</span>
+      `;
+      itemDiv.addEventListener("click", () => {
+        onSelect({
+          name: `${displayName}, ${district}`,
+          lat: feat.geometry.coordinates[1],
+          lon: feat.geometry.coordinates[0]
+        });
+      });
+      container.appendChild(itemDiv);
+    });
+    container.style.display = "block";
+  } catch (e) {
+    console.error("Autocomplete error:", e);
+    container.style.display = "none";
+  }
+}
+
+function calculateRateDetails(timeStr) {
+  const night = isNightRate(timeStr || "12:00");
+  const baseRate = night ? 3.0 : 2.0; // PLN per km
+  return { baseRate, isNight: night };
+}
+
+function calculateEstimatedDistance(pickup, destination) {
+  const p = (pickup || "").toLowerCase();
+  const d = (destination || "").toLowerCase();
+
+  if (d.includes("modlin") || p.includes("modlin")) return 40;
+  if (d.includes("chopin") || p.includes("chopin") || d.includes("okęcie") || p.includes("okęcie") || d.includes("lotnisko")) return 14;
+  if (d.includes("arkadia") || p.includes("arkadia")) return 7;
+  if (d.includes("stare miasto") || p.includes("stare miasto") || d.includes("starówka")) return 6;
+  if (d.includes("centraln") || p.includes("centraln") || d.includes("dworzec")) return 5;
+  if (d.includes("kultur") || p.includes("kultur")) return 4;
+  
+  return 8; // Default Warsaw city ride ~8 km
+}
+
+async function calculateAccurateRoute() {
+  const pickupInput = document.getElementById("ride-pickup");
+  const destInput = document.getElementById("ride-destination");
+  const calcBox = document.getElementById("calculator-result");
+  
+  if (!pickupInput || !destInput) return;
+  const pickup = pickupInput.value.trim();
+  const dest = destInput.value.trim();
+
+  if (!dest) {
+    if (calcBox) calcBox.style.display = "none";
+    return;
+  }
+
+  let distanceKm = null;
+  const pLat = parseFloat(pickupInput.dataset.lat);
+  const pLon = parseFloat(pickupInput.dataset.lon);
+  const dLat = parseFloat(destInput.dataset.lat);
+  const dLon = parseFloat(destInput.dataset.lon);
+
+  if (!isNaN(pLat) && !isNaN(pLon) && !isNaN(dLat) && !isNaN(dLon)) {
+    try {
+      const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${pLon},${pLat};${dLon},${dLat}?overview=false`;
+      const res = await fetch(osrmUrl);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.routes && data.routes.length > 0) {
+          distanceKm = parseFloat((data.routes[0].distance / 1000).toFixed(1));
+        }
+      }
+    } catch (e) {
+      console.warn("OSRM routing fallback:", e);
+    }
+  }
+
+  if (!distanceKm) {
+    distanceKm = calculateEstimatedDistance(pickup, dest);
+  }
+
+  bookingData.distance = distanceKm;
+  const rateDetails = calculateRateDetails(selectedTimeStr || "12:00");
+  const baseRate = rateDetails.baseRate;
+  const pickupFee = 10.0;
+  const totalPrice = pickupFee + (distanceKm * baseRate);
+  bookingData.price = totalPrice;
+
+  // Update UI Fare Card
+  if (calcBox) {
+    calcBox.style.display = "block";
+    const distEl = document.getElementById("calc-val-distance");
+    const rateEl = document.getElementById("calc-val-rate");
+    const peakRow = document.getElementById("calc-peak-row");
+    const surEl = document.getElementById("calc-val-surcharge");
+    const totalEl = document.getElementById("calc-val-total");
+
+    if (distEl) distEl.textContent = `~${distanceKm} km`;
+    if (rateEl) rateEl.textContent = `${baseRate.toFixed(2)} PLN / km`;
+    
+    if (peakRow && surEl) {
+      peakRow.style.display = "flex";
+      const nightLabel = rateDetails.isNight ? ` (+50% ${translations[currentLanguage].nightRateLabel || "Night"})` : '';
+      surEl.textContent = `+10.00 PLN ${translations[currentLanguage].basePickupLabel || "Pickup"}${nightLabel}`;
+    }
+    
+    if (totalEl) totalEl.textContent = `${totalPrice.toFixed(2)} PLN`;
+  }
+}
+
+function runCalculator() {
+  calculateAccurateRoute();
+}
+
+function setQuickDestination(destName, lat, lon) {
   triggerHaptic(20);
   const destInput = document.getElementById("ride-destination");
   const pickupInput = document.getElementById("ride-pickup");
   
   if (destInput) {
     destInput.value = destName;
+    if (lat && lon) {
+      destInput.dataset.lat = lat;
+      destInput.dataset.lon = lon;
+    }
   }
   if (pickupInput && !pickupInput.value.trim()) {
-    pickupInput.value = "Warszawa Centrum";
+    pickupInput.value = "Warszawa Centralna";
+    pickupInput.dataset.lat = "52.2289";
+    pickupInput.dataset.lon = "21.0032";
   }
   
-  // Recompute route price and preview instantly
-  if (typeof runCalculator === "function") {
-    runCalculator();
-  }
+  calculateAccurateRoute();
 }
 
 /* ==============================================
