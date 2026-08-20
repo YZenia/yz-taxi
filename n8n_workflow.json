@@ -709,7 +709,9 @@
       "parameters": {
         "operation": "executeQuery",
         "query": "SELECT booking_time FROM bookings WHERE booking_date = '{{ $json.query.date }}' AND status IN ('pending', 'confirmed', 'counter_offer');",
-        "options": {}
+        "options": {
+          "alwaysOutputData": true
+        }
       },
       "id": "f5757a73-a36b-4caa-8a95-de67b759777c",
       "name": "SQL: Fetch Slots",
@@ -944,6 +946,19 @@
       "position": [
         2400,
         4800
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const res = [];\nfor (const item of items) {\n  if (item.json && item.json.booking_time) {\n    res.push({ json: { booking_time: item.json.booking_time } });\n  }\n}\nreturn res.length > 0 ? res : [{ json: {} }];"
+      },
+      "id": "71771771-7171-4717-8717-717717717171",
+      "name": "Format Slots Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        4512
       ]
     }
   ],
@@ -1289,6 +1304,17 @@
         [
           {
             "node": "Format Location Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL: Fetch Slots": {
+      "main": [
+        [
+          {
+            "node": "Format Slots Response",
             "type": "main",
             "index": 0
           }
