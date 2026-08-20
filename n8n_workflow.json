@@ -1279,15 +1279,7 @@
       ]
     },
     "SQL: Save Driver Location": {
-      "main": [
-        [
-          {
-            "node": "Telegram: Location Saved Success",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": []
     },
     "Schedule: Location Reminder": {
       "main": [
