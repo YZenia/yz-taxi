@@ -3594,6 +3594,8 @@ function openBookingModal(date, time) {
         destInput.setAttribute("required", "required");
         destInput.value = "";
       }
+    }
+
     // Auto pre-fill pickup address if client location is known
     const pickupInput = document.getElementById("ride-pickup");
     if (pickupInput && (!pickupInput.value || pickupInput.value === "📍 Current GPS Location")) {
@@ -4158,6 +4160,8 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
   }, 50);
+});
+
 function scrollToBooking() {
   triggerHaptic(20);
   const el = document.getElementById("booking-section");
