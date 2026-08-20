@@ -1137,15 +1137,33 @@
       margin-top: 2px;
     }
 
-    /* ====== Interactive Leaflet Map Styling ====== */
+    /* ====== Interactive Leaflet Map & Ergonomics 2026 ====== */
+    .contact-buttons {
+      padding: 30px 15px 10px 15px !important;
+      margin: 0 auto !important;
+    }
+    #map-section {
+      padding: 10px 15px 100px 15px !important;
+      margin: 0 auto !important;
+    }
+    #map-section h2 {
+      margin-top: 5px;
+      margin-bottom: 6px;
+    }
+    #map-description {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 0.92rem;
+      color: #bbb;
+    }
     #live-leaflet-map {
       width: 100%;
       max-width: 680px;
       height: 320px;
-      margin: 25px auto 15px auto;
+      margin: 12px auto 14px auto;
       border-radius: 18px;
-      border: 1px solid rgba(0, 255, 255, 0.3);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 255, 255, 0.15);
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 255, 255, 0.2);
       overflow: hidden;
       z-index: 1;
     }
@@ -1160,17 +1178,53 @@
     .leaflet-popup-tip {
       background: rgba(14, 18, 28, 0.95) !important;
     }
-    .custom-taxi-marker {
+    .custom-taxi-marker-wrapper {
+      background: transparent !important;
+      border: none !important;
+    }
+    .taxi-radar-marker {
+      position: relative;
+      width: 48px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
-      filter: drop-shadow(0 0 10px #00ff88);
-      animation: bounceMarker 2s infinite;
     }
-    @keyframes bounceMarker {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+    .radar-pulse {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 255, 136, 0.35);
+      border: 2px solid #00ff88;
+      box-shadow: 0 0 16px #00ff88;
+      animation: radarWave 2s infinite ease-out;
+    }
+    @keyframes radarWave {
+      0% { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(1.7); opacity: 0; }
+    }
+    .taxi-pin-symbol {
+      position: relative;
+      font-size: 1.9rem;
+      filter: drop-shadow(0 0 10px rgba(0,0,0,0.9));
+      z-index: 2;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: 85px;
+      }
+      .contact-buttons {
+        padding: 20px 12px 10px 12px !important;
+      }
+      #map-section {
+        padding: 10px 12px 105px 12px !important;
+      }
+      #live-leaflet-map {
+        height: 270px;
+        margin: 10px auto 12px auto;
+      }
     }
   </style>
 
@@ -2204,7 +2258,7 @@ function initLeafletMap(lat = 52.2297, lon = 21.0122) {
   if (!mapContainer || typeof L === "undefined") return;
 
   if (liveMapInstance) {
-    liveMapInstance.setView([lat, lon], 12);
+    liveMapInstance.setView([lat, lon], 14);
     if (liveTaxiMarker) {
       liveTaxiMarker.setLatLng([lat, lon]);
     }
@@ -2214,7 +2268,7 @@ function initLeafletMap(lat = 52.2297, lon = 21.0122) {
   try {
     liveMapInstance = L.map('live-leaflet-map', {
       zoomControl: false
-    }).setView([lat, lon], 12);
+    }).setView([lat, lon], 14);
 
     // CartoDB Dark Matter tiles (free, dark cyberpunk style)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -2224,25 +2278,34 @@ function initLeafletMap(lat = 52.2297, lon = 21.0122) {
 
     L.control.zoom({ position: 'bottomright' }).addTo(liveMapInstance);
 
-    // Custom Glowing Taxi Icon
+    // Custom Glowing Radar Taxi Icon
     const taxiIcon = L.divIcon({
-      className: 'custom-taxi-marker',
-      html: '🚖',
-      iconSize: [36, 36],
-      iconAnchor: [18, 18],
-      popupAnchor: [0, -18]
+      className: 'custom-taxi-marker-wrapper',
+      html: `
+        <div class="taxi-radar-marker">
+          <div class="radar-pulse"></div>
+          <div class="taxi-pin-symbol">🚖</div>
+        </div>
+      `,
+      iconSize: [48, 48],
+      iconAnchor: [24, 24],
+      popupAnchor: [0, -24]
     });
 
-    liveTaxiMarker = L.marker([lat, lon], { icon: taxiIcon }).addTo(liveMapInstance);
+    liveTaxiMarker = L.marker([lat, lon], { icon: taxiIcon, zIndexOffset: 1000 }).addTo(liveMapInstance);
     
     const popupContent = `
       <div style="text-align:center;padding:4px;font-family:inherit;">
         <strong style="color:#0ff;font-size:1rem;letter-spacing:1px;">YZ TAXI</strong>
         <div style="font-size:0.8rem;color:#00ff88;margin-top:2px;">● Online in Warsaw</div>
-        <div style="font-size:0.75rem;color:#aaa;margin-top:4px;">Available for Immediate / Pre-booking</div>
+        <div style="font-size:0.75rem;color:#aaa;margin-top:4px;">Live Dispatch & Pre-booking</div>
       </div>
     `;
-    liveTaxiMarker.bindPopup(popupContent);
+    liveTaxiMarker.bindPopup(popupContent, { autoClose: false, closeOnClick: false }).openPopup();
+
+    setTimeout(() => {
+      if (liveMapInstance) liveMapInstance.invalidateSize();
+    }, 400);
   } catch (e) {
     console.warn("Leaflet map initialization error:", e);
   }
