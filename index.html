@@ -1211,6 +1211,97 @@
       z-index: 2;
     }
 
+    /* ====== Client ETA & Geolocation UI ====== */
+    .locate-user-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 22px;
+      margin: 8px auto 14px auto;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(0, 255, 136, 0.15));
+      border: 1px solid rgba(0, 255, 255, 0.5);
+      border-radius: 12px;
+      color: #0ff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 255, 255, 0.2);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(10px);
+    }
+    .locate-user-btn:hover {
+      background: linear-gradient(135deg, #0ff, #00ff88);
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
+    }
+    .client-eta-card {
+      max-width: 680px;
+      margin: 12px auto;
+      padding: 14px 18px;
+      background: rgba(14, 18, 28, 0.95);
+      border: 1px solid rgba(0, 255, 136, 0.4);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 255, 136, 0.15);
+      backdrop-filter: blur(15px);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .client-eta-info {
+      font-size: 0.95rem;
+      color: #eee;
+      text-align: left;
+    }
+    .client-eta-info strong {
+      color: #00ff88;
+      font-size: 1.15rem;
+    }
+    .quick-book-from-loc-btn {
+      padding: 9px 18px;
+      background: linear-gradient(135deg, #00ff88, #0ff);
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+    }
+    .quick-book-from-loc-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+    }
+    .user-pulse-marker {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .user-pulse-ring {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0, 200, 255, 0.4);
+      border: 2px solid #00d2ff;
+      box-shadow: 0 0 16px #00d2ff;
+      animation: radarWave 2s infinite ease-out;
+    }
+    .user-pin-symbol {
+      position: relative;
+      font-size: 1.7rem;
+      filter: drop-shadow(0 0 8px rgba(0,0,0,0.9));
+      z-index: 2;
+    }
+
     @media (max-width: 768px) {
       body {
         padding-bottom: 85px;
@@ -1484,7 +1575,24 @@
   <p id="map-description">
     Real-time driver location in Warsaw:
   </p>
+
+  <div style="text-align: center;">
+    <button type="button" class="locate-user-btn" id="btn-locate-user" onclick="locateClientAndCalculateETA()">
+      <span>📍</span> <span id="lbl-locate-user">Locate Me & Calculate Arrival Time</span>
+    </button>
+  </div>
+
   <div id="live-leaflet-map"></div>
+
+  <div id="client-eta-card" class="client-eta-card" style="display: none;">
+    <div class="client-eta-info">
+      ⚡ <span id="lbl-eta-prefix">Estimated Arrival:</span> <strong id="eta-time-val">~8 min</strong> <span id="eta-distance-val">(3.5 km away)</span>
+    </div>
+    <button type="button" class="quick-book-from-loc-btn" id="btn-eta-book" onclick="openBookingWithClientLocation()">
+      ⚡ <span id="lbl-eta-book">Book from My Location</span>
+    </button>
+  </div>
+
   <a
     id="map-button"
     href="https://maps.app.goo.gl/6ou5whAx9nCxE9mo9?g_st=a"
@@ -1660,7 +1768,10 @@ const translations = {
     statusLabel: "Status:",
     driverStatusText: "Driver Online in Warsaw • Live Dispatch",
     quickLocTitle: "⚡ Quick Warsaw Destinations:",
-    phoneInvalidMsg: "Please enter a valid phone number (min. 7 digits)"
+    phoneInvalidMsg: "Please enter a valid phone number (min. 7 digits)",
+    locateUserBtn: "Locate Me & Calculate Arrival Time",
+    etaPrefix: "Estimated Arrival:",
+    etaBookBtn: "Book from My Location"
   },
   pl: {
     mainTitle: "Y Z T A X I",
@@ -1744,7 +1855,10 @@ const translations = {
     statusLabel: "Status:",
     driverStatusText: "Kierowca Dostępny w Warszawie • Szybki Przyjazd",
     quickLocTitle: "⚡ Popularne Miejsca w Warszawie:",
-    phoneInvalidMsg: "Wprowadź poprawny numer telefonu (min. 7 cyfr)"
+    phoneInvalidMsg: "Wprowadź poprawny numer telefonu (min. 7 cyfr)",
+    locateUserBtn: "Zlokalizuj mnie i oblicz czas dojazdu",
+    etaPrefix: "Szacowany czas przyjazdu:",
+    etaBookBtn: "Zamów z mojej lokalizacji"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -1828,7 +1942,10 @@ const translations = {
     statusLabel: "Статус:",
     driverStatusText: "Водитель Онлайн в Варшаве • Быстрая Подача",
     quickLocTitle: "⚡ Популярные Места Варшавы:",
-    phoneInvalidMsg: "Пожалуйста, укажите корректный номер телефона (мин. 7 цифр)"
+    phoneInvalidMsg: "Пожалуйста, укажите корректный номер телефона (мин. 7 цифр)",
+    locateUserBtn: "Найти меня и рассчитать время подачи",
+    etaPrefix: "Расчетное время подачи:",
+    etaBookBtn: "Заказать отсюда"
   }
 };
 
@@ -1979,6 +2096,17 @@ function setLanguage(lang) {
     if (activeBooking) {
       renderStatusWidget(activeBooking);
     }
+  }
+
+  // ETA & Map Location translations
+  if (document.getElementById('lbl-locate-user')) {
+    document.getElementById('lbl-locate-user').textContent = t.locateUserBtn;
+  }
+  if (document.getElementById('lbl-eta-prefix')) {
+    document.getElementById('lbl-eta-prefix').textContent = t.etaPrefix;
+  }
+  if (document.getElementById('lbl-eta-book')) {
+    document.getElementById('lbl-eta-book').textContent = t.etaBookBtn;
   }
 
   // Floating dock translations
@@ -2312,6 +2440,11 @@ function initLeafletMap(lat = 52.2297, lon = 21.0122) {
   }
 }
 
+let currentDriverCoords = { lat: 52.2297, lon: 21.0122 };
+let clientUserMarker = null;
+let etaRouteLayer = null;
+let currentClientCoords = null;
+
 async function fetchDriverLocation() {
   if (typeof N8N_GET_LOCATION_URL !== "undefined" && N8N_GET_LOCATION_URL) {
     try {
@@ -2323,7 +2456,8 @@ async function fetchDriverLocation() {
           if (mapBtn) mapBtn.href = data.url;
         }
         if (data && data.lat && data.lon) {
-          initLeafletMap(parseFloat(data.lat), parseFloat(data.lon));
+          currentDriverCoords = { lat: parseFloat(data.lat), lon: parseFloat(data.lon) };
+          initLeafletMap(currentDriverCoords.lat, currentDriverCoords.lon);
           return;
         }
       }
@@ -2332,6 +2466,136 @@ async function fetchDriverLocation() {
     }
   }
   initLeafletMap(52.2297, 21.0122);
+}
+
+/* ==============================================
+   4.6b) Client Location & Live ETA Calculation
+============================================== */
+async function locateClientAndCalculateETA() {
+  triggerHaptic(25);
+  const btn = document.getElementById("btn-locate-user");
+  const origHtml = btn.innerHTML;
+  btn.innerHTML = `<span>⏳</span> <span>Locating...</span>`;
+  btn.disabled = true;
+
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser.");
+    btn.innerHTML = origHtml;
+    btn.disabled = false;
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const cLat = position.coords.latitude;
+      const cLon = position.coords.longitude;
+      currentClientCoords = { lat: cLat, lon: cLon };
+
+      if (!liveMapInstance) {
+        initLeafletMap(currentDriverCoords.lat, currentDriverCoords.lon);
+      }
+
+      // Add or update client marker
+      const userIcon = L.divIcon({
+        className: 'custom-taxi-marker-wrapper',
+        html: `
+          <div class="user-pulse-marker">
+            <div class="user-pulse-ring"></div>
+            <div class="user-pin-symbol">🧍</div>
+          </div>
+        `,
+        iconSize: [42, 42],
+        iconAnchor: [21, 21],
+        popupAnchor: [0, -21]
+      });
+
+      if (clientUserMarker) {
+        clientUserMarker.setLatLng([cLat, cLon]);
+      } else {
+        clientUserMarker = L.marker([cLat, cLon], { icon: userIcon, zIndexOffset: 900 }).addTo(liveMapInstance);
+      }
+
+      const clientPopup = `
+        <div style="text-align:center;padding:4px;font-family:inherit;">
+          <strong style="color:#00d2ff;font-size:0.95rem;">📍 You are here</strong>
+          <div style="font-size:0.75rem;color:#aaa;margin-top:2px;">Pickup Point</div>
+        </div>
+      `;
+      clientUserMarker.bindPopup(clientPopup).openPopup();
+
+      // Fetch Driving Route & Exact Road ETA from Driver to Client via OSRM
+      try {
+        const dLat = currentDriverCoords.lat;
+        const dLon = currentDriverCoords.lon;
+        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${dLon},${dLat};${cLon},${cLat}?overview=full&geometries=geojson`;
+        
+        const osrmRes = await fetch(osrmUrl);
+        if (osrmRes.ok) {
+          const osrmData = await osrmRes.json();
+          if (osrmData.routes && osrmData.routes.length > 0) {
+            const route = osrmData.routes[0];
+            const distanceKm = (route.distance / 1000).toFixed(1);
+            // Warsaw city driving buffer (+2-3 min for traffic lights)
+            const durationMin = Math.max(3, Math.round(route.duration / 60) + 2);
+
+            // Draw neon route line on map
+            if (etaRouteLayer) {
+              liveMapInstance.removeLayer(etaRouteLayer);
+            }
+            etaRouteLayer = L.geoJSON(route.geometry, {
+              style: {
+                color: '#00ffff',
+                weight: 5,
+                opacity: 0.85,
+                dashArray: '6, 8',
+                lineCap: 'round',
+                lineJoin: 'round'
+              }
+            }).addTo(liveMapInstance);
+
+            // Fit map bounds to show both Driver and Client comfortably
+            liveMapInstance.fitBounds([
+              [dLat, dLon],
+              [cLat, cLon]
+            ], { padding: [50, 50] });
+
+            // Display ETA card
+            const etaCard = document.getElementById("client-eta-card");
+            if (etaCard) {
+              etaCard.style.display = "flex";
+              document.getElementById("eta-time-val").textContent = `~${durationMin} min`;
+              document.getElementById("eta-distance-val").textContent = `(${distanceKm} km away)`;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("ETA route calculation error:", err);
+      }
+
+      btn.innerHTML = `<span>✓</span> <span>${translations[currentLanguage].locateUserBtn || 'Location Updated'}</span>`;
+      btn.disabled = false;
+    },
+    (err) => {
+      console.warn("Geolocation error:", err);
+      alert(currentLanguage === 'ru' ? 'Пожалуйста, разрешите доступ к геолокации в настройках браузера.' : (currentLanguage === 'pl' ? 'Zezwól na dostęp do lokalizacji w przeglądarce.' : 'Please allow location access in your browser settings.'));
+      btn.innerHTML = origHtml;
+      btn.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+  );
+}
+
+function openBookingWithClientLocation() {
+  triggerHaptic(20);
+  scrollToBooking();
+  if (currentClientCoords) {
+    const pickupInput = document.getElementById("ride-pickup");
+    if (pickupInput) {
+      pickupInput.value = "📍 Current GPS Location";
+      pickupInput.dataset.lat = currentClientCoords.lat;
+      pickupInput.dataset.lon = currentClientCoords.lon;
+    }
+  }
 }
 
 /* ==============================================
