@@ -1238,7 +1238,7 @@
 
 <!-- ====== Шапка ====== -->
 <header>
-  <a href="https://maps.app.goo.gl/6ou5whAx9nCxE9mo9?g_st=a" id="header-link">
+  <a href="#map-section" id="header-link" onclick="event.preventDefault(); document.getElementById('map-section').scrollIntoView({ behavior: 'smooth' });">
     <div id="logo-container">
       <img src="logo.webp" alt="Logo" id="rotating-logo" />
     </div>
@@ -1468,7 +1468,8 @@
     <span></span>
   </a>
   <a
-    href="https://t.me/your_telegram_username"
+    href="https://t.me/Motokrovnyi"
+    target="_blank"
     id="telegram-text"
     class="typing-btn"
     data-text="Order via Telegram"
@@ -2258,7 +2259,7 @@ function initLeafletMap(lat = 52.2297, lon = 21.0122) {
   if (!mapContainer || typeof L === "undefined") return;
 
   if (liveMapInstance) {
-    liveMapInstance.setView([lat, lon], 14);
+    liveMapInstance.setView([lat, lon], 11);
     if (liveTaxiMarker) {
       liveTaxiMarker.setLatLng([lat, lon]);
     }
@@ -2268,7 +2269,7 @@ function initLeafletMap(lat = 52.2297, lon = 21.0122) {
   try {
     liveMapInstance = L.map('live-leaflet-map', {
       zoomControl: false
-    }).setView([lat, lon], 14);
+    }).setView([lat, lon], 11);
 
     // CartoDB Dark Matter tiles (free, dark cyberpunk style)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -2320,8 +2321,6 @@ async function fetchDriverLocation() {
         if (data && data.url) {
           const mapBtn = document.getElementById("map-button");
           if (mapBtn) mapBtn.href = data.url;
-          const headerLink = document.getElementById("header-link");
-          if (headerLink) headerLink.href = data.url;
         }
         if (data && data.lat && data.lon) {
           initLeafletMap(parseFloat(data.lat), parseFloat(data.lon));
@@ -3795,9 +3794,9 @@ function scrollToBooking() {
 
 <!-- ====== Мобильный Floating Action Dock 2026 ====== -->
 <div class="mobile-quick-dock">
-  <button class="dock-btn book" onclick="scrollToBooking()">⚡ <span id="dock-btn-book">Book</span></button>
-  <a href="https://t.me/YZenia" target="_blank" class="dock-btn telegram">💬 Telegram</a>
-  <a href="tel:+48739229181" class="dock-btn call">📞 <span id="dock-btn-call">Call</span></a>
+  <button class="dock-btn book" onclick="scrollToBooking()"><span id="dock-btn-book">Book</span></button>
+  <a href="https://t.me/Motokrovnyi" target="_blank" class="dock-btn telegram">Telegram</a>
+  <a href="tel:+48739229181" class="dock-btn call"><span id="dock-btn-call">Call</span></a>
 </div>
 
 <!-- ====== Плавающий Тикет Статуса Поездки (Активное Бронирование) ====== -->
