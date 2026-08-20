@@ -1,8 +1,6 @@
-// Service Worker for YZ Taxi Warsaw PWA
-const CACHE_NAME = 'yz-taxi-v1.2';
+// Service Worker for YZ Taxi Warsaw PWA (v2.1)
+const CACHE_NAME = 'yz-taxi-v2.1';
 const STATIC_ASSETS = [
-  './',
-  './index.html',
   './logo.webp',
   './card.png',
   './pay.png',
@@ -17,6 +15,7 @@ const STATIC_ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS).catch((err) => {
@@ -24,7 +23,6 @@ self.addEventListener('install', (event) => {
       });
     })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -33,6 +31,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('PWA: Deleting old cache:', key);
             return caches.delete(key);
           }
         })
@@ -43,35 +42,42 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Do not cache API webhooks (always network-first)
-  if (event.request.url.includes('/webhook/')) {
+  const url = event.request.url;
+
+  // 1. API webhooks: always network-only
+  if (url.includes('/webhook/')) {
     event.respondWith(fetch(event.request));
     return;
   }
 
-  // Cache-first with network fallback for static assets
+  // 2. Navigation / HTML pages: Network-First with Cache fallback (ensures newest website updates are always loaded immediately!)
+  if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match('./index.html') || caches.match(event.request))
+    );
+    return;
+  }
+
+  // 3. Static assets (images, icons): Stale-While-Revalidate
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        if (
-          !networkResponse ||
-          networkResponse.status !== 200 ||
-          networkResponse.type !== 'basic'
-        ) {
-          return networkResponse;
+      const fetchPromise = fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const copy = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         }
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
         return networkResponse;
-      }).catch(() => {
-        // Fallback if offline
-        return caches.match('./index.html');
-      });
+      }).catch(() => null);
+
+      return cachedResponse || fetchPromise;
     })
   );
 });
