@@ -1236,6 +1236,26 @@
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
     }
+    .autodetect-gps-btn {
+      background: rgba(0, 255, 255, 0.12);
+      border: 1px solid rgba(0, 255, 255, 0.45);
+      color: #0ff;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .autodetect-gps-btn:hover {
+      background: #0ff;
+      color: #000;
+      transform: scale(1.04);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+    }
     .client-eta-card {
       max-width: 680px;
       margin: 12px auto;
@@ -1445,7 +1465,12 @@
       </div>
 
       <div class="form-group">
-        <label for="ride-pickup" id="label-pickup">Pickup Address</label>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label for="ride-pickup" id="label-pickup" style="margin-bottom: 0;">Pickup Address</label>
+          <button type="button" class="autodetect-gps-btn" onclick="autoDetectPickupAddress()" title="Use Current GPS Location">
+            <span>📍</span> <span id="lbl-autodetect-gps">Auto-Detect GPS</span>
+          </button>
+        </div>
         <div class="input-autocomplete-wrapper">
           <input type="text" id="ride-pickup" required placeholder="Warsaw Central Station" autocomplete="off">
           <div id="pickup-suggestions" class="autocomplete-dropdown"></div>
@@ -1771,7 +1796,8 @@ const translations = {
     phoneInvalidMsg: "Please enter a valid phone number (min. 7 digits)",
     locateUserBtn: "Locate Me & Calculate Arrival Time",
     etaPrefix: "Estimated Arrival:",
-    etaBookBtn: "Book from My Location"
+    etaBookBtn: "Book from My Location",
+    lblAutodetectGps: "Auto-Detect GPS"
   },
   pl: {
     mainTitle: "Y Z T A X I",
@@ -1858,7 +1884,8 @@ const translations = {
     phoneInvalidMsg: "Wprowadź poprawny numer telefonu (min. 7 cyfr)",
     locateUserBtn: "Zlokalizuj mnie i oblicz czas dojazdu",
     etaPrefix: "Szacowany czas przyjazdu:",
-    etaBookBtn: "Zamów z mojej lokalizacji"
+    etaBookBtn: "Zamów z mojej lokalizacji",
+    lblAutodetectGps: "Wykryj GPS"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -1945,7 +1972,8 @@ const translations = {
     phoneInvalidMsg: "Пожалуйста, укажите корректный номер телефона (мин. 7 цифр)",
     locateUserBtn: "Найти меня и рассчитать время подачи",
     etaPrefix: "Расчетное время подачи:",
-    etaBookBtn: "Заказать отсюда"
+    etaBookBtn: "Заказать отсюда",
+    lblAutodetectGps: "Мое местоположение"
   }
 };
 
@@ -2107,6 +2135,9 @@ function setLanguage(lang) {
   }
   if (document.getElementById('lbl-eta-book')) {
     document.getElementById('lbl-eta-book').textContent = t.etaBookBtn;
+  }
+  if (document.getElementById('lbl-autodetect-gps')) {
+    document.getElementById('lbl-autodetect-gps').textContent = t.lblAutodetectGps || "Auto-Detect GPS";
   }
 
   // Floating dock translations
@@ -2585,13 +2616,85 @@ async function locateClientAndCalculateETA() {
   );
 }
 
-function openBookingWithClientLocation() {
+async function reverseGeocodeCoords(lat, lon) {
+  try {
+    const res = await fetch(`https://photon.komoot.io/reverse?lat=${lat}&lon=${lon}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.features && data.features.length > 0) {
+        const p = data.features[0].properties || {};
+        const street = p.name || p.street || 'Current Location';
+        const num = p.housenumber ? ` ${p.housenumber}` : '';
+        const district = p.district || p.suburb || p.city || 'Warszawa';
+        return `${street}${num}, ${district}`;
+      }
+    }
+  } catch (e) {
+    console.warn("Reverse geocoding error:", e);
+  }
+  return `GPS: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+}
+
+async function autoDetectPickupAddress() {
+  triggerHaptic(20);
+  const pickupInput = document.getElementById("ride-pickup");
+  const gpsBtn = document.querySelector(".autodetect-gps-btn");
+  if (!pickupInput) return;
+
+  const origHtml = gpsBtn ? gpsBtn.innerHTML : "";
+  if (gpsBtn) gpsBtn.innerHTML = `<span>⏳</span> <span>Locating...</span>`;
+
+  if (currentClientCoords) {
+    const addr = await reverseGeocodeCoords(currentClientCoords.lat, currentClientCoords.lon);
+    pickupInput.value = addr;
+    pickupInput.dataset.lat = currentClientCoords.lat;
+    pickupInput.dataset.lon = currentClientCoords.lon;
+    calculateAccurateRoute();
+    if (gpsBtn) {
+      gpsBtn.innerHTML = `<span>✓</span> <span>Detected</span>`;
+      setTimeout(() => { if (gpsBtn) gpsBtn.innerHTML = origHtml; }, 2000);
+    }
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser.");
+    if (gpsBtn) gpsBtn.innerHTML = origHtml;
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      currentClientCoords = { lat, lon };
+      const addr = await reverseGeocodeCoords(lat, lon);
+      pickupInput.value = addr;
+      pickupInput.dataset.lat = lat;
+      pickupInput.dataset.lon = lon;
+      calculateAccurateRoute();
+      if (gpsBtn) {
+        gpsBtn.innerHTML = `<span>✓</span> <span>Detected</span>`;
+        setTimeout(() => { if (gpsBtn) gpsBtn.innerHTML = origHtml; }, 2000);
+      }
+    },
+    (err) => {
+      console.warn("Auto-detect GPS error:", err);
+      alert(currentLanguage === 'ru' ? 'Пожалуйста, разрешите доступ к геолокации в настройках браузера.' : (currentLanguage === 'pl' ? 'Zezwól na dostęp do lokalizacji w przeglądarce.' : 'Please allow location access in your browser settings.'));
+      if (gpsBtn) gpsBtn.innerHTML = origHtml;
+    },
+    { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+  );
+}
+
+async function openBookingWithClientLocation() {
   triggerHaptic(20);
   scrollToBooking();
   if (currentClientCoords) {
     const pickupInput = document.getElementById("ride-pickup");
     if (pickupInput) {
-      pickupInput.value = "📍 Current GPS Location";
+      const addr = await reverseGeocodeCoords(currentClientCoords.lat, currentClientCoords.lon);
+      pickupInput.value = addr;
       pickupInput.dataset.lat = currentClientCoords.lat;
       pickupInput.dataset.lon = currentClientCoords.lon;
     }
@@ -3490,6 +3593,17 @@ function openBookingModal(date, time) {
       if (destInput) {
         destInput.setAttribute("required", "required");
         destInput.value = "";
+      }
+    // Auto pre-fill pickup address if client location is known
+    const pickupInput = document.getElementById("ride-pickup");
+    if (pickupInput && (!pickupInput.value || pickupInput.value === "📍 Current GPS Location")) {
+      if (currentClientCoords) {
+        reverseGeocodeCoords(currentClientCoords.lat, currentClientCoords.lon).then(addr => {
+          pickupInput.value = addr;
+          pickupInput.dataset.lat = currentClientCoords.lat;
+          pickupInput.dataset.lon = currentClientCoords.lon;
+          calculateAccurateRoute();
+        });
       }
     }
     
