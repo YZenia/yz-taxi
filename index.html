@@ -2141,6 +2141,9 @@ window.addEventListener('DOMContentLoaded', () => {
   fetchDriverLocation();
   initAddressAutocomplete();
 
+  // Periodic Live GPS location polling every 30s
+  setInterval(fetchDriverLocation, 30000);
+
   // Register Service Worker for PWA 2026 support
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')

@@ -243,7 +243,8 @@
       "parameters": {
         "updates": [
           "callback_query",
-          "message"
+          "message",
+          "edited_message"
         ],
         "additionalFields": {}
       },
@@ -265,7 +266,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const callbackQuery = items[0].json.callback_query;\nif (callbackQuery) {\n  const parts = callbackQuery.data.split(':');\n  const action = parts[0];\n  const bookingId = parts[1];\n  const surcharge = parts[2] ? parseFloat(parts[2]) : 0;\n  return [{\n    json: {\n      type: \"callback\",\n      action,\n      bookingId,\n      surcharge,\n      callbackQueryId: callbackQuery.id,\n      messageId: callbackQuery.message.message_id,\n      chatId: callbackQuery.message.chat.id\n    }\n  }];\n} else if (items[0].json.message) {\n  return [{\n    json: {\n      type: \"message\",\n      text: items[0].json.message.text,\n      chatId: items[0].json.message.chat.id,\n      messageId: items[0].json.message.message_id\n    }\n  }];\n}\nreturn [];"
+        "jsCode": "const raw = items[0].json;\nconst callbackQuery = raw.callback_query;\nconst message = raw.message;\nconst editedMessage = raw.edited_message;\n\n// 1. Button callback from Telegram\nif (callbackQuery) {\n  const parts = callbackQuery.data.split(':');\n  const action = parts[0];\n  const bookingId = parts[1];\n  const surcharge = parts[2] ? parseFloat(parts[2]) : 0;\n  return [{\n    json: {\n      type: \"callback\",\n      action,\n      bookingId,\n      surcharge,\n      callbackQueryId: callbackQuery.id,\n      messageId: callbackQuery.message.message_id,\n      chatId: callbackQuery.message.chat.id\n    }\n  }];\n}\n\n// 2. Telegram Live Location or Point Location (message or edited_message)\nconst locMsg = message || editedMessage;\nif (locMsg && locMsg.location) {\n  const lat = locMsg.location.latitude;\n  const lon = locMsg.location.longitude;\n  const mapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;\n  return [{\n    json: {\n      type: \"gps_location\",\n      lat: lat,\n      lon: lon,\n      mapsUrl: mapsUrl,\n      chatId: locMsg.chat ? locMsg.chat.id : 429593682,\n      isLive: !!locMsg.location.live_period\n    }\n  }];\n}\n\n// 3. Text Message (manual Google Maps URL reply)\nif (message && message.text) {\n  return [{\n    json: {\n      type: \"message\",\n      text: message.text,\n      chatId: message.chat.id,\n      messageId: message.message_id\n    }\n  }];\n}\n\nreturn [];"
       },
       "id": "a623f96f-acd9-4baf-998b-b15688b777bb",
       "name": "Parse Callback Payload",
@@ -772,8 +773,17 @@
           },
           "conditions": [
             {
+              "id": "condition-gps-type",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "gps_location",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
               "id": "condition-contains-http",
-              "leftValue": "={{ $json.text }}",
+              "leftValue": "={{ $json.text || '' }}",
               "rightValue": "https?://",
               "operator": {
                 "type": "string",
@@ -781,7 +791,7 @@
               }
             }
           ],
-          "combinator": "and"
+          "combinator": "or"
         },
         "options": {}
       },
@@ -797,7 +807,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "INSERT INTO driver_location (url) VALUES ('{{ $json.text }}') RETURNING *;",
+        "query": "INSERT INTO driver_location (url, lat, lon, updated_at) VALUES ('{{ $json.mapsUrl || $json.text }}', {{ $json.lat || 'NULL' }}, {{ $json.lon || 'NULL' }}, NOW()) RETURNING *;",
         "options": {}
       },
       "id": "83883883-8388-4838-8838-838838838838",
@@ -917,8 +927,10 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT url FROM driver_location ORDER BY updated_at DESC LIMIT 1;",
-        "options": {}
+        "query": "SELECT url, lat, lon, updated_at FROM driver_location ORDER BY updated_at DESC LIMIT 1;",
+        "options": {
+          "alwaysOutputData": true
+        }
       },
       "id": "89889899-8989-4899-8989-898989898989",
       "name": "SQL: Fetch Location",
@@ -937,7 +949,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return [{\n  json: {\n    url: items[0].json.url\n  }\n}];"
+        "jsCode": "const item = items[0] && items[0].json ? items[0].json : {};\nreturn [{\n  json: {\n    url: item.url || \"https://maps.app.goo.gl/6ou5whAx9nCxE9mo9?g_st=a\",\n    lat: item.lat || 52.2297,\n    lon: item.lon || 21.0122,\n    updated_at: item.updated_at || null\n  }\n}];"
       },
       "id": "90990990-9090-4909-9090-909909909090",
       "name": "Format Location Response",
