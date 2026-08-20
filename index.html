@@ -2250,6 +2250,8 @@ async function fetchDriverLocation() {
         if (data && data.url) {
           const mapBtn = document.getElementById("map-button");
           if (mapBtn) mapBtn.href = data.url;
+          const headerLink = document.getElementById("header-link");
+          if (headerLink) headerLink.href = data.url;
         }
         if (data && data.lat && data.lon) {
           initLeafletMap(parseFloat(data.lat), parseFloat(data.lon));
