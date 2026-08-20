@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   <title>Taxi Service Warszawa</title>
-    <!-- SEO -->
-  <meta name="description" content="Y Z Taxi Warsaw." />
-  <!-- Open Graph для Telegram, Facebook и других -->
-<meta property="og:title" content="Y Z TAXI – Taxi Service Warszawa">
-  <meta property="og:description" content="Fast and affordable taxi in Warsaw. Order now!">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+  <meta name="theme-color" content="#000000"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>YZ TAXI – Premium Taxi Service Warszawa</title>
+  
+  <!-- SEO & Open Graph -->
+  <meta name="description" content="Fast, reliable and modern taxi service in Warsaw. Instant 1-click booking, transparent rates, and real-time live tracking." />
+  <meta property="og:title" content="YZ TAXI – Taxi Service Warszawa">
+  <meta property="og:description" content="Fast and affordable taxi in Warsaw. Book online in 1 click!">
   <meta property="og:image" content="https://yzenia.github.io/yz-taxi/android-chrome-512x512.png">
   <meta property="og:url" content="https://yzenia.github.io/yz-taxi/">
   <meta property="og:type" content="website">
 
-<!-- Favicon для GitHub Pages -->
+  <!-- Favicon & PWA Manifest -->
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="shortcut icon" href="favicon.ico">
-  <link rel="manifest" href="site.webmanifest">  
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Taxi Service</title>
-  <!-- Подключение шрифта -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
   <style>
     /* ---- reset ---- */
     body {
@@ -808,23 +809,85 @@
       }
     }
 
-    /* ====== Адаптивность ====== */
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 2rem;
-      }
-      .section {
-        padding: 15px 20px;
-      }
-      .payment-methods img {
-        width: 60px;
-      }
-      .video-text-card h2 {
-        font-size: 1.6rem;
-      }
-      .video-text-card p {
-        font-size: 0.95rem;
-      }
+    /* ====== Live Driver Status & Quick Chips 2026 UI ====== */
+    .driver-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 255, 136, 0.08);
+      border: 1px solid rgba(0, 255, 136, 0.35);
+      color: #00ff88;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin: 10px 0 15px 0;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(8px);
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #00ff88;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+      animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+    }
+    .quick-locations-container {
+      margin: 10px 0 14px 0;
+      text-align: left;
+    }
+    .quick-loc-label {
+      display: block;
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .quick-chip {
+      background: rgba(0, 255, 255, 0.08);
+      border: 1px solid rgba(0, 255, 255, 0.25);
+      border-radius: 16px;
+      color: #0ff;
+      font-size: 0.75rem;
+      padding: 5px 11px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .quick-chip:hover {
+      background: rgba(0, 255, 255, 0.25);
+      border-color: #0ff;
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    .quick-chip:active {
+      transform: scale(0.96);
+    }
+    .slot-skeleton {
+      height: 60px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.5s infinite;
+    }
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
   </style>
 
@@ -844,6 +907,13 @@
     </div>
   </a>
     <h1 id="main-title">Y Z T A X I</h1>
+    
+    <!-- Live Driver Status Indicator -->
+    <div id="live-driver-status" class="driver-status-badge">
+      <span class="pulse-dot"></span>
+      <span id="driver-status-text">Driver Online in Warsaw • Live Dispatch</span>
+    </div>
+
     <div class="language-switcher" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
       <button onclick="changeLanguage('en')">EN</button>
       <button onclick="changeLanguage('pl')">PL</button>
@@ -950,6 +1020,20 @@
         <label for="ride-pickup" id="label-pickup">Pickup Address</label>
         <input type="text" id="ride-pickup" required placeholder="Warsaw Central Station">
       </div>
+
+      <!-- Quick Warsaw Destinations Chips -->
+      <div class="quick-locations-container">
+        <span class="quick-loc-label" id="quick-loc-title">⚡ Quick Warsaw Destinations:</span>
+        <div class="quick-chips">
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Chopina (WAW)', 14)">✈️ Chopin Airport</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Modlin (WMI)', 40)">✈️ Modlin Airport</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Warszawa Centralna', 5)">🚆 Dworzec Centralny</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Pałac Kultury i Nauki', 4)">🏛️ Pałac Kultury</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Westfield Arkadia', 7)">🛍️ Arkadia</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Stare Miasto (Old Town)', 6)">🏰 Stare Miasto</button>
+        </div>
+      </div>
+
       <div class="form-group" id="destination-group">
         <label for="ride-destination" id="label-destination">Destination Address</label>
         <input type="text" id="ride-destination" required placeholder="Chopin Airport">
@@ -1228,7 +1312,10 @@ const translations = {
     historyTitle: "Ride History",
     logoutBtn: "Log Out",
     noHistory: "No rides yet.",
-    statusLabel: "Status:"
+    statusLabel: "Status:",
+    driverStatusText: "Driver Online in Warsaw • Live Dispatch",
+    quickLocTitle: "⚡ Quick Warsaw Destinations:",
+    phoneInvalidMsg: "Please enter a valid phone number (min. 7 digits)"
   },
   pl: {
     mainTitle: "Y Z T A X I",
@@ -1309,7 +1396,10 @@ const translations = {
     historyTitle: "Historia Przejazdów",
     logoutBtn: "Wyloguj się",
     noHistory: "Brak przejazdów.",
-    statusLabel: "Status:"
+    statusLabel: "Status:",
+    driverStatusText: "Kierowca Dostępny w Warszawie • Szybki Przyjazd",
+    quickLocTitle: "⚡ Popularne Miejsca w Warszawie:",
+    phoneInvalidMsg: "Wprowadź poprawny numer telefonu (min. 7 cyfr)"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -1390,7 +1480,10 @@ const translations = {
     historyTitle: "История Поездок",
     logoutBtn: "Выйти",
     noHistory: "Поездок пока нет.",
-    statusLabel: "Статус:"
+    statusLabel: "Статус:",
+    driverStatusText: "Водитель Онлайн в Варшаве • Быстрая Подача",
+    quickLocTitle: "⚡ Популярные Места Варшавы:",
+    phoneInvalidMsg: "Пожалуйста, укажите корректный номер телефона (мин. 7 цифр)"
   }
 };
 
@@ -1476,6 +1569,13 @@ function setLanguage(lang) {
     document.getElementById('video-card2-text').textContent  = t.videoCard2Text;
     document.getElementById('video-card3-title').textContent = t.videoCard3Title;
     document.getElementById('video-card3-text').textContent  = t.videoCard3Text;
+  }
+
+  if (document.getElementById('driver-status-text')) {
+    document.getElementById('driver-status-text').textContent = t.driverStatusText || "Driver Online in Warsaw • Live Dispatch";
+  }
+  if (document.getElementById('quick-loc-title')) {
+    document.getElementById('quick-loc-title').textContent = t.quickLocTitle || "⚡ Quick Warsaw Destinations:";
   }
 
   // Booking calendar translations
@@ -1708,6 +1808,13 @@ window.addEventListener('DOMContentLoaded', () => {
   // Запускаем с английской версии (или любой другой)
   changeLanguage('en');
   initUserAuth();
+
+  // Register Service Worker for PWA 2026 support
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('YZ Taxi Service Worker registered:', reg.scope))
+      .catch(err => console.warn('YZ Taxi Service Worker registration failed:', err));
+  }
 });
 
   // Включение glow-анимации при появлении payment-icons
@@ -1728,6 +1835,48 @@ paymentIcons.forEach(icon => glowObserver.observe(icon));
 
 
 
+
+/* ==============================================
+   4.5) Security & Modern UI Utility Functions (2026)
+============================================== */
+// Universal XSS Sanitizer
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Mobile Haptic Feedback
+function triggerHaptic(duration = 15) {
+  try {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(duration);
+    }
+  } catch (e) {}
+}
+
+// 1-Click Quick Destination Selector
+function setQuickDestination(destName, estKm) {
+  triggerHaptic(20);
+  const destInput = document.getElementById("ride-destination");
+  const pickupInput = document.getElementById("ride-pickup");
+  
+  if (destInput) {
+    destInput.value = destName;
+  }
+  if (pickupInput && !pickupInput.value.trim()) {
+    pickupInput.value = "Warszawa Centrum";
+  }
+  
+  // Recompute route price and preview instantly
+  if (typeof runCalculator === "function") {
+    runCalculator();
+  }
+}
 
 /* ==============================================
    5) Interactive Booking Calendar Widget Logic
@@ -1794,6 +1943,7 @@ function generateDays() {
 
 // Handle day selection
 function selectDay(element, dateString) {
+  triggerHaptic(12);
   document.querySelectorAll(".day-btn").forEach(btn => btn.classList.remove("active"));
   element.classList.add("active");
   selectedDateStr = dateString;
@@ -1804,7 +1954,12 @@ function selectDay(element, dateString) {
 async function loadSlots(dateString) {
   const slotsContainer = document.getElementById("slots-container");
   if (!slotsContainer) return;
-  slotsContainer.innerHTML = "<div style='grid-column: 1/-1; text-align: center; color: #aaa; padding: 20px 0;'>Loading slots...</div>";
+  
+  // Modern Skeleton Loading Cards
+  slotsContainer.innerHTML = `
+    <div class="slot-skeleton"></div><div class="slot-skeleton"></div><div class="slot-skeleton"></div>
+    <div class="slot-skeleton"></div><div class="slot-skeleton"></div><div class="slot-skeleton"></div>
+  `;
   
   let occupiedSlots = [];
   
@@ -2177,7 +2332,7 @@ function renderHistoryList(bookings, container) {
     if (b.status === "pending" || b.status === "confirmed" || b.status === "counter_offer") {
       const cancelText = currentLanguage === "ru" ? "Отмена" : (currentLanguage === "pl" ? "Anuluj" : "Cancel");
       cancelBtnHtml = `
-        <br><button onclick="cancelBookingFromHistory('${b.id}')" 
+        <br><button onclick="cancelBookingFromHistory('${escapeHtml(b.id)}')" 
                 style="margin-top: 5px; padding: 2px 8px; border-radius: 4px; border: 1px solid #ff3366; background: transparent; color: #ff3366; font-size: 0.7rem; cursor: pointer; transition: all 0.2s;"
                 onmouseover="this.style.background='rgba(255,51,102,0.1)'"
                 onmouseout="this.style.background='transparent'">
@@ -2188,12 +2343,12 @@ function renderHistoryList(bookings, container) {
     html += `
       <tr style="border-bottom: 1px solid #222; vertical-align: top;">
         <td style="padding: 8px 0; color: #fff;">
-          <strong>📅 ${formattedDate} &nbsp; ⏰ ${b.booking_time}</strong><br>
-          <span style="font-size: 0.75rem; color: #888;">📍 ${b.pickup_address} → 🏁 ${b.destination_address}</span>
+          <strong>📅 ${escapeHtml(formattedDate)} &nbsp; ⏰ ${escapeHtml(b.booking_time)}</strong><br>
+          <span style="font-size: 0.75rem; color: #888;">📍 ${escapeHtml(b.pickup_address)} → 🏁 ${escapeHtml(b.destination_address)}</span>
         </td>
         <td style="padding: 8px 0; text-align: right; white-space: nowrap; width: 80px;">
-          <strong style="color: #0ff;">${finalPrice} PLN</strong><br>
-          <span style="font-size: 0.75rem; color: ${statusColor}; font-weight: bold;">${statusText}</span>
+          <strong style="color: #0ff;">${Number(finalPrice).toFixed(2)} PLN</strong><br>
+          <span style="font-size: 0.75rem; color: ${statusColor}; font-weight: bold;">${escapeHtml(statusText)}</span>
           ${cancelBtnHtml}
         </td>
       </tr>
@@ -2425,10 +2580,21 @@ async function submitBooking(event) {
   
   if (!statusMsg || !submitBtn) return;
   
-  const name = document.getElementById("client-name").value;
-  const phone = document.getElementById("client-phone").value;
-  const pickup = document.getElementById("ride-pickup").value;
-  const destination = document.getElementById("ride-destination").value;
+  const name = document.getElementById("client-name").value.trim();
+  const phone = document.getElementById("client-phone").value.trim();
+  const pickup = document.getElementById("ride-pickup").value.trim();
+  const destination = document.getElementById("ride-destination").value.trim();
+  
+  // Robust Phone Number Validation
+  const phoneClean = phone.replace(/[\s\-\(\)]/g, '');
+  if (phoneClean.length < 7 || phoneClean.length > 18) {
+    statusMsg.style.display = "block";
+    statusMsg.style.color = "#ff3366";
+    statusMsg.textContent = translations[currentLanguage].phoneInvalidMsg || "Please enter a valid phone number (min. 7 digits)";
+    triggerHaptic([30, 50, 30]);
+    return;
+  }
+  triggerHaptic(20);
   
   // Safely recalculate if data is missing
   if (!bookingData.price) {
