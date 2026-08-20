@@ -2037,11 +2037,14 @@ const mapObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       mapButton.classList.add('typing-animate');
+      if (typeof liveMapInstance !== "undefined" && liveMapInstance) {
+        setTimeout(() => liveMapInstance.invalidateSize(), 200);
+      }
     } else {
       mapButton.classList.remove('typing-animate');
     }
   });
-}, { threshold: 0.3 });
+}, { threshold: 0.2 });
 mapObserver.observe(mapSection);
 
 /* =========================
