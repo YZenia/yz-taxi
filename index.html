@@ -303,6 +303,218 @@
       flex-direction: column;
       align-items: center;
     }
+    .pricing-card-wrapper {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #price-carousel {
+      width: 100%;
+      background: rgba(14, 18, 28, 0.88);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(0, 255, 255, 0.35);
+      border-radius: 22px;
+      padding: 24px 20px 18px 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.75), 0 0 25px rgba(0, 255, 255, 0.15);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
+    }
+    #price-carousel:hover {
+      border-color: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 255, 255, 0.22);
+      transform: translateY(-2px);
+    }
+    .price-card-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+    }
+    .price-header-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .price-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+    }
+    .price-badge.hot {
+      background: rgba(0, 255, 136, 0.15);
+      border: 1px solid #00ff88;
+      color: #00ff88;
+    }
+    .price-badge.popular {
+      background: rgba(255, 0, 255, 0.15);
+      border: 1px solid #f0f;
+      color: #ff00ff;
+    }
+    .price-badge.special {
+      background: rgba(0, 200, 255, 0.15);
+      border: 1px solid #00c8ff;
+      color: #00c8ff;
+    }
+    .price-badge.default {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+    .netto-tag {
+      background: rgba(255, 170, 0, 0.15);
+      border: 1px solid #ffaa00;
+      color: #ffaa00;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+    }
+    .price-plan-name {
+      font-size: 0.88rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #aaa;
+      font-weight: 600;
+    }
+    .price-amount-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      line-height: 1;
+      margin: 4px 0;
+    }
+    .price-number {
+      font-size: 2.8rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .price-currency {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #888;
+    }
+    .price-desc-box {
+      font-size: 0.92rem;
+      color: #ccc;
+      text-align: center;
+      max-width: 300px;
+      line-height: 1.4;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .price-plan-btn {
+      margin-top: 8px;
+      padding: 11px 32px;
+      border-radius: 30px;
+      border: 2px solid #0ff;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(0, 255, 136, 0.15));
+      color: #0ff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+      letter-spacing: 0.8px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
+    }
+    .price-plan-btn:hover {
+      background: linear-gradient(135deg, #0ff, #00ff88);
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.45);
+    }
+    .price-plan-btn.standard {
+      border-color: #f0f;
+      background: linear-gradient(135deg, rgba(255, 0, 255, 0.15), rgba(255, 0, 128, 0.15));
+      color: #f0f;
+      box-shadow: 0 4px 15px rgba(255, 0, 255, 0.2);
+    }
+    .price-plan-btn.standard:hover {
+      background: linear-gradient(135deg, #f0f, #ff0080);
+      color: #000;
+      box-shadow: 0 8px 25px rgba(255, 0, 255, 0.45);
+    }
+    .pricing-vat-notice {
+      margin-top: 14px;
+      padding: 10px 16px;
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(255, 170, 0, 0.08);
+      border: 1px dashed rgba(255, 170, 0, 0.45);
+      border-radius: 12px;
+      color: #ffbe40;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      backdrop-filter: blur(8px);
+    }
+    .pricing-vat-notice .vat-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .carousel-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 0 10px;
+    }
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .carousel-dot.active {
+      width: 20px;
+      border-radius: 6px;
+      background: #0ff;
+      box-shadow: 0 0 10px #0ff;
+    }
+    #price-carousel .arrows {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    #price-carousel .arrows button {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      border-radius: 50%;
+      background: rgba(0, 255, 255, 0.08);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      color: #0ff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    #price-carousel .arrows button:hover {
+      background: #0ff;
+      color: #000;
+      box-shadow: 0 0 14px #0ff;
+    }
     .payment-methods {
       display: flex;
       flex-wrap: wrap;
@@ -1399,12 +1611,23 @@
 <!-- ====== Секция: Цены и способы оплаты ====== -->
 <section class="section pricing" id="pricing-section">
   <h2 id="pricing-title">Pricing</h2>
-  <div class="carousel" id="price-carousel">
-    <div class="arrows">
-      <button id="price-prev">← Prev</button>
-      <button id="price-next">Next →</button>
+  
+  <div class="pricing-card-wrapper">
+    <div class="carousel" id="price-carousel">
+      <div class="arrows">
+        <button id="price-prev" title="Previous plan">‹</button>
+        <div class="carousel-dots" id="price-dots"></div>
+        <button id="price-next" title="Next plan">›</button>
+      </div>
+    </div>
+
+    <!-- Netto & 10% Receipt / Invoice Notice -->
+    <div class="pricing-vat-notice">
+      <span class="vat-icon">🧾</span>
+      <span id="pricing-vat-text">* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.</span>
     </div>
   </div>
+
   <h3 id="payment-title">Payment Methods</h3>
   <div class="payment-methods">
     <div class="payment-icon glow-cyan" onclick="showPaymentPopup('card')">
@@ -1506,8 +1729,11 @@
           <strong id="calc-val-surcharge">-</strong>
         </div>
         <div class="fare-total-row">
-          <span id="calc-lbl-total">Estimated Total:</span>
+          <span id="calc-lbl-total">Estimated Total (Netto):</span>
           <strong id="calc-val-total" style="color: #00ff88; font-size: 1.35em;">-</strong>
+        </div>
+        <div style="font-size: 0.76rem; color: #ffaa00; text-align: center; margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,170,0,0.3);">
+          <span id="calc-lbl-vat-note">ℹ️ Net price. With receipt / VAT invoice: +10%</span>
         </div>
       </div>
       
@@ -1791,7 +2017,9 @@ const translations = {
     locateUserBtn: "Locate Me & Calculate Arrival Time",
     etaPrefix: "Estimated Arrival:",
     etaBookBtn: "Book from My Location",
-    lblAutodetectGps: "Auto-Detect GPS"
+    lblAutodetectGps: "Auto-Detect GPS",
+    pricingVatNotice: "* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.",
+    calcVatNote: "ℹ️ Net price. With receipt / VAT invoice: +10%"
   },
   pl: {
     mainTitle: "Y Z T A X I",
@@ -1879,7 +2107,9 @@ const translations = {
     locateUserBtn: "Zlokalizuj mnie i oblicz czas dojazdu",
     etaPrefix: "Szacowany czas przyjazdu:",
     etaBookBtn: "Zamów z mojej lokalizacji",
-    lblAutodetectGps: "Wykryj GPS"
+    lblAutodetectGps: "Wykryj GPS",
+    pricingVatNotice: "* Wszystkie ceny są cenami NETTO. W przypadku wystawienia paragonu lub faktury VAT doliczane jest +10%.",
+    calcVatNote: "ℹ️ Cena netto. Z paragonem / fakturą VAT: +10%"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -1967,7 +2197,9 @@ const translations = {
     locateUserBtn: "Найти меня и рассчитать время подачи",
     etaPrefix: "Расчетное время подачи:",
     etaBookBtn: "Заказать отсюда",
-    lblAutodetectGps: "Мое местоположение"
+    lblAutodetectGps: "Мое местоположение",
+    pricingVatNotice: "* Все цены указаны НЕТТО. При оформлении чека или счёта-фактуры к стоимости добавляется +10%.",
+    calcVatNote: "ℹ️ Цена нетто. С чеком / фактурой: +10%"
   }
 };
 
@@ -2102,6 +2334,9 @@ function setLanguage(lang) {
     document.getElementById('calc-lbl-rate').textContent = t.calcRate;
     document.getElementById('calc-lbl-surcharge').textContent = t.calcSurcharge;
     document.getElementById('calc-lbl-total').textContent = t.calcTotal;
+    if (document.getElementById('calc-lbl-vat-note')) {
+      document.getElementById('calc-lbl-vat-note').textContent = t.calcVatNote || "ℹ️ Net price. With receipt / VAT invoice: +10%";
+    }
   }
 
   // Status widget translations
@@ -2132,6 +2367,9 @@ function setLanguage(lang) {
   }
   if (document.getElementById('lbl-autodetect-gps')) {
     document.getElementById('lbl-autodetect-gps').textContent = t.lblAutodetectGps || "Auto-Detect GPS";
+  }
+  if (document.getElementById('pricing-vat-text')) {
+    document.getElementById('pricing-vat-text').textContent = t.pricingVatNotice || "* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.";
   }
 
   // Floating dock translations
@@ -2304,33 +2542,54 @@ function renderPriceSlide() {
   const slideDiv = document.createElement('div');
   slideDiv.className = 'slide active';
 
+  // Update dots indicator
+  const dotsContainer = document.getElementById('price-dots');
+  if (dotsContainer) {
+    dotsContainer.innerHTML = '';
+    priceSlides.forEach((_, idx) => {
+      const dot = document.createElement('span');
+      dot.className = `carousel-dot ${idx === currentPriceIndex ? 'active' : ''}`;
+      dot.title = priceSlides[idx].label;
+      dot.onclick = () => {
+        triggerHaptic(15);
+        currentPriceIndex = idx;
+        renderPriceSlide();
+      };
+      dotsContainer.appendChild(dot);
+    });
+  }
+
   if (typeof plan === 'object' && plan !== null) {
     const isPerKm = plan.fixedPrice === null;
-    const bookLabel = currentLanguage === 'ru' ? 'Забронировать этот план' : (currentLanguage === 'pl' ? 'Zarezerwuj ten plan' : 'Book this plan');
+    const bookLabel = currentLanguage === 'ru' ? 'Забронировать план' : (currentLanguage === 'pl' ? 'Zarezerwuj ten plan' : 'Book this plan');
     const scrollLabel = currentLanguage === 'ru' ? '↓ Выбрать время ↓' : (currentLanguage === 'pl' ? '↓ Wybierz czas ↓' : '↓ Pick a time ↓');
     
     let badgeHtml = "";
     if (plan.label.includes("1 Hour") || plan.label.includes("1 Godzina") || plan.label.includes("1 Час")) {
-      badgeHtml = `<span style="background:rgba(0,255,136,0.15);border:1px solid #00ff88;color:#00ff88;font-size:0.72rem;font-weight:700;padding:2px 10px;border-radius:12px;letter-spacing:0.5px;">⭐ ${currentLanguage === 'ru' ? 'Для Города' : (currentLanguage === 'pl' ? 'W Mieście' : 'City Quick')}</span>`;
+      badgeHtml = `<span class="price-badge hot">⭐ ${currentLanguage === 'ru' ? 'Для Города' : (currentLanguage === 'pl' ? 'W Mieście' : 'City Quick')}</span>`;
     } else if (plan.label.includes("Full Day") || plan.label.includes("Cały Dzień") || plan.label.includes("Целый День")) {
-      badgeHtml = `<span style="background:rgba(255,0,255,0.15);border:1px solid #f0f;color:#ff00ff;font-size:0.72rem;font-weight:700;padding:2px 10px;border-radius:12px;letter-spacing:0.5px;">🔥 ${currentLanguage === 'ru' ? 'Хит' : (currentLanguage === 'pl' ? 'Popularny' : 'Best Value')}</span>`;
+      badgeHtml = `<span class="price-badge popular">🔥 ${currentLanguage === 'ru' ? 'Хит Продаж' : (currentLanguage === 'pl' ? 'Popularny' : 'Best Value')}</span>`;
+    } else if (plan.label.includes("Long Day") || plan.label.includes("Długa Trasa") || plan.label.includes("Дальняя Дист")) {
+      badgeHtml = `<span class="price-badge special">🚀 ${currentLanguage === 'ru' ? 'Дальние Поездки' : (currentLanguage === 'pl' ? 'Trasy Międzymiastowe' : 'Long Distance')}</span>`;
+    } else {
+      badgeHtml = `<span class="price-badge default">⚡ ${currentLanguage === 'ru' ? 'По Тарифу' : (currentLanguage === 'pl' ? 'Stawka / KM' : 'Per KM')}</span>`;
     }
 
     slideDiv.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 0">
-        ${badgeHtml}
-        <div style="font-size:0.85rem;letter-spacing:3px;text-transform:uppercase;color:#aaa;">${plan.label}</div>
-        <div style="font-size:2.6rem;font-weight:900;color:#0ff;line-height:1;">${plan.price} <span style="font-size:1rem;font-weight:400">${plan.unit}</span></div>
-        <div style="font-size:0.9rem;color:#ccc;text-align:center;max-width:280px;">${plan.desc}</div>
-        ${!isPerKm ? `<button onclick="bookPricingPlan(${JSON.stringify(plan).replace(/"/g,'&quot;')})"
-          style="margin-top:8px;padding:10px 28px;border-radius:30px;border:2px solid #0ff;background:rgba(0,255,255,0.1);color:#0ff;font-weight:700;cursor:pointer;font-size:0.95rem;letter-spacing:1px;transition:all 0.2s;"
-          onmouseover="this.style.background='rgba(0,255,255,0.25)'"
-          onmouseout="this.style.background='rgba(0,255,255,0.1)'">
+      <div class="price-card-inner">
+        <div class="price-header-row">
+          ${badgeHtml}
+          <span class="netto-tag">NETTO</span>
+        </div>
+        <div class="price-plan-name">${escapeHtml(plan.label)}</div>
+        <div class="price-amount-wrap">
+          <span class="price-number">${plan.price}</span>
+          <span class="price-currency">${escapeHtml(plan.unit)}</span>
+        </div>
+        <div class="price-desc-box">${escapeHtml(plan.desc)}</div>
+        ${!isPerKm ? `<button class="price-plan-btn" onclick="bookPricingPlan(${JSON.stringify(plan).replace(/"/g,'&quot;')})">
           ${bookLabel}
-        </button>` : `<button onclick="selectStandardRate()"
-          style="margin-top:8px;padding:10px 28px;border-radius:30px;border:2px solid #f0f;background:rgba(255,0,255,0.1);color:#f0f;font-weight:700;cursor:pointer;font-size:0.95rem;letter-spacing:1px;transition:all 0.2s;"
-          onmouseover="this.style.background='rgba(255,0,255,0.25)'"
-          onmouseout="this.style.background='rgba(255,0,255,0.1)'">
+        </button>` : `<button class="price-plan-btn standard" onclick="selectStandardRate()">
           ${scrollLabel}
         </button>`}
       </div>`;
