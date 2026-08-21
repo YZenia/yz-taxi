@@ -1572,7 +1572,7 @@
       <button onclick="changeLanguage('en')">EN</button>
       <button onclick="changeLanguage('pl')">PL</button>
       <button onclick="changeLanguage('ru')">RU</button>
-      <button id="profile-btn" onclick="openProfileModal()" style="border-color: #f0f; color: #f0f;">👤 <span id="profile-btn-label">Profile</span></button>
+      <button id="profile-btn" onclick="openProfileModal()" style="border-color: #f0f; color: #f0f;"><span id="profile-btn-label">Profile</span></button>
     </div>
 </header>
 
@@ -1623,7 +1623,6 @@
 
     <!-- Netto & 10% Receipt / Invoice Notice -->
     <div class="pricing-vat-notice">
-      <span class="vat-icon">🧾</span>
       <span id="pricing-vat-text">* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.</span>
     </div>
   </div>
@@ -1685,7 +1684,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <label for="ride-pickup" id="label-pickup" style="margin-bottom: 0;">Pickup Address</label>
           <button type="button" class="autodetect-gps-btn" onclick="autoDetectPickupAddress()" title="Use Current GPS Location">
-            <span>📍</span> <span id="lbl-autodetect-gps">Auto-Detect GPS</span>
+            <span id="lbl-autodetect-gps">Auto-Detect GPS</span>
           </button>
         </div>
         <div class="input-autocomplete-wrapper">
@@ -1696,14 +1695,14 @@
 
       <!-- Quick Warsaw Destinations Chips -->
       <div class="quick-locations-container">
-        <span class="quick-loc-label" id="quick-loc-title">⚡ Quick Warsaw Destinations:</span>
+        <span class="quick-loc-label" id="quick-loc-title">Quick Warsaw Destinations:</span>
         <div class="quick-chips">
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Chopina (WAW)', 52.1672, 20.9679)">✈️ Chopin Airport</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Modlin (WMI)', 52.4511, 20.6517)">✈️ Modlin Airport</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Warszawa Centralna', 52.2289, 21.0032)">🚆 Dworzec Centralny</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Pałac Kultury i Nauki', 52.2319, 21.0067)">🏛️ Pałac Kultury</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Westfield Arkadia', 52.2571, 20.9845)">🛍️ Arkadia</button>
-          <button type="button" class="quick-chip" onclick="setQuickDestination('Stare Miasto (Old Town)', 52.2497, 21.0122)">🏰 Stare Miasto</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Chopina (WAW)', 52.1672, 20.9679)">Chopin Airport (WAW)</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Lotnisko Modlin (WMI)', 52.4511, 20.6517)">Modlin Airport (WMI)</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Warszawa Centralna', 52.2289, 21.0032)">Dworzec Centralny</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Pałac Kultury i Nauki', 52.2319, 21.0067)">Pałac Kultury i Nauki</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Westfield Arkadia', 52.2571, 20.9845)">Westfield Arkadia</button>
+          <button type="button" class="quick-chip" onclick="setQuickDestination('Stare Miasto (Old Town)', 52.2497, 21.0122)">Stare Miasto</button>
         </div>
       </div>
 
@@ -1733,7 +1732,7 @@
           <strong id="calc-val-total" style="color: #00ff88; font-size: 1.35em;">-</strong>
         </div>
         <div style="font-size: 0.76rem; color: #ffaa00; text-align: center; margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,170,0,0.3);">
-          <span id="calc-lbl-vat-note">ℹ️ Net price. With receipt / VAT invoice: +10%</span>
+          <span id="calc-lbl-vat-note">Net price. With receipt / VAT invoice: +10%</span>
         </div>
       </div>
       
@@ -1823,7 +1822,7 @@
 
   <div style="text-align: center;">
     <button type="button" class="locate-user-btn" id="btn-locate-user" onclick="locateClientAndCalculateETA()">
-      <span>📍</span> <span id="lbl-locate-user">Locate Me & Calculate Arrival Time</span>
+      <span id="lbl-locate-user">Locate Me & Calculate Arrival Time</span>
     </button>
   </div>
 
@@ -1831,10 +1830,10 @@
 
   <div id="client-eta-card" class="client-eta-card" style="display: none;">
     <div class="client-eta-info">
-      ⚡ <span id="lbl-eta-prefix">Estimated Arrival:</span> <strong id="eta-time-val">~8 min</strong> <span id="eta-distance-val">(3.5 km away)</span>
+      <span id="lbl-eta-prefix">Estimated Arrival:</span> <strong id="eta-time-val">~8 min</strong> <span id="eta-distance-val">(3.5 km away)</span>
     </div>
     <button type="button" class="quick-book-from-loc-btn" id="btn-eta-book" onclick="openBookingWithClientLocation()">
-      ⚡ <span id="lbl-eta-book">Book from My Location</span>
+      <span id="lbl-eta-book">Book from My Location</span>
     </button>
   </div>
 
@@ -2012,14 +2011,14 @@ const translations = {
     noHistory: "No rides yet.",
     statusLabel: "Status:",
     driverStatusText: "Driver Online in Warsaw • Live Dispatch",
-    quickLocTitle: "⚡ Quick Warsaw Destinations:",
+    quickLocTitle: "Quick Warsaw Destinations:",
     phoneInvalidMsg: "Please enter a valid phone number (min. 7 digits)",
     locateUserBtn: "Locate Me & Calculate Arrival Time",
     etaPrefix: "Estimated Arrival:",
     etaBookBtn: "Book from My Location",
     lblAutodetectGps: "Auto-Detect GPS",
     pricingVatNotice: "* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.",
-    calcVatNote: "ℹ️ Net price. With receipt / VAT invoice: +10%"
+    calcVatNote: "Net price. With receipt / VAT invoice: +10%"
   },
   pl: {
     mainTitle: "Y Z T A X I",
@@ -2102,14 +2101,14 @@ const translations = {
     noHistory: "Brak przejazdów.",
     statusLabel: "Status:",
     driverStatusText: "Kierowca Dostępny w Warszawie • Szybki Przyjazd",
-    quickLocTitle: "⚡ Popularne Miejsca w Warszawie:",
+    quickLocTitle: "Popularne Miejsca w Warszawie:",
     phoneInvalidMsg: "Wprowadź poprawny numer telefonu (min. 7 cyfr)",
     locateUserBtn: "Zlokalizuj mnie i oblicz czas dojazdu",
     etaPrefix: "Szacowany czas przyjazdu:",
     etaBookBtn: "Zamów z mojej lokalizacji",
     lblAutodetectGps: "Wykryj GPS",
     pricingVatNotice: "* Wszystkie ceny są cenami NETTO. W przypadku wystawienia paragonu lub faktury VAT doliczane jest +10%.",
-    calcVatNote: "ℹ️ Cena netto. Z paragonem / fakturą VAT: +10%"
+    calcVatNote: "Cena netto. Z paragonem / fakturą VAT: +10%"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -2192,14 +2191,14 @@ const translations = {
     noHistory: "Поездок пока нет.",
     statusLabel: "Статус:",
     driverStatusText: "Водитель Онлайн в Варшаве • Быстрая Подача",
-    quickLocTitle: "⚡ Популярные Места Варшавы:",
+    quickLocTitle: "Популярные Места Варшавы:",
     phoneInvalidMsg: "Пожалуйста, укажите корректный номер телефона (мин. 7 цифр)",
     locateUserBtn: "Найти меня и рассчитать время подачи",
     etaPrefix: "Расчетное время подачи:",
     etaBookBtn: "Заказать отсюда",
     lblAutodetectGps: "Мое местоположение",
     pricingVatNotice: "* Все цены указаны НЕТТО. При оформлении чека или счёта-фактуры к стоимости добавляется +10%.",
-    calcVatNote: "ℹ️ Цена нетто. С чеком / фактурой: +10%"
+    calcVatNote: "Цена нетто. С чеком / фактурой: +10%"
   }
 };
 
@@ -2291,7 +2290,7 @@ function setLanguage(lang) {
     document.getElementById('driver-status-text').textContent = t.driverStatusText || "Driver Online in Warsaw • Live Dispatch";
   }
   if (document.getElementById('quick-loc-title')) {
-    document.getElementById('quick-loc-title').textContent = t.quickLocTitle || "⚡ Quick Warsaw Destinations:";
+    document.getElementById('quick-loc-title').textContent = t.quickLocTitle || "Quick Warsaw Destinations:";
   }
 
   // Booking calendar translations
@@ -2311,7 +2310,7 @@ function setLanguage(lang) {
 
   // Profile translations
   if (document.getElementById('profile-btn')) {
-    document.getElementById('profile-btn').textContent = "👤 " + t.profileBtnText;
+    document.getElementById('profile-btn').textContent = t.profileBtnText;
   }
   if (document.getElementById('profile-modal-title')) {
     document.getElementById('profile-modal-title').textContent = t.profileModalTitle;
@@ -2335,7 +2334,7 @@ function setLanguage(lang) {
     document.getElementById('calc-lbl-surcharge').textContent = t.calcSurcharge;
     document.getElementById('calc-lbl-total').textContent = t.calcTotal;
     if (document.getElementById('calc-lbl-vat-note')) {
-      document.getElementById('calc-lbl-vat-note').textContent = t.calcVatNote || "ℹ️ Net price. With receipt / VAT invoice: +10%";
+      document.getElementById('calc-lbl-vat-note').textContent = t.calcVatNote || "Net price. With receipt / VAT invoice: +10%";
     }
   }
 
@@ -2417,12 +2416,12 @@ function showPaymentPopup(type) {
       <div style="margin-bottom: 8px; font-size: 0.9rem; color: #ccc;">${t.cardDesc}</div>
       <div class="copy-box" onclick="copyToClipboard('79102011690000810203025301', this)">
         <code>79 1020 1169 0000 8102 0302 5301</code>
-        <span class="copy-btn-badge">📋 ${currentLanguage === 'ru' ? 'Копировать' : (currentLanguage === 'pl' ? 'Kopiuj' : 'Copy')}</span>
+        <span class="copy-btn-badge">${currentLanguage === 'ru' ? 'Копировать' : (currentLanguage === 'pl' ? 'Kopiuj' : 'Copy')}</span>
       </div>
       <div style="margin-top: 14px; margin-bottom: 6px; font-size: 0.9rem; color: #ccc;">${t.cardDesc2 || 'Title / Receiver:'}</div>
       <div class="copy-box" onclick="copyToClipboard('Yevhenii Zhukovskyi', this)">
         <code>Yevhenii Zhukovskyi</code>
-        <span class="copy-btn-badge">📋 ${currentLanguage === 'ru' ? 'Копировать' : (currentLanguage === 'pl' ? 'Kopiuj' : 'Copy')}</span>
+        <span class="copy-btn-badge">${currentLanguage === 'ru' ? 'Копировать' : (currentLanguage === 'pl' ? 'Kopiuj' : 'Copy')}</span>
       </div>
     `;
   } else if (type === 'cash') {
@@ -2434,7 +2433,7 @@ function showPaymentPopup(type) {
       <div style="margin-bottom: 8px; font-size: 0.9rem; color: #ccc;">${t.blikDesc}</div>
       <div class="copy-box" onclick="copyToClipboard('+48739229181', this)">
         <code>+48 739 229 181</code>
-        <span class="copy-btn-badge">📋 BLIK</span>
+        <span class="copy-btn-badge">BLIK</span>
       </div>
       <div style="margin-top: 10px; font-size: 0.85rem; color: #888;">${t.blikDesc2 || ''}</div>
     `;
@@ -2452,7 +2451,7 @@ function copyToClipboard(value, el) {
       const badge = el.querySelector('.copy-btn-badge');
       if (badge) {
         const originalText = badge.textContent;
-        badge.textContent = "✓ " + (currentLanguage === 'ru' ? 'Скопировано!' : (currentLanguage === 'pl' ? 'Skopiowano!' : 'Copied!'));
+        badge.textContent = "" + (currentLanguage === 'ru' ? 'Скопировано!' : (currentLanguage === 'pl' ? 'Skopiowano!' : 'Copied!'));
         badge.style.background = "#00ff88";
         badge.style.color = "#000";
         setTimeout(() => {
@@ -2566,13 +2565,13 @@ function renderPriceSlide() {
     
     let badgeHtml = "";
     if (plan.label.includes("1 Hour") || plan.label.includes("1 Godzina") || plan.label.includes("1 Час")) {
-      badgeHtml = `<span class="price-badge hot">⭐ ${currentLanguage === 'ru' ? 'Для Города' : (currentLanguage === 'pl' ? 'W Mieście' : 'City Quick')}</span>`;
+      badgeHtml = `<span class="price-badge hot">${currentLanguage === 'ru' ? 'Для Города' : (currentLanguage === 'pl' ? 'W Mieście' : 'City Quick')}</span>`;
     } else if (plan.label.includes("Full Day") || plan.label.includes("Cały Dzień") || plan.label.includes("Целый День")) {
-      badgeHtml = `<span class="price-badge popular">🔥 ${currentLanguage === 'ru' ? 'Хит Продаж' : (currentLanguage === 'pl' ? 'Popularny' : 'Best Value')}</span>`;
+      badgeHtml = `<span class="price-badge popular">${currentLanguage === 'ru' ? 'Хит Продаж' : (currentLanguage === 'pl' ? 'Popularny' : 'Best Value')}</span>`;
     } else if (plan.label.includes("Long Day") || plan.label.includes("Długa Trasa") || plan.label.includes("Дальняя Дист")) {
-      badgeHtml = `<span class="price-badge special">🚀 ${currentLanguage === 'ru' ? 'Дальние Поездки' : (currentLanguage === 'pl' ? 'Trasy Międzymiastowe' : 'Long Distance')}</span>`;
+      badgeHtml = `<span class="price-badge special">${currentLanguage === 'ru' ? 'Дальние Поездки' : (currentLanguage === 'pl' ? 'Trasy Międzymiastowe' : 'Long Distance')}</span>`;
     } else {
-      badgeHtml = `<span class="price-badge default">⚡ ${currentLanguage === 'ru' ? 'По Тарифу' : (currentLanguage === 'pl' ? 'Stawka / KM' : 'Per KM')}</span>`;
+      badgeHtml = `<span class="price-badge default">${currentLanguage === 'ru' ? 'По Тарифу' : (currentLanguage === 'pl' ? 'Stawka / KM' : 'Per KM')}</span>`;
     }
 
     slideDiv.innerHTML = `
@@ -2801,7 +2800,7 @@ async function locateClientAndCalculateETA() {
 
       const clientPopup = `
         <div style="text-align:center;padding:4px;font-family:inherit;">
-          <strong style="color:#00d2ff;font-size:0.95rem;">📍 You are here</strong>
+          <strong style="color:#00d2ff;font-size:0.95rem;">You are here</strong>
           <div style="font-size:0.75rem;color:#aaa;margin-top:2px;">Pickup Point</div>
         </div>
       `;
@@ -2856,7 +2855,7 @@ async function locateClientAndCalculateETA() {
         console.warn("ETA route calculation error:", err);
       }
 
-      btn.innerHTML = `<span>✓</span> <span>${translations[currentLanguage].locateUserBtn || 'Location Updated'}</span>`;
+      btn.innerHTML = `<span></span> <span>${translations[currentLanguage].locateUserBtn || 'Location Updated'}</span>`;
       btn.disabled = false;
     },
     (err) => {
@@ -2904,7 +2903,7 @@ async function autoDetectPickupAddress() {
     pickupInput.dataset.lon = currentClientCoords.lon;
     calculateAccurateRoute();
     if (gpsBtn) {
-      gpsBtn.innerHTML = `<span>✓</span> <span>Detected</span>`;
+      gpsBtn.innerHTML = `<span></span> <span>Detected</span>`;
       setTimeout(() => { if (gpsBtn) gpsBtn.innerHTML = origHtml; }, 2000);
     }
     return;
@@ -2927,7 +2926,7 @@ async function autoDetectPickupAddress() {
       pickupInput.dataset.lon = lon;
       calculateAccurateRoute();
       if (gpsBtn) {
-        gpsBtn.innerHTML = `<span>✓</span> <span>Detected</span>`;
+        gpsBtn.innerHTML = `<span></span> <span>Detected</span>`;
         setTimeout(() => { if (gpsBtn) gpsBtn.innerHTML = origHtml; }, 2000);
       }
     },
@@ -3041,7 +3040,7 @@ async function fetchPhotonSuggestions(query, container, onSelect) {
       const itemDiv = document.createElement("div");
       itemDiv.className = "autocomplete-item";
       itemDiv.innerHTML = `
-        <span class="main-name">📍 ${escapeHtml(displayName)}</span>
+        <span class="main-name">${escapeHtml(displayName)}</span>
         <span class="sub-name">${escapeHtml(subName)}</span>
       `;
       itemDiv.addEventListener("click", () => {
@@ -3638,8 +3637,8 @@ function renderHistoryList(bookings, container) {
     html += `
       <tr style="border-bottom: 1px solid #222; vertical-align: top;">
         <td style="padding: 8px 0; color: #fff;">
-          <strong>📅 ${escapeHtml(formattedDate)} &nbsp; ⏰ ${escapeHtml(b.booking_time)}</strong><br>
-          <span style="font-size: 0.75rem; color: #888;">📍 ${escapeHtml(b.pickup_address)} → 🏁 ${escapeHtml(b.destination_address)}</span>
+          <strong>${escapeHtml(formattedDate)} &bull; ${escapeHtml(b.booking_time)}</strong><br>
+          <span style="font-size: 0.75rem; color: #888;">${escapeHtml(b.pickup_address)} &rarr; ${escapeHtml(b.destination_address)}</span>
         </td>
         <td style="padding: 8px 0; text-align: right; white-space: nowrap; width: 80px;">
           <strong style="color: #0ff;">${Number(finalPrice).toFixed(2)} PLN</strong><br>
@@ -3750,8 +3749,8 @@ function bookPricingPlan(plan) {
   const planLabel = plan.label;
   const planPrice = `${plan.price + 10} PLN`;
   const toastMsg = currentLanguage === "ru"
-    ? `✓ Выбран план: ${planLabel} — ${planPrice} (включая 10 PLN за посадку). Выберите дату и время ниже.`
-    : (currentLanguage === "pl" ? `✓ Wybrano plan: ${planLabel} — ${planPrice} (w tym 10 PLN opłaty startowej). Wybierz datę i czas poniżej.` : `✓ Plan selected: ${planLabel} — ${planPrice} (includes 10 PLN pickup fee). Now pick a date & time below.`);
+    ? `Выбран план: ${planLabel} — ${planPrice} (включая 10 PLN за посадку). Выберите дату и время ниже.`
+    : (currentLanguage === "pl" ? `Wybrano plan: ${planLabel} — ${planPrice} (w tym 10 PLN opłaty startowej). Wybierz datę i czas poniżej.` : `Plan selected: ${planLabel} — ${planPrice} (includes 10 PLN pickup fee). Now pick a date & time below.`);
   
   toast.textContent = toastMsg;
   toast.style.cssText = "position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);border:1px solid #0ff;color:#0ff;padding:12px 20px;border-radius:10px;font-size:0.9rem;z-index:10000;pointer-events:none;text-align:center;max-width:90vw;";
@@ -3767,8 +3766,8 @@ function selectStandardRate() {
   }
   const toast = document.createElement("div");
   const toastMsg = currentLanguage === "ru"
-    ? `✓ Выбран стандартный тариф за км. Выберите дату и время ниже.`
-    : (currentLanguage === "pl" ? `✓ Wybrano taryfę standardową za km. Wybierz datę i czas poniżej.` : `✓ Standard per-km rate selected. Now pick a date & time below.`);
+    ? `Выбран стандартный тариф за км. Выберите дату и время ниже.`
+    : (currentLanguage === "pl" ? `Wybrano taryfę standardową za km. Wybierz datę i czas poniżej.` : `Standard per-km rate selected. Now pick a date & time below.`);
   
   toast.textContent = toastMsg;
   toast.style.cssText = "position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);border:1px solid #f0f;color:#f0f;padding:12px 20px;border-radius:10px;font-size:0.9rem;z-index:10000;pointer-events:none;text-align:center;max-width:90vw;";
@@ -3800,7 +3799,7 @@ function openBookingModal(date, time) {
       ? (translations[currentLanguage].nightRateLabel || "Night Rate (+50%)") 
       : (translations[currentLanguage].dayRateLabel || "Day Rate");
       
-    modalInfo.innerHTML = `📅 ${formattedDate} &nbsp;&nbsp;&nbsp; ⏰ ${time} (${rateText})`;
+    modalInfo.innerHTML = `${formattedDate} &bull; ${time} (${rateText})`;
     
     // Manage fields if a package/plan is chosen
     if (window._pricingPlan && window._pricingPlan.fixedPrice !== null) {
@@ -3851,7 +3850,7 @@ function openBookingModal(date, time) {
 
     // Auto pre-fill pickup address if client location is known
     const pickupInput = document.getElementById("ride-pickup");
-    if (pickupInput && (!pickupInput.value || pickupInput.value === "📍 Current GPS Location")) {
+    if (pickupInput && (!pickupInput.value || pickupInput.value === "Current GPS Location")) {
       if (currentClientCoords) {
         reverseGeocodeCoords(currentClientCoords.lat, currentClientCoords.lon).then(addr => {
           pickupInput.value = addr;
@@ -3977,8 +3976,8 @@ function showBookingSuccess(statusMsg, bookingId, payload) {
   statusMsg.style.color = "#0f0";
   
   const successText = currentLanguage === "ru" 
-    ? "✓ Запрос успешно отправлен! Таксист свяжется с вами." 
-    : (currentLanguage === "pl" ? "✓ Zapytanie wysłane! Taksówkarz skontaktuje się z Tobą." : "✓ Request sent! The driver will contact you.");
+    ? "Запрос успешно отправлен! Таксист свяжется с вами." 
+    : (currentLanguage === "pl" ? "Zapytanie wysłane! Taksówkarz skontaktuje się z Tobą." : "Request sent! The driver will contact you.");
   
   statusMsg.textContent = successText;
   
@@ -4454,10 +4453,10 @@ function scrollToBooking() {
     </div>
 
     <div class="widget-details-box">
-      <div>📍 <span id="widget-val-pickup" style="font-weight: 500;">Pickup</span></div>
-      <div style="margin-top: 5px;">🏁 <span id="widget-val-destination" style="font-weight: 500;">Destination</span></div>
+      <div><span id="widget-val-pickup" style="font-weight: 500;">Pickup</span></div>
+      <div style="margin-top: 5px;"><span id="widget-val-destination" style="font-weight: 500;">Destination</span></div>
       <div style="margin-top: 8px; font-size: 0.9em; color: #aaa;">
-        📅 <span id="widget-val-datetime">12.07.2026 at 14:00</span>
+        <span id="widget-val-datetime">12.07.2026 at 14:00</span>
       </div>
     </div>
     
