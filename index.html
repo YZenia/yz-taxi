@@ -1840,10 +1840,10 @@
           <img src="blik.jpg" alt="BLIK" class="pay-brand-icon blik-round">
           <div>
             <div class="pay-brand-name" id="pay-blik-title">BLIK Transfer</div>
-            <div class="pay-brand-sub">Phone Transfer</div>
+            <div class="pay-brand-sub" id="pay-blik-sub">Phone Transfer</div>
           </div>
         </div>
-        <span class="pay-badge pay-badge-blik">Instant 24/7</span>
+        <span class="pay-badge pay-badge-blik" id="pay-badge-blik">Instant 24/7</span>
       </div>
 
       <div class="pay-card-number-box" onclick="copyToClipboard('+48739229181', this)" title="Click to copy">
@@ -1864,7 +1864,7 @@
           <img src="pay.png" alt="Cash" class="pay-brand-icon">
           <div>
             <div class="pay-brand-name" id="pay-cash-title">Cash Payment</div>
-            <div class="pay-brand-sub">On Destination</div>
+            <div class="pay-brand-sub" id="pay-cash-sub">On Destination</div>
           </div>
         </div>
         <div class="pay-currency-tags">
@@ -2266,10 +2266,18 @@ const translations = {
     lblAutodetectGps: "Auto-Detect GPS",
     pricingVatNotice: "* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.",
     calcVatNote: "Net price. With receipt / VAT invoice: +10%",
-    payNameCard: "Card Transfer",
-    payNameCash: "Cash",
-    payNameBlik: "BLIK",
-    payHint: "Details"
+    cardTitle: "Card Payment",
+    payBlikSub: "Phone Transfer",
+    payBadgeBlik: "Instant 24/7",
+    cashTitle: "Cash Payment",
+    payCashSub: "On Destination",
+    cashDesc: "Pay the driver directly in cash upon completion of the ride.",
+    blikTitle: "BLIK Payment",
+    payLblReceiver: "Receiver:",
+    payLblBlikTitle: "Title:",
+    payLblReceiptOpt: "Receipt / Invoice:",
+    payLblReceiptVal: "Available (+10%)",
+    payBtnCopy: "Copy"
   },
   pl: {
     mainTitle: "Y Z T A X I",
@@ -2360,10 +2368,18 @@ const translations = {
     lblAutodetectGps: "Wykryj GPS",
     pricingVatNotice: "* Wszystkie ceny są cenami NETTO. W przypadku wystawienia paragonu lub faktury VAT doliczane jest +10%.",
     calcVatNote: "Cena netto. Z paragonem / fakturą VAT: +10%",
-    payNameCard: "Przelew / Karta",
-    payNameCash: "Gotówka",
-    payNameBlik: "BLIK",
-    payHint: "Szczegóły"
+    cardTitle: "Płatność Kartą",
+    payBlikSub: "Przelew na telefon",
+    payBadgeBlik: "Natychmiast 24/7",
+    cashTitle: "Płatność Gotówką",
+    payCashSub: "Na miejscu",
+    cashDesc: "Zapłać kierowcy ustaloną kwotę w gotówce po zakończeniu kursu.",
+    blikTitle: "Płatność BLIK",
+    payLblReceiver: "Odbiorca:",
+    payLblBlikTitle: "Tytuł:",
+    payLblReceiptOpt: "Paragon / Faktura:",
+    payLblReceiptVal: "Dostępne (+10%)",
+    payBtnCopy: "Kopiuj"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -2454,10 +2470,18 @@ const translations = {
     lblAutodetectGps: "Мое местоположение",
     pricingVatNotice: "* Все цены указаны НЕТТО. При оформлении чека или счёта-фактуры к стоимости добавляется +10%.",
     calcVatNote: "Цена нетто. С чеком / фактурой: +10%",
-    payNameCard: "Перевод / Карта",
-    payNameCash: "Наличные",
-    payNameBlik: "BLIK",
-    payHint: "Реквизиты"
+    cardTitle: "Оплата картой",
+    payBlikSub: "Перевод по номеру",
+    payBadgeBlik: "Мгновенно 24/7",
+    cashTitle: "Оплата наличными",
+    payCashSub: "Оплата на месте",
+    cashDesc: "Оплатите водителю оговорённую сумму наличными по завершении поездки.",
+    blikTitle: "Оплата BLIK",
+    payLblReceiver: "Получатель:",
+    payLblBlikTitle: "Назначение:",
+    payLblReceiptOpt: "Чек / Счёт-фактура:",
+    payLblReceiptVal: "Доступно (+10%)",
+    payBtnCopy: "Копировать"
   }
 };
 
@@ -2631,15 +2655,19 @@ function setLanguage(lang) {
   }
 
   // Open Payment Cards translations
-  if (document.getElementById('pay-card-title')) document.getElementById('pay-card-title').textContent = t.cardTitle || 'Card Transfer';
-  if (document.getElementById('pay-blik-title')) document.getElementById('pay-blik-title').textContent = t.blikTitle || 'BLIK Transfer';
+  if (document.getElementById('pay-card-title')) document.getElementById('pay-card-title').textContent = t.cardTitle || 'Card Payment';
+  if (document.getElementById('pay-blik-title')) document.getElementById('pay-blik-title').textContent = t.blikTitle || 'BLIK Payment';
+  if (document.getElementById('pay-blik-sub')) document.getElementById('pay-blik-sub').textContent = t.payBlikSub || 'Phone Transfer';
+  if (document.getElementById('pay-badge-blik')) document.getElementById('pay-badge-blik').textContent = t.payBadgeBlik || 'Instant 24/7';
   if (document.getElementById('pay-cash-title')) document.getElementById('pay-cash-title').textContent = t.cashTitle || 'Cash Payment';
-  if (document.getElementById('pay-lbl-receiver')) document.getElementById('pay-lbl-receiver').textContent = lang === 'ru' ? 'Получатель:' : (lang === 'pl' ? 'Odbiorca:' : 'Receiver:');
-  if (document.getElementById('pay-lbl-blik-title')) document.getElementById('pay-lbl-blik-title').textContent = lang === 'ru' ? 'Назначение:' : (lang === 'pl' ? 'Tytuł:' : 'Title:');
-  if (document.getElementById('pay-btn-copy-card')) document.getElementById('pay-btn-copy-card').textContent = lang === 'ru' ? 'Копировать' : (lang === 'pl' ? 'Kopiuj' : 'Copy');
-  if (document.getElementById('pay-btn-copy-blik')) document.getElementById('pay-btn-copy-blik').textContent = lang === 'ru' ? 'Копировать' : (lang === 'pl' ? 'Kopiuj' : 'Copy');
-  if (document.getElementById('pay-lbl-receipt-opt')) document.getElementById('pay-lbl-receipt-opt').textContent = lang === 'ru' ? 'Чек / Счёт-фактура:' : (lang === 'pl' ? 'Paragon / Faktura:' : 'Receipt / Invoice:');
-  if (document.getElementById('pay-lbl-receipt-val')) document.getElementById('pay-lbl-receipt-val').textContent = lang === 'ru' ? 'Доступно (+10%)' : (lang === 'pl' ? 'Dostępne (+10%)' : 'Available (+10%)');
+  if (document.getElementById('pay-cash-sub')) document.getElementById('pay-cash-sub').textContent = t.payCashSub || 'On Destination';
+  if (document.getElementById('pay-cash-text')) document.getElementById('pay-cash-text').textContent = t.cashDesc || 'Pay the driver directly in cash upon completion of the ride.';
+  if (document.getElementById('pay-lbl-receiver')) document.getElementById('pay-lbl-receiver').textContent = t.payLblReceiver || (lang === 'ru' ? 'Получатель:' : (lang === 'pl' ? 'Odbiorca:' : 'Receiver:'));
+  if (document.getElementById('pay-lbl-blik-title')) document.getElementById('pay-lbl-blik-title').textContent = t.payLblBlikTitle || (lang === 'ru' ? 'Назначение:' : (lang === 'pl' ? 'Tytuł:' : 'Title:'));
+  if (document.getElementById('pay-btn-copy-card')) document.getElementById('pay-btn-copy-card').textContent = t.payBtnCopy || (lang === 'ru' ? 'Копировать' : (lang === 'pl' ? 'Kopiuj' : 'Copy'));
+  if (document.getElementById('pay-btn-copy-blik')) document.getElementById('pay-btn-copy-blik').textContent = t.payBtnCopy || (lang === 'ru' ? 'Копировать' : (lang === 'pl' ? 'Kopiuj' : 'Copy'));
+  if (document.getElementById('pay-lbl-receipt-opt')) document.getElementById('pay-lbl-receipt-opt').textContent = t.payLblReceiptOpt || (lang === 'ru' ? 'Чек / Счёт-фактура:' : (lang === 'pl' ? 'Paragon / Faktura:' : 'Receipt / Invoice:'));
+  if (document.getElementById('pay-lbl-receipt-val')) document.getElementById('pay-lbl-receipt-val').textContent = t.payLblReceiptVal || (lang === 'ru' ? 'Доступно (+10%)' : (lang === 'pl' ? 'Dostępne (+10%)' : 'Available (+10%)'));
 
   // Floating dock translations
   if (document.getElementById('dock-btn-book')) {
