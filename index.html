@@ -525,63 +525,114 @@
       color: #000;
       box-shadow: 0 0 14px #0ff;
     }
+    /* ====== Modern Interactive Payment Method Buttons ====== */
     .payment-methods {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 30px;
-      margin-top: 30px;
+      gap: 14px;
+      margin-top: 22px;
+      width: 100%;
+      max-width: 500px;
+      box-sizing: border-box;
     }
-    /* ==== Светящийся ореол с плавной сменой цветов ==== */
-    .payment-icon img {
-      width: 55px;
-      height: auto;
-      border-radius: 12px;
-      display: block;
-      transition: all 0.3s ease;
-      filter: drop-shadow(0 0 0 transparent);
+    .payment-card-btn {
+      flex: 1 1 135px;
+      max-width: 155px;
+      background: rgba(14, 18, 28, 0.85);
+      border: 1.5px solid rgba(0, 255, 255, 0.25);
+      border-radius: 18px;
+      padding: 14px 10px 12px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      color: #fff;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
     }
-    .payment-icon img:hover {
-      transform: translateY(-3px) scale(1.05);
+    .payment-card-btn:hover {
+      transform: translateY(-4px) scale(1.03);
+    }
+    .payment-card-btn:active {
+      transform: translateY(-1px) scale(0.98);
     }
 
-    .payment-icon img[alt="Blik"] {
+    /* Individual glow borders & buttons */
+    .payment-card-btn.glow-cyan {
+      border-color: rgba(0, 255, 255, 0.35);
+    }
+    .payment-card-btn.glow-cyan:hover {
+      border-color: #00ffff;
+      box-shadow: 0 12px 30px rgba(0, 255, 255, 0.25), 0 0 18px rgba(0, 255, 255, 0.35);
+    }
+
+    .payment-card-btn.glow-yellow {
+      border-color: rgba(255, 204, 0, 0.35);
+    }
+    .payment-card-btn.glow-yellow:hover {
+      border-color: #ffcc00;
+      box-shadow: 0 12px 30px rgba(255, 204, 0, 0.25), 0 0 18px rgba(255, 204, 0, 0.35);
+    }
+
+    .payment-card-btn.glow-magenta {
+      border-color: rgba(255, 0, 255, 0.35);
+    }
+    .payment-card-btn.glow-magenta:hover {
+      border-color: #ff00ff;
+      box-shadow: 0 12px 30px rgba(255, 0, 255, 0.25), 0 0 18px rgba(255, 0, 255, 0.35);
+    }
+
+    .payment-icon-wrap {
+      width: 46px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .payment-icon-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+    .payment-card-btn:hover .payment-icon-wrap img {
+      transform: scale(1.1);
+    }
+    .payment-icon-wrap img[alt="Blik"] {
       border-radius: 50%;
     }
-
-    /* Включаем glow при попадании в зону видимости */
-    .payment-icon.glow-visible img {
-      animation-duration: 3s;
-      animation-iteration-count: infinite;
-      animation-timing-function: ease-in-out;
+    .payment-card-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      width: 100%;
     }
-
-    /* Цвет 1: CYAN */
-    .payment-icon.glow-cyan.glow-visible img {
-      animation-name: glow-cyan;
+    .payment-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #fff;
     }
-    @keyframes glow-cyan {
-      0%, 100% { filter: drop-shadow(0 0 2px transparent); }
-      50%     { filter: drop-shadow(0 0 8px #0ff); }
+    .payment-hint {
+      font-size: 0.72rem;
+      color: #888;
+      font-weight: 500;
+      transition: color 0.2s ease;
     }
-
-    /* Цвет 2: MAGENTA */
-    .payment-icon.glow-magenta.glow-visible img {
-      animation-name: glow-magenta;
-    }
-    @keyframes glow-magenta {
-      0%, 100% { filter: drop-shadow(0 0 2px transparent); }
-      50%     { filter: drop-shadow(0 0 8px #f0f); }
-    }
-
-    /* Цвет 3: YELLOW */
-    .payment-icon.glow-yellow.glow-visible img {
-      animation-name: glow-yellow;
-    }
-    @keyframes glow-yellow {
-      0%, 100% { filter: drop-shadow(0 0 2px transparent); }
-      50%     { filter: drop-shadow(0 0 8px #ff0); }
-    }
+    .payment-card-btn.glow-cyan:hover .payment-hint { color: #00ffff; }
+    .payment-card-btn.glow-yellow:hover .payment-hint { color: #ffcc00; }
+    .payment-card-btn.glow-magenta:hover .payment-hint { color: #ff00ff; }
 
 
 
@@ -1639,15 +1690,35 @@
 
   <h3 id="payment-title">Payment Methods</h3>
   <div class="payment-methods">
-    <div class="payment-icon glow-cyan" onclick="showPaymentPopup('card')">
-      <img src="card.png" alt="Card">
-    </div>
-    <div class="payment-icon glow-yellow" onclick="showPaymentPopup('cash')">
-      <img src="pay.png" alt="Cash">
-    </div>
-    <div class="payment-icon glow-magenta" onclick="showPaymentPopup('blik')">
-      <img src="blik.jpg" alt="Blik">
-    </div>
+    <button type="button" class="payment-card-btn glow-cyan" onclick="showPaymentPopup('card')">
+      <div class="payment-icon-wrap">
+        <img src="card.png" alt="Card">
+      </div>
+      <div class="payment-card-info">
+        <span class="payment-name" id="pay-name-card">Card Transfer</span>
+        <span class="payment-hint" id="pay-hint-card">Details</span>
+      </div>
+    </button>
+
+    <button type="button" class="payment-card-btn glow-yellow" onclick="showPaymentPopup('cash')">
+      <div class="payment-icon-wrap">
+        <img src="pay.png" alt="Cash">
+      </div>
+      <div class="payment-card-info">
+        <span class="payment-name" id="pay-name-cash">Cash</span>
+        <span class="payment-hint" id="pay-hint-cash">Details</span>
+      </div>
+    </button>
+
+    <button type="button" class="payment-card-btn glow-magenta" onclick="showPaymentPopup('blik')">
+      <div class="payment-icon-wrap">
+        <img src="blik.jpg" alt="Blik">
+      </div>
+      <div class="payment-card-info">
+        <span class="payment-name" id="pay-name-blik">BLIK</span>
+        <span class="payment-hint" id="pay-hint-blik">Details</span>
+      </div>
+    </button>
   </div>
 </section>
 
@@ -2028,7 +2099,11 @@ const translations = {
     etaBookBtn: "Book from My Location",
     lblAutodetectGps: "Auto-Detect GPS",
     pricingVatNotice: "* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.",
-    calcVatNote: "Net price. With receipt / VAT invoice: +10%"
+    calcVatNote: "Net price. With receipt / VAT invoice: +10%",
+    payNameCard: "Card Transfer",
+    payNameCash: "Cash",
+    payNameBlik: "BLIK",
+    payHint: "Details"
   },
   pl: {
     mainTitle: "Y Z T A X I",
@@ -2118,7 +2193,11 @@ const translations = {
     etaBookBtn: "Zamów z mojej lokalizacji",
     lblAutodetectGps: "Wykryj GPS",
     pricingVatNotice: "* Wszystkie ceny są cenami NETTO. W przypadku wystawienia paragonu lub faktury VAT doliczane jest +10%.",
-    calcVatNote: "Cena netto. Z paragonem / fakturą VAT: +10%"
+    calcVatNote: "Cena netto. Z paragonem / fakturą VAT: +10%",
+    payNameCard: "Przelew / Karta",
+    payNameCash: "Gotówka",
+    payNameBlik: "BLIK",
+    payHint: "Szczegóły"
   },
   ru: {
     mainTitle: "Y Z T A X I",
@@ -2208,7 +2287,11 @@ const translations = {
     etaBookBtn: "Заказать отсюда",
     lblAutodetectGps: "Мое местоположение",
     pricingVatNotice: "* Все цены указаны НЕТТО. При оформлении чека или счёта-фактуры к стоимости добавляется +10%.",
-    calcVatNote: "Цена нетто. С чеком / фактурой: +10%"
+    calcVatNote: "Цена нетто. С чеком / фактурой: +10%",
+    payNameCard: "Перевод / Карта",
+    payNameCash: "Наличные",
+    payNameBlik: "BLIK",
+    payHint: "Реквизиты"
   }
 };
 
@@ -2380,6 +2463,14 @@ function setLanguage(lang) {
   if (document.getElementById('pricing-vat-text')) {
     document.getElementById('pricing-vat-text').textContent = t.pricingVatNotice || "* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.";
   }
+
+  // Payment Methods button translations
+  if (document.getElementById('pay-name-card')) document.getElementById('pay-name-card').textContent = t.payNameCard || 'Card Transfer';
+  if (document.getElementById('pay-name-cash')) document.getElementById('pay-name-cash').textContent = t.payNameCash || 'Cash';
+  if (document.getElementById('pay-name-blik')) document.getElementById('pay-name-blik').textContent = t.payNameBlik || 'BLIK';
+  if (document.getElementById('pay-hint-card')) document.getElementById('pay-hint-card').textContent = t.payHint || 'Details';
+  if (document.getElementById('pay-hint-cash')) document.getElementById('pay-hint-cash').textContent = t.payHint || 'Details';
+  if (document.getElementById('pay-hint-blik')) document.getElementById('pay-hint-blik').textContent = t.payHint || 'Details';
 
   // Floating dock translations
   if (document.getElementById('dock-btn-book')) {
