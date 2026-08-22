@@ -526,171 +526,231 @@
       color: #000;
       box-shadow: 0 0 14px #0ff;
     }
-    /* ====== Modern Open Payment Method Cards 2026 ====== */
+    /* ====== Ultra-Premium Fintech Payment Cards 2026 ====== */
     .payment-cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
       gap: 16px;
       margin-top: 24px;
       width: 100%;
-      max-width: 860px;
+      max-width: 900px;
       box-sizing: border-box;
-      padding: 0 8px;
+      padding: 0 10px;
     }
-    .payment-open-card {
-      background: rgba(14, 18, 28, 0.88);
-      border: 1.5px solid rgba(0, 255, 255, 0.25);
-      border-radius: 18px;
-      padding: 16px 16px 14px 16px;
+    .pay-fintech-card {
+      border-radius: 20px;
+      padding: 16px 18px 14px 18px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: 12px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       box-sizing: border-box;
       position: relative;
       overflow: hidden;
     }
-    .payment-open-card:hover {
-      transform: translateY(-3px);
+    .pay-fintech-card:hover {
+      transform: translateY(-4px);
     }
-    .payment-open-card.glow-cyan {
-      border-color: rgba(0, 255, 255, 0.35);
+
+    /* 1. Bank Card */
+    .pay-card-bank {
+      background: linear-gradient(135deg, rgba(6, 26, 44, 0.92) 0%, rgba(10, 15, 28, 0.95) 100%);
+      border: 1.5px solid rgba(0, 255, 255, 0.3);
     }
-    .payment-open-card.glow-cyan:hover {
+    .pay-card-bank:hover {
       border-color: #00ffff;
-      box-shadow: 0 12px 35px rgba(0, 255, 255, 0.2), 0 0 20px rgba(0, 255, 255, 0.25);
+      box-shadow: 0 14px 40px rgba(0, 255, 255, 0.25), 0 0 25px rgba(0, 255, 255, 0.2);
     }
-    .payment-open-card.glow-magenta {
-      border-color: rgba(255, 0, 255, 0.35);
+
+    /* 2. BLIK Card */
+    .pay-card-blik {
+      background: linear-gradient(135deg, rgba(38, 8, 35, 0.92) 0%, rgba(15, 11, 26, 0.95) 100%);
+      border: 1.5px solid rgba(255, 0, 128, 0.35);
     }
-    .payment-open-card.glow-magenta:hover {
-      border-color: #ff00ff;
-      box-shadow: 0 12px 35px rgba(255, 0, 255, 0.2), 0 0 20px rgba(255, 0, 255, 0.25);
+    .pay-card-blik:hover {
+      border-color: #ff007f;
+      box-shadow: 0 14px 40px rgba(255, 0, 128, 0.25), 0 0 25px rgba(255, 0, 128, 0.2);
     }
-    .payment-open-card.glow-yellow {
-      border-color: rgba(255, 204, 0, 0.35);
+
+    /* 3. Cash Card */
+    .pay-card-cash {
+      background: linear-gradient(135deg, rgba(35, 28, 6, 0.92) 0%, rgba(18, 15, 10, 0.95) 100%);
+      border: 1.5px solid rgba(255, 204, 0, 0.35);
     }
-    .payment-open-card.glow-yellow:hover {
+    .pay-card-cash:hover {
       border-color: #ffcc00;
-      box-shadow: 0 12px 35px rgba(255, 204, 0, 0.2), 0 0 20px rgba(255, 204, 0, 0.25);
+      box-shadow: 0 14px 40px rgba(255, 204, 0, 0.25), 0 0 25px rgba(255, 204, 0, 0.2);
     }
-    .pay-card-header {
+
+    .pay-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .pay-brand {
       display: flex;
       align-items: center;
       gap: 12px;
-    }
-    .pay-icon-box {
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .pay-icon-box img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 8px;
-    }
-    .pay-icon-box img[alt="BLIK"] {
-      border-radius: 50%;
-    }
-    .pay-title-box {
-      display: flex;
-      flex-direction: column;
       text-align: left;
     }
-    .pay-title {
+    .pay-brand-icon {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .pay-brand-icon.blik-round {
+      border-radius: 50%;
+    }
+    .pay-brand-name {
       font-size: 0.95rem;
       font-weight: 700;
       color: #fff;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+    .pay-brand-sub {
+      font-size: 0.72rem;
+      color: #8f9bb3;
+      margin-top: 2px;
+    }
+
+    /* Badges */
+    .pay-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
       letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      white-space: nowrap;
     }
-    .pay-subtitle {
-      font-size: 0.74rem;
-      color: #888;
+    .pay-badge-bank {
+      background: rgba(0, 255, 255, 0.12);
+      border: 1px solid rgba(0, 255, 255, 0.35);
+      color: #00ffff;
     }
-    .pay-card-body {
+    .pay-badge-blik {
+      background: rgba(255, 0, 128, 0.12);
+      border: 1px solid rgba(255, 0, 128, 0.35);
+      color: #ff007f;
+    }
+    .pay-currency-tags {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      text-align: left;
+      gap: 5px;
     }
-    .pay-data-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.82rem;
-      color: #aaa;
+    .pay-cur-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(255, 204, 0, 0.12);
+      border: 1px solid rgba(255, 204, 0, 0.35);
+      color: #ffcc00;
     }
-    .pay-data-val {
-      font-weight: 600;
-      color: #fff;
-    }
-    .pay-copy-block {
+
+    /* Copy Box & Numbers */
+    .pay-card-number-box {
       background: rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      padding: 8px 10px;
+      border-radius: 12px;
+      padding: 9px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
       transition: all 0.2s ease;
+      width: 100%;
+      box-sizing: border-box;
     }
-    .pay-copy-block:hover {
+    .pay-card-bank .pay-card-number-box:hover {
       background: rgba(0, 255, 255, 0.08);
-      border-color: rgba(0, 255, 255, 0.4);
+      border-color: rgba(0, 255, 255, 0.5);
     }
-    .payment-open-card.glow-magenta .pay-copy-block:hover {
-      background: rgba(255, 0, 255, 0.08);
-      border-color: rgba(255, 0, 255, 0.4);
+    .pay-card-blik .pay-card-number-box:hover {
+      background: rgba(255, 0, 128, 0.08);
+      border-color: rgba(255, 0, 128, 0.5);
     }
-    .pay-code {
+    .pay-number-text {
       font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 0.82rem;
+      font-size: 0.84rem;
+      font-weight: 700;
       color: #00ffff;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
+      user-select: all;
     }
-    .payment-open-card.glow-magenta .pay-code {
-      color: #ff00ff;
+    .pay-number-blik {
+      color: #ff007f;
+      font-size: 0.95rem;
     }
-    .pay-copy-btn {
+    .pay-action-btn {
       background: transparent;
       border: none;
       padding: 0;
       cursor: pointer;
+      display: flex;
+      align-items: center;
     }
-    .pay-copy-btn .copy-btn-badge {
+    .pay-action-btn .copy-btn-badge {
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       font-size: 0.72rem;
-      font-weight: 600;
-      padding: 3px 8px;
+      font-weight: 700;
+      padding: 4px 9px;
       border-radius: 6px;
       transition: all 0.2s ease;
     }
-    .pay-copy-block:hover .copy-btn-badge {
+    .pay-card-bank .pay-card-number-box:hover .copy-btn-badge {
       background: #00ffff;
       color: #000;
       border-color: #00ffff;
     }
-    .payment-open-card.glow-magenta .pay-copy-block:hover .copy-btn-badge {
-      background: #ff00ff;
-      color: #000;
-      border-color: #ff00ff;
+    .pay-card-blik .pay-card-number-box:hover .copy-btn-badge {
+      background: #ff007f;
+      color: #fff;
+      border-color: #ff007f;
     }
-    .pay-cash-desc {
+
+    .pay-cash-info-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 204, 0, 0.15);
+      border-radius: 12px;
+      padding: 10px 12px;
+      text-align: left;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .pay-cash-text {
       margin: 0;
-      font-size: 0.84rem;
-      line-height: 1.45;
-      color: #ccc;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: #e0e0e0;
+    }
+
+    /* Card Footer Meta */
+    .pay-card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 0.8rem;
+      padding-top: 4px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .pay-meta-label {
+      color: #888;
+    }
+    .pay-meta-val {
+      font-weight: 600;
+      color: #fff;
+      text-align: right;
     }
 
 
@@ -1749,67 +1809,80 @@
 
   <h3 id="payment-title">Payment Methods</h3>
   <div class="payment-cards-grid">
-    <!-- Card 1: Bank Card Transfer -->
-    <div class="payment-open-card glow-cyan">
-      <div class="pay-card-header">
-        <div class="pay-icon-box">
-          <img src="card.png" alt="Card">
+    <!-- 1. Bank Card (Fintech Style) -->
+    <div class="pay-fintech-card pay-card-bank">
+      <div class="pay-card-top">
+        <div class="pay-brand">
+          <img src="card.png" alt="Card" class="pay-brand-icon">
+          <div>
+            <div class="pay-brand-name" id="pay-card-title">Card Payment</div>
+            <div class="pay-brand-sub">PKO Bank Polski</div>
+          </div>
         </div>
-        <div class="pay-title-box">
-          <span class="pay-title" id="pay-card-title">Card Transfer</span>
-          <span class="pay-subtitle">PKO Bank Polski</span>
-        </div>
+        <span class="pay-badge pay-badge-bank">IBAN / PLN</span>
       </div>
-      <div class="pay-card-body">
-        <div class="pay-data-row">
-          <span class="pay-data-label" id="pay-lbl-receiver">Receiver:</span>
-          <span class="pay-data-val">Yevhenii Zhukovskyi</span>
-        </div>
-        <div class="pay-copy-block" onclick="copyToClipboard('79102011690000810203025301', this)" title="Click to copy">
-          <code class="pay-code">79 1020 1169 0000 8102 0302 5301</code>
-          <button type="button" class="pay-copy-btn"><span class="copy-btn-badge" id="pay-btn-copy-card">Copy</span></button>
-        </div>
+
+      <div class="pay-card-number-box" onclick="copyToClipboard('79102011690000810203025301', this)" title="Click to copy">
+        <div class="pay-number-text">79 1020 1169 0000 8102 0302 5301</div>
+        <button type="button" class="pay-action-btn"><span class="copy-btn-badge" id="pay-btn-copy-card">Copy</span></button>
+      </div>
+
+      <div class="pay-card-bottom">
+        <span class="pay-meta-label" id="pay-lbl-receiver">Receiver:</span>
+        <span class="pay-meta-val">Yevhenii Zhukovskyi</span>
       </div>
     </div>
 
-    <!-- Card 2: BLIK -->
-    <div class="payment-open-card glow-magenta">
-      <div class="pay-card-header">
-        <div class="pay-icon-box">
-          <img src="blik.jpg" alt="BLIK">
+    <!-- 2. BLIK (Authentic Magenta Theme) -->
+    <div class="pay-fintech-card pay-card-blik">
+      <div class="pay-card-top">
+        <div class="pay-brand">
+          <img src="blik.jpg" alt="BLIK" class="pay-brand-icon blik-round">
+          <div>
+            <div class="pay-brand-name" id="pay-blik-title">BLIK Transfer</div>
+            <div class="pay-brand-sub">Phone Transfer</div>
+          </div>
         </div>
-        <div class="pay-title-box">
-          <span class="pay-title" id="pay-blik-title">BLIK Transfer</span>
-          <span class="pay-subtitle">Instant Phone Transfer</span>
-        </div>
+        <span class="pay-badge pay-badge-blik">Instant 24/7</span>
       </div>
-      <div class="pay-card-body">
-        <div class="pay-data-row">
-          <span class="pay-data-label" id="pay-lbl-blik-title">Title:</span>
-          <span class="pay-data-val">Taxi</span>
-        </div>
-        <div class="pay-copy-block" onclick="copyToClipboard('+48739229181', this)" title="Click to copy">
-          <code class="pay-code">+48 739 229 181</code>
-          <button type="button" class="pay-copy-btn"><span class="copy-btn-badge" id="pay-btn-copy-blik">Copy</span></button>
-        </div>
+
+      <div class="pay-card-number-box" onclick="copyToClipboard('+48739229181', this)" title="Click to copy">
+        <div class="pay-number-text pay-number-blik">+48 739 229 181</div>
+        <button type="button" class="pay-action-btn"><span class="copy-btn-badge" id="pay-btn-copy-blik">Copy</span></button>
+      </div>
+
+      <div class="pay-card-bottom">
+        <span class="pay-meta-label" id="pay-lbl-blik-title">Title:</span>
+        <span class="pay-meta-val">Taxi</span>
       </div>
     </div>
 
-    <!-- Card 3: Cash -->
-    <div class="payment-open-card glow-yellow">
-      <div class="pay-card-header">
-        <div class="pay-icon-box">
-          <img src="pay.png" alt="Cash">
+    <!-- 3. Cash (Currency Tags & Description) -->
+    <div class="pay-fintech-card pay-card-cash">
+      <div class="pay-card-top">
+        <div class="pay-brand">
+          <img src="pay.png" alt="Cash" class="pay-brand-icon">
+          <div>
+            <div class="pay-brand-name" id="pay-cash-title">Cash Payment</div>
+            <div class="pay-brand-sub">On Destination</div>
+          </div>
         </div>
-        <div class="pay-title-box">
-          <span class="pay-title" id="pay-cash-title">Cash Payment</span>
-          <span class="pay-subtitle">PLN / EUR</span>
+        <div class="pay-currency-tags">
+          <span class="pay-cur-tag">PLN</span>
+          <span class="pay-cur-tag">EUR</span>
+          <span class="pay-cur-tag">USD</span>
         </div>
       </div>
-      <div class="pay-card-body">
-        <p class="pay-cash-desc" id="pay-cash-text">
+
+      <div class="pay-cash-info-box">
+        <p class="pay-cash-text" id="pay-cash-text">
           Pay the driver directly in cash upon completion of the ride.
         </p>
+      </div>
+
+      <div class="pay-card-bottom">
+        <span class="pay-meta-label" id="pay-lbl-receipt-opt">Receipt / Invoice:</span>
+        <span class="pay-meta-val" id="pay-lbl-receipt-val">Available (+10%)</span>
       </div>
     </div>
   </div>
@@ -2563,9 +2636,10 @@ function setLanguage(lang) {
   if (document.getElementById('pay-cash-title')) document.getElementById('pay-cash-title').textContent = t.cashTitle || 'Cash Payment';
   if (document.getElementById('pay-lbl-receiver')) document.getElementById('pay-lbl-receiver').textContent = lang === 'ru' ? 'Получатель:' : (lang === 'pl' ? 'Odbiorca:' : 'Receiver:');
   if (document.getElementById('pay-lbl-blik-title')) document.getElementById('pay-lbl-blik-title').textContent = lang === 'ru' ? 'Назначение:' : (lang === 'pl' ? 'Tytuł:' : 'Title:');
-  if (document.getElementById('pay-cash-text')) document.getElementById('pay-cash-text').textContent = t.cashDesc || 'Pay the driver directly in cash upon completion of the ride.';
   if (document.getElementById('pay-btn-copy-card')) document.getElementById('pay-btn-copy-card').textContent = lang === 'ru' ? 'Копировать' : (lang === 'pl' ? 'Kopiuj' : 'Copy');
   if (document.getElementById('pay-btn-copy-blik')) document.getElementById('pay-btn-copy-blik').textContent = lang === 'ru' ? 'Копировать' : (lang === 'pl' ? 'Kopiuj' : 'Copy');
+  if (document.getElementById('pay-lbl-receipt-opt')) document.getElementById('pay-lbl-receipt-opt').textContent = lang === 'ru' ? 'Чек / Счёт-фактура:' : (lang === 'pl' ? 'Paragon / Faktura:' : 'Receipt / Invoice:');
+  if (document.getElementById('pay-lbl-receipt-val')) document.getElementById('pay-lbl-receipt-val').textContent = lang === 'ru' ? 'Доступно (+10%)' : (lang === 'pl' ? 'Dostępne (+10%)' : 'Available (+10%)');
 
   // Floating dock translations
   if (document.getElementById('dock-btn-book')) {
