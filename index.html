@@ -526,114 +526,172 @@
       color: #000;
       box-shadow: 0 0 14px #0ff;
     }
-    /* ====== Modern Interactive Payment Method Buttons ====== */
-    .payment-methods {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-      margin-top: 22px;
+    /* ====== Modern Open Payment Method Cards 2026 ====== */
+    .payment-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
       width: 100%;
-      max-width: 500px;
+      max-width: 860px;
       box-sizing: border-box;
+      padding: 0 8px;
     }
-    .payment-card-btn {
-      flex: 1 1 135px;
-      max-width: 155px;
-      background: rgba(14, 18, 28, 0.85);
+    .payment-open-card {
+      background: rgba(14, 18, 28, 0.88);
       border: 1.5px solid rgba(0, 255, 255, 0.25);
       border-radius: 18px;
-      padding: 14px 10px 12px 10px;
+      padding: 16px 16px 14px 16px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      font-family: inherit;
-      color: #fff;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      outline: none;
+      justify-content: space-between;
+      gap: 12px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
       position: relative;
       overflow: hidden;
-      box-sizing: border-box;
     }
-    .payment-card-btn:hover {
-      transform: translateY(-4px) scale(1.03);
+    .payment-open-card:hover {
+      transform: translateY(-3px);
     }
-    .payment-card-btn:active {
-      transform: translateY(-1px) scale(0.98);
-    }
-
-    /* Individual glow borders & buttons */
-    .payment-card-btn.glow-cyan {
+    .payment-open-card.glow-cyan {
       border-color: rgba(0, 255, 255, 0.35);
     }
-    .payment-card-btn.glow-cyan:hover {
+    .payment-open-card.glow-cyan:hover {
       border-color: #00ffff;
-      box-shadow: 0 12px 30px rgba(0, 255, 255, 0.25), 0 0 18px rgba(0, 255, 255, 0.35);
+      box-shadow: 0 12px 35px rgba(0, 255, 255, 0.2), 0 0 20px rgba(0, 255, 255, 0.25);
     }
-
-    .payment-card-btn.glow-yellow {
-      border-color: rgba(255, 204, 0, 0.35);
-    }
-    .payment-card-btn.glow-yellow:hover {
-      border-color: #ffcc00;
-      box-shadow: 0 12px 30px rgba(255, 204, 0, 0.25), 0 0 18px rgba(255, 204, 0, 0.35);
-    }
-
-    .payment-card-btn.glow-magenta {
+    .payment-open-card.glow-magenta {
       border-color: rgba(255, 0, 255, 0.35);
     }
-    .payment-card-btn.glow-magenta:hover {
+    .payment-open-card.glow-magenta:hover {
       border-color: #ff00ff;
-      box-shadow: 0 12px 30px rgba(255, 0, 255, 0.25), 0 0 18px rgba(255, 0, 255, 0.35);
+      box-shadow: 0 12px 35px rgba(255, 0, 255, 0.2), 0 0 20px rgba(255, 0, 255, 0.25);
     }
-
-    .payment-icon-wrap {
-      width: 46px;
-      height: 46px;
+    .payment-open-card.glow-yellow {
+      border-color: rgba(255, 204, 0, 0.35);
+    }
+    .payment-open-card.glow-yellow:hover {
+      border-color: #ffcc00;
+      box-shadow: 0 12px 35px rgba(255, 204, 0, 0.2), 0 0 20px rgba(255, 204, 0, 0.25);
+    }
+    .pay-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pay-icon-box {
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
-    .payment-icon-wrap img {
+    .pay-icon-box img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       border-radius: 8px;
-      transition: transform 0.3s ease;
     }
-    .payment-card-btn:hover .payment-icon-wrap img {
-      transform: scale(1.1);
-    }
-    .payment-icon-wrap img[alt="Blik"] {
+    .pay-icon-box img[alt="BLIK"] {
       border-radius: 50%;
     }
-    .payment-card-info {
+    .pay-title-box {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      width: 100%;
+      text-align: left;
     }
-    .payment-name {
-      font-size: 0.85rem;
+    .pay-title {
+      font-size: 0.95rem;
       font-weight: 700;
+      color: #fff;
       letter-spacing: 0.5px;
+    }
+    .pay-subtitle {
+      font-size: 0.74rem;
+      color: #888;
+    }
+    .pay-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+    .pay-data-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: #aaa;
+    }
+    .pay-data-val {
+      font-weight: 600;
       color: #fff;
     }
-    .payment-hint {
-      font-size: 0.72rem;
-      color: #888;
-      font-weight: 500;
-      transition: color 0.2s ease;
+    .pay-copy-block {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .payment-card-btn.glow-cyan:hover .payment-hint { color: #00ffff; }
-    .payment-card-btn.glow-yellow:hover .payment-hint { color: #ffcc00; }
-    .payment-card-btn.glow-magenta:hover .payment-hint { color: #ff00ff; }
+    .pay-copy-block:hover {
+      background: rgba(0, 255, 255, 0.08);
+      border-color: rgba(0, 255, 255, 0.4);
+    }
+    .payment-open-card.glow-magenta .pay-copy-block:hover {
+      background: rgba(255, 0, 255, 0.08);
+      border-color: rgba(255, 0, 255, 0.4);
+    }
+    .pay-code {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #00ffff;
+      letter-spacing: 0.5px;
+    }
+    .payment-open-card.glow-magenta .pay-code {
+      color: #ff00ff;
+    }
+    .pay-copy-btn {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    .pay-copy-btn .copy-btn-badge {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    .pay-copy-block:hover .copy-btn-badge {
+      background: #00ffff;
+      color: #000;
+      border-color: #00ffff;
+    }
+    .payment-open-card.glow-magenta .pay-copy-block:hover .copy-btn-badge {
+      background: #ff00ff;
+      color: #000;
+      border-color: #ff00ff;
+    }
+    .pay-cash-desc {
+      margin: 0;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: #ccc;
+    }
 
 
 
@@ -1690,36 +1748,70 @@
   </div>
 
   <h3 id="payment-title">Payment Methods</h3>
-  <div class="payment-methods">
-    <button type="button" class="payment-card-btn glow-cyan" onclick="showPaymentPopup('card')">
-      <div class="payment-icon-wrap">
-        <img src="card.png" alt="Card">
+  <div class="payment-cards-grid">
+    <!-- Card 1: Bank Card Transfer -->
+    <div class="payment-open-card glow-cyan">
+      <div class="pay-card-header">
+        <div class="pay-icon-box">
+          <img src="card.png" alt="Card">
+        </div>
+        <div class="pay-title-box">
+          <span class="pay-title" id="pay-card-title">Card Transfer</span>
+          <span class="pay-subtitle">PKO Bank Polski</span>
+        </div>
       </div>
-      <div class="payment-card-info">
-        <span class="payment-name" id="pay-name-card">Card Transfer</span>
-        <span class="payment-hint" id="pay-hint-card">Details</span>
+      <div class="pay-card-body">
+        <div class="pay-data-row">
+          <span class="pay-data-label" id="pay-lbl-receiver">Receiver:</span>
+          <span class="pay-data-val">Yevhenii Zhukovskyi</span>
+        </div>
+        <div class="pay-copy-block" onclick="copyToClipboard('79102011690000810203025301', this)" title="Click to copy">
+          <code class="pay-code">79 1020 1169 0000 8102 0302 5301</code>
+          <button type="button" class="pay-copy-btn"><span class="copy-btn-badge" id="pay-btn-copy-card">Copy</span></button>
+        </div>
       </div>
-    </button>
+    </div>
 
-    <button type="button" class="payment-card-btn glow-yellow" onclick="showPaymentPopup('cash')">
-      <div class="payment-icon-wrap">
-        <img src="pay.png" alt="Cash">
+    <!-- Card 2: BLIK -->
+    <div class="payment-open-card glow-magenta">
+      <div class="pay-card-header">
+        <div class="pay-icon-box">
+          <img src="blik.jpg" alt="BLIK">
+        </div>
+        <div class="pay-title-box">
+          <span class="pay-title" id="pay-blik-title">BLIK Transfer</span>
+          <span class="pay-subtitle">Instant Phone Transfer</span>
+        </div>
       </div>
-      <div class="payment-card-info">
-        <span class="payment-name" id="pay-name-cash">Cash</span>
-        <span class="payment-hint" id="pay-hint-cash">Details</span>
+      <div class="pay-card-body">
+        <div class="pay-data-row">
+          <span class="pay-data-label" id="pay-lbl-blik-title">Title:</span>
+          <span class="pay-data-val">Taxi</span>
+        </div>
+        <div class="pay-copy-block" onclick="copyToClipboard('+48739229181', this)" title="Click to copy">
+          <code class="pay-code">+48 739 229 181</code>
+          <button type="button" class="pay-copy-btn"><span class="copy-btn-badge" id="pay-btn-copy-blik">Copy</span></button>
+        </div>
       </div>
-    </button>
+    </div>
 
-    <button type="button" class="payment-card-btn glow-magenta" onclick="showPaymentPopup('blik')">
-      <div class="payment-icon-wrap">
-        <img src="blik.jpg" alt="Blik">
+    <!-- Card 3: Cash -->
+    <div class="payment-open-card glow-yellow">
+      <div class="pay-card-header">
+        <div class="pay-icon-box">
+          <img src="pay.png" alt="Cash">
+        </div>
+        <div class="pay-title-box">
+          <span class="pay-title" id="pay-cash-title">Cash Payment</span>
+          <span class="pay-subtitle">PLN / EUR</span>
+        </div>
       </div>
-      <div class="payment-card-info">
-        <span class="payment-name" id="pay-name-blik">BLIK</span>
-        <span class="payment-hint" id="pay-hint-blik">Details</span>
+      <div class="pay-card-body">
+        <p class="pay-cash-desc" id="pay-cash-text">
+          Pay the driver directly in cash upon completion of the ride.
+        </p>
       </div>
-    </button>
+    </div>
   </div>
 </section>
 
@@ -2465,13 +2557,15 @@ function setLanguage(lang) {
     document.getElementById('pricing-vat-text').textContent = t.pricingVatNotice || "* All prices are NET. If you require an official receipt or VAT invoice (Faktura), +10% is added to the price.";
   }
 
-  // Payment Methods button translations
-  if (document.getElementById('pay-name-card')) document.getElementById('pay-name-card').textContent = t.payNameCard || 'Card Transfer';
-  if (document.getElementById('pay-name-cash')) document.getElementById('pay-name-cash').textContent = t.payNameCash || 'Cash';
-  if (document.getElementById('pay-name-blik')) document.getElementById('pay-name-blik').textContent = t.payNameBlik || 'BLIK';
-  if (document.getElementById('pay-hint-card')) document.getElementById('pay-hint-card').textContent = t.payHint || 'Details';
-  if (document.getElementById('pay-hint-cash')) document.getElementById('pay-hint-cash').textContent = t.payHint || 'Details';
-  if (document.getElementById('pay-hint-blik')) document.getElementById('pay-hint-blik').textContent = t.payHint || 'Details';
+  // Open Payment Cards translations
+  if (document.getElementById('pay-card-title')) document.getElementById('pay-card-title').textContent = t.cardTitle || 'Card Transfer';
+  if (document.getElementById('pay-blik-title')) document.getElementById('pay-blik-title').textContent = t.blikTitle || 'BLIK Transfer';
+  if (document.getElementById('pay-cash-title')) document.getElementById('pay-cash-title').textContent = t.cashTitle || 'Cash Payment';
+  if (document.getElementById('pay-lbl-receiver')) document.getElementById('pay-lbl-receiver').textContent = lang === 'ru' ? 'Получатель:' : (lang === 'pl' ? 'Odbiorca:' : 'Receiver:');
+  if (document.getElementById('pay-lbl-blik-title')) document.getElementById('pay-lbl-blik-title').textContent = lang === 'ru' ? 'Назначение:' : (lang === 'pl' ? 'Tytuł:' : 'Title:');
+  if (document.getElementById('pay-cash-text')) document.getElementById('pay-cash-text').textContent = t.cashDesc || 'Pay the driver directly in cash upon completion of the ride.';
+  if (document.getElementById('pay-btn-copy-card')) document.getElementById('pay-btn-copy-card').textContent = lang === 'ru' ? 'Копировать' : (lang === 'pl' ? 'Kopiuj' : 'Copy');
+  if (document.getElementById('pay-btn-copy-blik')) document.getElementById('pay-btn-copy-blik').textContent = lang === 'ru' ? 'Копировать' : (lang === 'pl' ? 'Kopiuj' : 'Copy');
 
   // Floating dock translations
   if (document.getElementById('dock-btn-book')) {

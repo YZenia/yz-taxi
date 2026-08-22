@@ -1,5 +1,5 @@
-// Service Worker for YZ Taxi Warsaw PWA (v3.3)
-const CACHE_NAME = 'yz-taxi-v3.3';
+// Service Worker for YZ Taxi Warsaw PWA (v3.4)
+const CACHE_NAME = 'yz-taxi-v3.4';
 const STATIC_ASSETS = [
   './logo.webp',
   './card.png',
