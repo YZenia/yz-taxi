@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2E8GLPQ23F"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-626676347"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-2E8GLPQ23F');
     gtag('config', 'AW-626676347');
+    gtag('config', 'G-2E8GLPQ23F');
   </script>
 
   <meta charset="UTF-8" />
@@ -3373,15 +3373,13 @@ async function loadSlots(dateString) {
           }).filter(Boolean);
         }
       } else {
-        console.warn("n8n response not ok, falling back to mock data");
-        occupiedSlots = getMockOccupiedSlots(dateString);
+        occupiedSlots = [];
       }
     } catch (e) {
-      console.error("Failed to fetch slots from n8n:", e);
-      occupiedSlots = getMockOccupiedSlots(dateString);
+      occupiedSlots = [];
     }
   } else {
-    occupiedSlots = getMockOccupiedSlots(dateString);
+    occupiedSlots = [];
   }
 
   // Check locally submitted bookings
